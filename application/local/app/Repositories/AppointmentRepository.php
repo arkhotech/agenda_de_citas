@@ -291,34 +291,34 @@ class AppointmentRepository
                         
                         foreach ($times as $t) {
                             $_time = explode('-', $t);
-                            if (is_array($_time) && count($_time) == 2) {                                
+                            if (is_array($_time) && count($_time) == 2) {
                                 $time_ini = new \DateTime($tmp_date->format('Y-m-d').' '.$_time[0].':00');
                                 $time_end = new \DateTime($tmp_date->format('Y-m-d').' '.$_time[1].':00');
                                 
-                                while ($time_ini->format('Y-m-d H:i:s') < $time_end->format('Y-m-d H:i:s')) {                                    
+                                while ($time_ini->format('Y-m-d H:i:s') < $time_end->format('Y-m-d H:i:s')) {
                                     $time_range = array();
                                     $timeEnd = new \DateTime($time_ini->format('Y-m-d H:i:s'));
                                     $timeEnd->add(new \DateInterval('PT'.$time_attention.'M'));
-                                    
-                                    $ind = $this->getIndex($appointment_array, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'));
-                                    $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule');
                                         
                                     for ($k=0; $k<$concurrency; $k++) {
+                                        $ind = $this->getIndex($appointment_array, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'),  'appointment', $k);
+                                        $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', $k);
+
                                         if ($ind > -1) {
                                             $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
-                                            $time_range[$k]['subject'] = $appointment_array[$ind]['subject'];                                        
+                                            $time_range[$k]['subject'] = $appointment_array[$ind]['subject'];
                                             $time_range[$k]['applyer_name'] = $appointment_array[$ind]['applyer_name'];
                                             $time_range[$k]['applyer_email'] = $appointment_array[$ind]['applyer_email'];
                                             $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
-                                            $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];                                            
+                                            $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
                                             $time_range[$k]['available'] = 'R';
                                         } else {
                                             $time_range[$k]['appointment_id'] = '';
-                                            $time_range[$k]['subject'] = '';                                        
+                                            $time_range[$k]['subject'] = '';
                                             $time_range[$k]['applyer_name'] = '';
                                             $time_range[$k]['applyer_email'] = '';
                                             $time_range[$k]['appointment_start_time'] = '';
-                                            $time_range[$k]['appointment_end_time'] = '';                                            
+                                            $time_range[$k]['appointment_end_time'] = '';
                                             $time_range[$k]['available'] = $ind_block > -1 ? 'B' : 'D';
                                         }
                                     }
@@ -336,7 +336,7 @@ class AppointmentRepository
                     $res['data'] = $appointment_availability;
                     $res['owner_name'] = $owner_name;
                     $res['concurrency'] = $concurrency;
-                    $res['error'] = null;                    
+                    $res['error'] = null;
                     
                     Cache::tags([$tag])->put($cache_id, $res, $ttl);
                 }
@@ -878,28 +878,29 @@ class AppointmentRepository
      * @param date $element_end
      * @return int
      */
-    private function getIndex($array_search, $element_ini, $element_end, $table = 'appointment')
+    private function getIndex($array_search, $element_ini, $element_end, $table, $ind)
     {
         $i = 0;
-        $index = -1;        
+        $index = -1;
         foreach ($array_search as $value) {
-            if ($table == 'appointment') {
-                $date_ini_db = new \DateTime($value['appointment_start_time']);
-                $date_end_db = new \DateTime($value['appointment_end_time']);
-            } else {
-                $date_ini_db = new \DateTime($value['start_date']);
-                $date_end_db = new \DateTime($value['end_date']);
+            if ($i == $ind) {
+                if ($table == 'appointment') {
+                    $date_ini_db = new \DateTime($value['appointment_start_time']);
+                    $date_end_db = new \DateTime($value['appointment_end_time']);
+                } else {
+                    $date_ini_db = new \DateTime($value['start_date']);
+                    $date_end_db = new \DateTime($value['end_date']);
+                }
+                
+                $date1 = new \DateTime($element_ini);
+                $date2 = new \DateTime($element_end);
+                
+                if ($date_ini_db->format('Y-m-d H:i:s') < $date2->format('Y-m-d H:i:s') &&
+                        $date_end_db->format('Y-m-d H:i:s') > $date1->format('Y-m-d H:i:s')) {
+                    $index = $i;
+                    break;
+                }
             }
-            
-            $date1 = new \DateTime($element_ini);
-            $date2 = new \DateTime($element_end);
-            
-            if ($date_ini_db->format('Y-m-d H:i:s') < $date2->format('Y-m-d H:i:s') &&
-                    $date_end_db->format('Y-m-d H:i:s') > $date1->format('Y-m-d H:i:s')) {
-                $index = $i;
-                break;                
-            }
-            
             $i++;
         }
         
