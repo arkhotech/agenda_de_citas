@@ -47,11 +47,12 @@ class AppointmentRepository
                         'applyer_name',
                         'owner_name',
                         'appointment_start_time',
-                        'applyer_attended'
+                        'applyer_attended',
+                        'calendar_id'
                     );
                     
                     if ($page !== 0) {
-                        $per_page = (int)config('calendar.per_page');            
+                        $per_page = (int)config('calendar.per_page');
 
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
@@ -87,6 +88,7 @@ class AppointmentRepository
                         $appointments_array[$i]['owner_name'] = $a->owner_name;
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
                         $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
+                        $appointments_array[$i]['calendar_id'] = $a->calendar_id;
                         $i++;
                     }
                     $res['data'] = $appointments_array;

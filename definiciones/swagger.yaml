@@ -1668,7 +1668,8 @@
         "appoinment_time",
         "appointment_id",
         "owner_name",
-        "subject"
+        "subject",
+        "calendar_id"
       ],
       "properties": {
         "applyer_attended": {
@@ -1696,6 +1697,10 @@
         "subject": {
           "type": "string",
           "description": "Asunto de la cita"
+        },
+        "calendar_id": {
+          "type": "string",
+          "description": "Id de calendario"
         }
       }
     },
