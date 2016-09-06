@@ -520,12 +520,12 @@ paths:
         - application/json
       parameters:
         - name: appkey
-          in: query
+          in: header
           description: App key
           required: true
           type: string
         - name: domain
-          in: query
+          in: header
           description: Domain de la App
           required: true
           type: string
@@ -560,12 +560,12 @@ paths:
         - application/json
       parameters:
         - name: appkey
-          in: query
+          in: header
           description: App key
           required: true
           type: string
         - name: domain
-          in: query
+          in: header
           description: Domain de la App
           required: true
           type: string

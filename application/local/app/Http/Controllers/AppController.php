@@ -113,8 +113,8 @@ class AppController extends Controller
     public function update(Request $request)
     {        
         $resp = array();
-        $appkey = $request->input('appkey');
-        $domain = $request->input('domain');
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
         $data = $request->json()->all();
         
         $validator = Validator::make($data, [
@@ -155,8 +155,8 @@ class AppController extends Controller
     public function changeStatus(Request $request)
     {        
         $resp = array();
-        $appkey = $request->input('appkey');
-        $domain = $request->input('domain');
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
         $data = $request->json()->all();
         
         $validator = Validator::make($data, [
