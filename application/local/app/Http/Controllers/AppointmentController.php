@@ -168,7 +168,7 @@ class AppointmentController extends Controller
                 'applyer_name' => 'bail|required|max:150',
                 'appointment_start_time' => 'bail|required|isodate',
                 'calendar_id' => 'bail|required|integer',
-                'subject' => 'bail|required|max:80'
+                'subject' => 'max:80'
             ]);
 
             if ($validator->fails()) {
@@ -224,7 +224,7 @@ class AppointmentController extends Controller
                     'applyer_name' => 'bail|required|max:150',
                     'appointment_start_time' => 'bail|required|isodate',
                     'calendar_id' => 'bail|required|integer',
-                    'subject' => 'bail|required|max:80'
+                    'subject' => 'max:80'
                 ]);
 
                 if ($validator->fails()) {
