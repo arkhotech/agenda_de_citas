@@ -1,6 +1,7 @@
 swagger: '2.0'
 info:
-  description: Esquema en el que estarán construidos los servicios para la aplicación de agendador de citas
+  description: Esquema en el que estarán construidos los servicios para la aplicación de
+    agendador de citas
   version: 1.0.0
   title: Agenda
   contact: {}
@@ -69,6 +70,7 @@ paths:
     put:
       tags:
         - Appointments
+      description: Actualiza una la información de una cita
       consumes:
         - application/json
       produces:
@@ -1361,7 +1363,6 @@ definitions:
       - applyer_name
       - appointment_start_time
       - calendar_id
-      - subject
     properties:
       applyer_email:
         type: string
