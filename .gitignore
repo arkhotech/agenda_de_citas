@@ -1,0 +1,6 @@
+/application/local/storage
+/application/local/Homestead.yaml
+/application/local/Homestead.json
+/application/local/.env
+/application/nbproject
+nbproject
