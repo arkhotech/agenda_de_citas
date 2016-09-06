@@ -1,2343 +1,1656 @@
-{
-  "swagger": "2.0",
-  "info": {
-    "description": "Esquema en el que estarán construidos los servicios para la aplicación de agendador de citas",
-    "version": "1.0.0",
-    "title": "Agenda",
-    "contact": {}
-  },
-  "host": "localhost",
-  "basePath": "/v1",
-  "tags": [
-    {
-      "name": "Calendars",
-      "description": "Instancias de agendas"
-    },
-    {
-      "name": "DaysOff",
-      "description": "Días no laborales"
-    },
-    {
-      "name": "Appointments",
-      "description": "Citas en una agenda determinada"
-    },
-    {
-      "name": "BlockSchedules",
-      "description": "Bloqueos de horarios"
-    },
-    {
-      "name": "Application",
-      "description": "Aplicaciones"
-    }
-  ],
-  "schemes": [
-    "http"
-  ],
-  "paths": {
-    "/appointment/assists/{appointment_id}": {
-      "put": {
-        "tags": [
-          "Appointments"
-        ],
-        "description": "Actualiza una cita a asistió o no asistió",
-        "operationId": "putAppointmentAssistsAppointment_id",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appointment_id",
-            "in": "path",
-            "description": "ID de la cita",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputAppointmentAttended"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointment/{appointment_id}": {
-      "put": {
-        "tags": [
-          "Appointments"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appointment_id",
-            "in": "path",
-            "description": "ID de la cita a modificar",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputAppointmentReserve"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "406": {
-            "description": "Error 406",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointments/availability/{calendar_id}": {
-      "get": {
-        "tags": [
-          "Appointments"
-        ],
-        "description": "Lista la disponiblidad de citas en una fecha dada",
-        "operationId": "getAppointmentsAvailableCalendar_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "calendar_id",
-            "in": "path",
-            "description": "ID del calendario",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "description": "Fecha a obtener disponibildad de cita (AAAA-MM-DD)",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de una aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputAppointmentAvailable"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointments/cancel/{appointment_id}": {
-      "put": {
-        "tags": [
-          "Appointments"
-        ],
-        "description": "Cancela una cita",
-        "operationId": "putAppointmentsCancelAppointment_id",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appointment_id",
-            "in": "path",
-            "description": "ID de la cita",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputAppointmentCancel"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "406": {
-            "description": "Error 406",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointments/confirm/{appointment_id}": {
-      "put": {
-        "tags": [
-          "Appointments"
-        ],
-        "operationId": "putAppointmentsConfirmAppointment_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appointment_id",
-            "in": "path",
-            "description": "ID de la cita",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "406": {
-            "description": "Error 406",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointments/listByApplyer/{applyer_id}": {
-      "get": {
-        "tags": [
-          "Appointments"
-        ],
-        "description": "Lista todas las citas futuras solicitadas de un solicitante",
-        "operationId": "getAppointmentsListByApplyerApplyer_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "applyer_id",
-            "in": "path",
-            "description": "ID del solicitante de la cita",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Parámetros de paginación",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominios de una App",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputAppointment"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointments/listByCalendar/{calendar_id}": {
-      "get": {
-        "tags": [
-          "Appointments"
-        ],
-        "description": "Lista todas las citas futuras de un usuario por agenda",
-        "operationId": "getAppointmentsListByCalendarCalendar_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "calendar_id",
-            "in": "path",
-            "description": "ID de la agenda",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Parámetros de paginación",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de una aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/OutputAppointment"
-            }
-          },
-          "400": {
-            "description": "Status 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Status 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Status 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointments/listByOwner/{owner_id}": {
-      "get": {
-        "tags": [
-          "Appointments"
-        ],
-        "description": "Lista todas las citas futuras solicitadas de un propietario",
-        "operationId": "getAppointmentsListByOwnerOwner_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "owner_id",
-            "in": "path",
-            "description": "ID del propietario de la agenda",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Parámetros de paginación",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominios de una App",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputAppointment"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/appointments/reserve": {
-      "post": {
-        "tags": [
-          "Appointments"
-        ],
-        "description": "Reserva una cita",
-        "operationId": "postAppointmentsReserve",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputAppointmentReserve"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputCreateAppointment"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "406": {
-            "description": "Error 406",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/apps": {
-      "get": {
-        "tags": [
-          "Application"
-        ],
-        "description": "Lista las aplicaciones",
-        "operationId": "getApplications",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "query",
-            "description": "App key",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "query",
-            "description": "Dominios de una App",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputApplications"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Application"
-        ],
-        "description": "Crea aplicaciones",
-        "operationId": "postApplications",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputCreateApplication"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Application"
-        ],
-        "summary": "UpdateApplication",
-        "description": "Actualiza una App",
-        "operationId": "putApplication",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "query",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "query",
-            "description": "Domain de la App",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputUpdateApplication"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/apps/changeStatus": {
-      "put": {
-        "tags": [
-          "Application"
-        ],
-        "summary": "ChangeStatusApplication",
-        "description": "Cambia el estado una App",
-        "operationId": "putChangeApplication",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "query",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "query",
-            "description": "Domain de la App",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputChangeApplication"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/blockSchedules": {
-      "get": {
-        "tags": [
-          "BlockSchedules"
-        ],
-        "description": "Lista todos los días no laborables del año actual",
-        "consumes": [],
-        "produces": [],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de una aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "BlockSchedules"
-        ],
-        "description": "Crea Bloqueo de días sobre una agenda",
-        "operationId": "postBlockSchedules",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputBlockSchedule"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/blockSchedules/{block_schedule_id}": {
-      "delete": {
-        "tags": [
-          "BlockSchedules"
-        ],
-        "description": "Elimina el bloqueo de un horario",
-        "operationId": "deleteBlockSchedulesBlock_schedule_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "block_schedule_id",
-            "in": "path",
-            "description": "ID del bloqueo de horario",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/calendars": {
-      "get": {
-        "tags": [
-          "Calendars"
-        ],
-        "description": "Lista todas las instancias de agenda",
-        "operationId": "getCalendars",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Parámetros de paginación",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominios de una App",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputCalendar"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Calendars"
-        ],
-        "summary": "data",
-        "description": "Crea instancias de agenda para un usuario o grupo",
-        "operationId": "postCalendars",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputCalendar"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/OutputCreateCalendar"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/calendars/disable/{calendar_id}": {
-      "put": {
-        "tags": [
-          "Calendars"
-        ],
-        "description": "Deshabilita una agenda",
-        "operationId": "putCalendarsDisableCalendar_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "calendar_id",
-            "in": "path",
-            "description": "ID del calendario",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/calendars/listByOwner/{owner_id}": {
-      "get": {
-        "tags": [
-          "Calendars"
-        ],
-        "description": "Lista todas las instancias de agenda que pertenecen a un usuario",
-        "operationId": "getCalendarsListByOwnerOwner_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "owner_id",
-            "in": "path",
-            "description": "ID del propietario de la agenda",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominios de una App",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputCalendar"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/calendars/searchByName": {
-      "get": {
-        "tags": [
-          "Calendars"
-        ],
-        "description": "Filtra por nombre de la agenda o propietario de la agenda",
-        "operationId": "getCalendarsSearchByName",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "text",
-            "in": "query",
-            "description": "Texto coincidente a buscar en el campo pertenece a o nombre agenda",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominios de una App",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputCalendar"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/calendars/{calendar_id}": {
-      "get": {
-        "tags": [
-          "Calendars"
-        ],
-        "description": "Lista un calendario por su ID",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "calendar_id",
-            "in": "path",
-            "description": "ID del calendario",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de una aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Status 200",
-            "schema": {
-              "$ref": "#/definitions/OutputCalendar"
-            }
-          },
-          "400": {
-            "description": "Status 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Status 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Status 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Calendars"
-        ],
-        "summary": "UpdateCalendar",
-        "description": "Actualiza una instancia de agenda",
-        "operationId": "putCalendarsCalendar_id",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "calendar_id",
-            "in": "path",
-            "description": "ID del calendario",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputCalendar"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/daysOff": {
-      "get": {
-        "tags": [
-          "DaysOff"
-        ],
-        "description": "Lista todos los días no laborables futuros",
-        "operationId": "getDaysOff",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominios de una App",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OutputDayOff"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Error 404",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "DaysOff"
-        ],
-        "description": "Crea días no laborables",
-        "operationId": "postDaysOff",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/InputDayOff"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "/daysOff/{day_off_id}/": {
-      "delete": {
-        "tags": [
-          "DaysOff"
-        ],
-        "description": "Elimina un día no laboral",
-        "operationId": "deleteDaysOffDay_off_id",
-        "consumes": [],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "day_off_id",
-            "in": "path",
-            "description": "ID del día laboral a eliminar",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "appkey",
-            "in": "header",
-            "description": "App key",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "domain",
-            "in": "header",
-            "description": "Dominio de la aplicación",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SuccessResponse"
-            }
-          },
-          "400": {
-            "description": "Error 400",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Error 500",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    }
-  },
-  "definitions": {
-    "Application": {
-      "type": "object",
-      "required": [
-        "appkey",
-        "contact_email",
-        "domain",
-        "from_email",
-        "from_name",
-        "name",
-        "status"
-      ],
-      "properties": {
-        "appkey": {
-          "type": "string",
-          "description": "App key"
-        },
-        "contact_email": {
-          "type": "string",
-          "description": "Email de contacto"
-        },
-        "domain": {
-          "type": "string",
-          "description": "Dominio de la App"
-        },
-        "from_email": {
-          "type": "string",
-          "description": "Email de notificación"
-        },
-        "from_name": {
-          "type": "string",
-          "description": "Nombre"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nombre de la App"
-        },
-        "status": {
-          "type": "string",
-          "description": "Estado de la App"
-        }
-      }
-    },
-    "Appointment": {
-      "type": "object",
-      "required": [
-        "applyer_attended",
-        "applyer_name",
-        "appoinment_time",
-        "appointment_id",
-        "owner_name",
-        "subject",
-        "calendar_id"
-      ],
-      "properties": {
-        "applyer_attended": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Si la cita fue atendida o no 1 o 0"
-        },
-        "applyer_name": {
-          "type": "string",
-          "description": "Nombre del solicitante"
-        },
-        "appoinment_time": {
-          "type": "string",
-          "description": "Horario de la cita (MM DD YYYY HH:NN T - HH:NN T)"
-        },
-        "appointment_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID de la cita"
-        },
-        "owner_name": {
-          "type": "string",
-          "description": "Nombre del propietario de la agenda"
-        },
-        "subject": {
-          "type": "string",
-          "description": "Asunto de la cita"
-        },
-        "calendar_id": {
-          "type": "string",
-          "description": "Id de calendario"
-        }
-      }
-    },
-    "AppointmentAvailable": {
-      "type": "object",
-      "required": [
-        "applyer_email",
-        "applyer_name",
-        "appoinment_start_time",
-        "appointment_end_time",
-        "appointment_id",
-        "available",
-        "owner_name",
-        "subject",
-        "time"
-      ],
-      "properties": {
-        "applyer_email": {
-          "type": "string",
-          "description": "E-mail del solicitante"
-        },
-        "applyer_name": {
-          "type": "string",
-          "description": "Nombre del solicitante"
-        },
-        "appoinment_start_time": {
-          "type": "string",
-          "description": "Horario inicial de la cita"
-        },
-        "appointment_end_time": {
-          "type": "string",
-          "description": "Horario final de la cita"
-        },
-        "appointment_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID de la cita"
-        },
-        "available": {
-          "type": "string",
-          "description": "Reservada, disponible o bloqueada"
-        },
-        "owner_name": {
-          "type": "string",
-          "description": "Nombre del propietario de la agenda"
-        },
-        "subject": {
-          "type": "string",
-          "description": "Asunto de la cita"
-        },
-        "time": {
-          "type": "string",
-          "description": "Hora de la cita (HH:NN)"
-        }
-      }
-    },
-    "Calendar": {
-      "type": "object",
-      "required": [
-        "concurrency",
-        "id",
-        "ignore_non_working_days",
-        "is_group",
-        "name",
-        "owner_email",
-        "owner_id",
-        "owner_name",
-        "schedule",
-        "time_attention",
-        "time_cancel_appointment",
-        "time_confirm_appointment"
-      ],
-      "properties": {
-        "concurrency": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Cantidad de citas que se pueden agendar en la misma hora"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID del calendario"
-        },
-        "ignore_non_working_days": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Si este campo esta en 1, entonces este calendario ignora los feriados globales"
-        },
-        "is_group": {
-          "type": "string",
-          "description": "Si es grupo se coloca en 1 sino entonces es un usuario y se coloca 0"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nombre de la agenda"
-        },
-        "owner_email": {
-          "type": "string",
-          "description": "Email del propietario del calendario"
-        },
-        "owner_id": {
-          "type": "string",
-          "description": "ID del usuario o grupo al que se le va a asignar la agenda"
-        },
-        "owner_name": {
-          "type": "string",
-          "description": "Nombre a quién pertenece la agenda"
-        },
-        "schedule": {
-          "type": "string",
-          "description": "Horario del trámite (Data serializada)"
-        },
-        "time_attention": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Duración que puede tener una cita dentro de la agenda (Definido en minutos)"
-        },
-        "time_cancel_appointment": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Tiempo en que se puede cancelar una cita en cada agenda antes de que inicie le cita"
-        },
-        "time_confirm_appointment": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Tiempo para eliminar citas reservadas de una agenda que no han sido confirmadas"
-        }
-      }
-    },
-    "CreateAppointment": {
-      "type": "object",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID de la cita que se insertó en DB"
-        }
-      }
-    },
-    "CreateCalendar": {
-      "type": "object",
-      "required": [
-        "id"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID del calendario que se insertó en DB"
-        }
-      }
-    },
-    "DateAppointment": {
-      "type": "object",
-      "required": [
-        "YYYY-MM-DD"
-      ],
-      "properties": {
-        "YYYY-MM-DD": {
-          "type": "array",
-          "description": "",
-          "items": {
-            "$ref": "#/definitions/AppointmentAvailable"
-          }
-        }
-      }
-    },
-    "DayOff": {
-      "type": "object",
-      "required": [
-        "date_dayoff",
-        "id",
-        "name"
-      ],
-      "properties": {
-        "date_dayoff": {
-          "type": "string",
-          "description": "Fecha del día no laboral (AAAA-MM-DD)"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID del día no laboral"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nombre del día no laboral"
-        }
-      }
-    },
-    "ErrorResponse": {
-      "type": "object",
-      "required": [
-        "response"
-      ],
-      "properties": {
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "GenericResponse": {
-      "type": "object",
-      "required": [
-        "code",
-        "message"
-      ],
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Código de status interno para operaciones request"
-        },
-        "message": {
-          "type": "string",
-          "description": "Mensaje de status interno para operaciones request"
-        }
-      }
-    },
-    "InputAppointmentAttended": {
-      "type": "object",
-      "required": [
-        "applyer_attended"
-      ],
-      "properties": {
-        "applyer_attended": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Si la cita fue atendida por el solicitante 1 o 0"
-        }
-      }
-    },
-    "InputAppointmentCancel": {
-      "type": "object",
-      "required": [
-        "user_id_cancel",
-        "user_name_cancel"
-      ],
-      "properties": {
-        "cancelation_cause": {
-          "type": "string",
-          "description": "Motivo cancelación de la cita"
-        },
-        "user_id_cancel": {
-          "type": "string",
-          "description": "ID del usuario que canceló la cita"
-        },
-        "user_name_cancel": {
-          "type": "string",
-          "description": "Nombre del usuario que canceló la cita"
-        }
-      }
-    },
-    "InputAppointmentReserve": {
-      "type": "object",
-      "required": [
-        "applyer_email",
-        "applyer_id",
-        "applyer_name",
-        "appointment_start_time",
-        "calendar_id",
-        "subject"
-      ],
-      "properties": {
-        "applyer_email": {
-          "type": "string",
-          "description": "Email del solicitante de la cita"
-        },
-        "applyer_id": {
-          "type": "string",
-          "description": "ID del solicitante de la cita"
-        },
-        "applyer_name": {
-          "type": "string",
-          "description": "Nombre del solicitante de la cita"
-        },
-        "appointment_start_time": {
-          "type": "string",
-          "description": "Horario de la cita (AAAA-MM-DD HH:NN)"
-        },
-        "calendar_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID de la agenda a la que se hace la cita"
-        },
-        "subject": {
-          "type": "string",
-          "description": "Descripción del trámite por el cual se realiza la cita"
-        }
-      }
-    },
-    "InputBlockSchedule": {
-      "type": "object",
-      "required": [
-        "calendar_id",
-        "cause",
-        "end_date",
-        "start_date",
-        "user_id_block"
-      ],
-      "properties": {
-        "calendar_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "ID del calendario"
-        },
-        "cause": {
-          "type": "string",
-          "description": "Motivo de bloqueo de la cita"
-        },
-        "end_date": {
-          "type": "string",
-          "description": "Fecha en que finaliza el bloqueo de la cita (AAAA-MM-DD HH:NN)"
-        },
-        "start_date": {
-          "type": "string",
-          "description": "Fecha en que inicia el bloqueo de la cita (AAAA-MM-DD HH:NN)"
-        },
-        "user_id_block": {
-          "type": "string",
-          "description": "ID del usuario que bloquea el horario"
-        },
-        "user_name_block": {
-          "type": "string",
-          "description": "Nombre del usuario que bloquea el horario"
-        }
-      }
-    },
-    "InputCalendar": {
-      "type": "object",
-      "required": [
-        "concurrency",
-        "ignore_non_working_days",
-        "is_group",
-        "name",
-        "owner_email",
-        "owner_id",
-        "owner_name",
-        "schedule",
-        "time_attention",
-        "time_cancel_appointment",
-        "time_confirm_appointment"
-      ],
-      "properties": {
-        "concurrency": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Cantidad de citas que se pueden agendar en la misma hora"
-        },
-        "ignore_non_working_days": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Si este campo esta en 1, entonces este calendario ignora los feriados globales sino coloque 0"
-        },
-        "is_group": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Si es grupo se coloca en 1 sino entonces es un usuario y se coloca 0"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nombre de la agenda"
-        },
-        "owner_email": {
-          "type": "string",
-          "description": "Email del propietario de la agenda"
-        },
-        "owner_id": {
-          "type": "string",
-          "description": "ID del propietario de la agenda"
-        },
-        "owner_name": {
-          "type": "string",
-          "description": "Nombre del propietario de la agenda"
-        },
-        "schedule": {
-          "type": "string",
-          "description": "Horario del trámite ej:\n\n\"schedule\": {\n        \"lunes\": {\n            \"0\": \"08:00-12:00\",\n            \"1\": \"14:00-18:00\",\n            \"2\": \"20:00-22:00\"\n        },\n        \"martes\": {\n            \"0\": \"08:00-12:00\",\n            \"1\": \"14:00-18:00\"\n        },\n        \"miercoles\": {\n            \"0\": \"08:00-12:00\",\n            \"1\": \"14:00-18:00\"\n        }\n    }"
-        },
-        "time_attention": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Duración que puede tener una cita dentro de la agenda (Definido en\n          minutos)"
-        },
-        "time_cancel_appointment": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Tiempo en el cual el usuario puede cancelar una cita con anterioridad"
-        },
-        "time_confirm_appointment": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Tiempo que tiene un usuario para confirmar una cita reservada, de lo contrario queda liberada"
-        }
-      }
-    },
-    "InputChangeApplication": {
-      "type": "object",
-      "required": [
-        "status"
-      ],
-      "properties": {
-        "status": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Estado de a App"
-        }
-      }
-    },
-    "InputCreateApplication": {
-      "type": "object",
-      "required": [
-        "contact_email",
-        "domain",
-        "from_email",
-        "from_name",
-        "name"
-      ],
-      "properties": {
-        "contact_email": {
-          "type": "string",
-          "description": "Email de contacto"
-        },
-        "domain": {
-          "type": "string",
-          "description": "Dominio de la App"
-        },
-        "from_email": {
-          "type": "string",
-          "description": "Email de notificación"
-        },
-        "from_name": {
-          "type": "string",
-          "description": "Nombre"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nombre de la App"
-        }
-      }
-    },
-    "InputDayOff": {
-      "type": "object",
-      "required": [
-        "date_dayoff",
-        "name"
-      ],
-      "properties": {
-        "date_dayoff": {
-          "type": "string",
-          "description": "Fecha del día no laboral (AAAA-MM-DD)"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nombre del día no laboral"
-        }
-      }
-    },
-    "InputUpdateApplication": {
-      "type": "object",
-      "required": [
-        "contact_email",
-        "from_email",
-        "from_name",
-        "name"
-      ],
-      "properties": {
-        "contact_email": {
-          "type": "string",
-          "description": "Email de contacto"
-        },
-        "from_email": {
-          "type": "string",
-          "description": "Email de notificación"
-        },
-        "from_name": {
-          "type": "string",
-          "description": "Nombre"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nombre de la App"
-        }
-      }
-    },
-    "OutputApplications": {
-      "type": "object",
-      "required": [
-        "response"
-      ],
-      "properties": {
-        "application": {
-          "type": "array",
-          "description": "Listado de aplicaciones",
-          "items": {
-            "$ref": "#/definitions/Application"
-          }
-        },
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "OutputAppointment": {
-      "type": "object",
-      "required": [
-        "count",
-        "response"
-      ],
-      "properties": {
-        "appointments": {
-          "type": "array",
-          "description": "Listado de citas futuras",
-          "items": {
-            "$ref": "#/definitions/Appointment"
-          }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "OutputAppointmentAvailable": {
-      "type": "object",
-      "required": [
-        "appointmentsavailable",
-        "concurrency",
-        "owner_name",
-        "response"
-      ],
-      "properties": {
-        "appointmentsavailable": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DateAppointment"
-          }
-        },
-        "concurrency": {
-          "type": "string",
-          "description": "Concurrencia de la agenda"
-        },
-        "owner_name": {
-          "type": "string",
-          "description": "Propietario de la agenda"
-        },
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "OutputCalendar": {
-      "type": "object",
-      "required": [
-        "count",
-        "response"
-      ],
-      "properties": {
-        "calendars": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Calendar"
-          }
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Total de registros"
-        },
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "OutputCreateAppointment": {
-      "type": "object",
-      "required": [
-        "appointment",
-        "response"
-      ],
-      "properties": {
-        "appointment": {
-          "$ref": "#/definitions/CreateAppointment"
-        },
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "OutputCreateCalendar": {
-      "type": "object",
-      "required": [
-        "response"
-      ],
-      "properties": {
-        "calendar": {
-          "$ref": "#/definitions/CreateCalendar"
-        },
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "OutputDayOff": {
-      "type": "object",
-      "required": [
-        "response"
-      ],
-      "properties": {
-        "daysoff": {
-          "type": "array",
-          "description": "Listado de días no laborales",
-          "items": {
-            "$ref": "#/definitions/DayOff"
-          }
-        },
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    },
-    "SuccessResponse": {
-      "type": "object",
-      "required": [
-        "response"
-      ],
-      "properties": {
-        "response": {
-          "$ref": "#/definitions/GenericResponse"
-        }
-      }
-    }
-  }
-}
+swagger: '2.0'
+info:
+  description: Esquema en el que estarán construidos los servicios para la aplicación de agendador de citas
+  version: 1.0.0
+  title: Agenda
+  contact: {}
+host: localhost
+basePath: /v1
+tags:
+  - name: Calendars
+    description: Instancias de agendas
+  - name: DaysOff
+    description: Días no laborales
+  - name: Appointments
+    description: Citas en una agenda determinada
+  - name: BlockSchedules
+    description: Bloqueos de horarios
+  - name: Application
+    description: Aplicaciones
+schemes:
+  - http
+paths:
+  '/appointment/assists/{appointment_id}':
+    put:
+      tags:
+        - Appointments
+      description: Actualiza una cita a asistió o no asistió
+      operationId: putAppointmentAssistsAppointment_id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appointment_id
+          in: path
+          description: ID de la cita
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputAppointmentAttended'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointment/{appointment_id}':
+    put:
+      tags:
+        - Appointments
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appointment_id
+          in: path
+          description: ID de la cita a modificar
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputAppointmentReserve'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '406':
+          description: Error 406
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointments/availability/{calendar_id}':
+    get:
+      tags:
+        - Appointments
+      description: Lista la disponiblidad de citas en una fecha dada
+      operationId: getAppointmentsAvailableCalendar_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: calendar_id
+          in: path
+          description: ID del calendario
+          required: true
+          type: integer
+          format: int32
+        - name: date
+          in: query
+          description: Fecha a obtener disponibildad de cita (AAAA-MM-DD)
+          required: false
+          type: string
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de una aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputAppointmentAvailable'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointments/cancel/{appointment_id}':
+    put:
+      tags:
+        - Appointments
+      description: Cancela una cita
+      operationId: putAppointmentsCancelAppointment_id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appointment_id
+          in: path
+          description: ID de la cita
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputAppointmentCancel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '406':
+          description: Error 406
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointments/confirm/{appointment_id}':
+    put:
+      tags:
+        - Appointments
+      operationId: putAppointmentsConfirmAppointment_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: appointment_id
+          in: path
+          description: ID de la cita
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '406':
+          description: Error 406
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointments/listByApplyer/{applyer_id}':
+    get:
+      tags:
+        - Appointments
+      description: Lista todas las citas futuras solicitadas de un solicitante
+      operationId: getAppointmentsListByApplyerApplyer_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: applyer_id
+          in: path
+          description: ID del solicitante de la cita
+          required: true
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominios de una App
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputAppointment'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointments/listByCalendar/{calendar_id}':
+    get:
+      tags:
+        - Appointments
+      description: Lista todas las citas futuras de un usuario por agenda
+      operationId: getAppointmentsListByCalendarCalendar_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: calendar_id
+          in: path
+          description: ID de la agenda
+          required: true
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de una aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OutputAppointment'
+        '400':
+          description: Status 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Status 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Status 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointments/listByOwner/{owner_id}':
+    get:
+      tags:
+        - Appointments
+      description: Lista todas las citas futuras solicitadas de un propietario
+      operationId: getAppointmentsListByOwnerOwner_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: owner_id
+          in: path
+          description: ID del propietario de la agenda
+          required: true
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominios de una App
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputAppointment'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /appointments/reserve:
+    post:
+      tags:
+        - Appointments
+      description: Reserva una cita
+      operationId: postAppointmentsReserve
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputAppointmentReserve'
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputCreateAppointment'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '406':
+          description: Error 406
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /apps:
+    get:
+      tags:
+        - Application
+      description: Lista las aplicaciones
+      operationId: getApplications
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: query
+          description: App key
+          required: false
+          type: string
+        - name: domain
+          in: query
+          description: Dominios de una App
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputApplications'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - Application
+      description: Crea aplicaciones
+      operationId: postApplications
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputCreateApplication'
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      tags:
+        - Application
+      summary: UpdateApplication
+      description: Actualiza una App
+      operationId: putApplication
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: query
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: query
+          description: Domain de la App
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputUpdateApplication'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /apps/changeStatus:
+    put:
+      tags:
+        - Application
+      summary: ChangeStatusApplication
+      description: Cambia el estado una App
+      operationId: putChangeApplication
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: query
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: query
+          description: Domain de la App
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputChangeApplication'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /blockSchedules:
+    get:
+      tags:
+        - BlockSchedules
+      description: Lista todos los días no laborables del año actual
+      consumes: []
+      produces: []
+      parameters:
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de una aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - BlockSchedules
+      description: Crea Bloqueo de días sobre una agenda
+      operationId: postBlockSchedules
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputBlockSchedule'
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/blockSchedules/{block_schedule_id}':
+    delete:
+      tags:
+        - BlockSchedules
+      description: Elimina el bloqueo de un horario
+      operationId: deleteBlockSchedulesBlock_schedule_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: block_schedule_id
+          in: path
+          description: ID del bloqueo de horario
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /calendars:
+    get:
+      tags:
+        - Calendars
+      description: Lista todas las instancias de agenda
+      operationId: getCalendars
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominios de una App
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputCalendar'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - Calendars
+      summary: data
+      description: Crea instancias de agenda para un usuario o grupo
+      operationId: postCalendars
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputCalendar'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/OutputCreateCalendar'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/calendars/disable/{calendar_id}':
+    put:
+      tags:
+        - Calendars
+      description: Deshabilita una agenda
+      operationId: putCalendarsDisableCalendar_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: calendar_id
+          in: path
+          description: ID del calendario
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/calendars/listByOwner/{owner_id}':
+    get:
+      tags:
+        - Calendars
+      description: Lista todas las instancias de agenda que pertenecen a un usuario
+      operationId: getCalendarsListByOwnerOwner_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: owner_id
+          in: path
+          description: ID del propietario de la agenda
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominios de una App
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputCalendar'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /calendars/searchByName:
+    get:
+      tags:
+        - Calendars
+      description: Filtra por nombre de la agenda o propietario de la agenda
+      operationId: getCalendarsSearchByName
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: text
+          in: query
+          description: Texto coincidente a buscar en el campo pertenece a o nombre agenda
+          required: true
+          type: string
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominios de una App
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputCalendar'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/calendars/{calendar_id}':
+    get:
+      tags:
+        - Calendars
+      description: Lista un calendario por su ID
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: calendar_id
+          in: path
+          description: ID del calendario
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de una aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Status 200
+          schema:
+            $ref: '#/definitions/OutputCalendar'
+        '400':
+          description: Status 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Status 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Status 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      tags:
+        - Calendars
+      summary: UpdateCalendar
+      description: Actualiza una instancia de agenda
+      operationId: putCalendarsCalendar_id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: calendar_id
+          in: path
+          description: ID del calendario
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputCalendar'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /daysOff:
+    get:
+      tags:
+        - DaysOff
+      description: Lista todos los días no laborables futuros
+      operationId: getDaysOff
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominios de una App
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputDayOff'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      tags:
+        - DaysOff
+      description: Crea días no laborables
+      operationId: postDaysOff
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputDayOff'
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/daysOff/{day_off_id}/':
+    delete:
+      tags:
+        - DaysOff
+      description: Elimina un día no laboral
+      operationId: deleteDaysOffDay_off_id
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: day_off_id
+          in: path
+          description: ID del día laboral a eliminar
+          required: true
+          type: integer
+          format: int32
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+definitions:
+  Application:
+    type: object
+    required:
+      - appkey
+      - contact_email
+      - domain
+      - from_email
+      - from_name
+      - name
+      - status
+    properties:
+      appkey:
+        type: string
+        description: App key
+      contact_email:
+        type: string
+        description: Email de contacto
+      domain:
+        type: string
+        description: Dominio de la App
+      from_email:
+        type: string
+        description: Email de notificación
+      from_name:
+        type: string
+        description: Nombre
+      name:
+        type: string
+        description: Nombre de la App
+      status:
+        type: string
+        description: Estado de la App
+  Appointment:
+    type: object
+    required:
+      - applyer_attended
+      - applyer_name
+      - appoinment_time
+      - appointment_id
+      - owner_name
+      - subject
+      - calendar_id
+    properties:
+      applyer_attended:
+        type: integer
+        format: int32
+        description: Si la cita fue atendida o no 1 o 0
+      applyer_name:
+        type: string
+        description: Nombre del solicitante
+      appoinment_time:
+        type: string
+        description: 'Horario de la cita (MM DD YYYY HH:NN T - HH:NN T)'
+      appointment_id:
+        type: integer
+        format: int32
+        description: ID de la cita
+      owner_name:
+        type: string
+        description: Nombre del propietario de la agenda
+      subject:
+        type: string
+        description: Asunto de la cita
+      calendar_id:
+        type: string
+        description: Id de calendario
+  AppointmentAvailable:
+    type: object
+    required:
+      - applyer_email
+      - applyer_name
+      - appoinment_start_time
+      - appointment_end_time
+      - appointment_id
+      - available
+      - owner_name
+      - subject
+      - time
+    properties:
+      applyer_email:
+        type: string
+        description: E-mail del solicitante
+      applyer_name:
+        type: string
+        description: Nombre del solicitante
+      appoinment_start_time:
+        type: string
+        description: Horario inicial de la cita
+      appointment_end_time:
+        type: string
+        description: Horario final de la cita
+      appointment_id:
+        type: integer
+        format: int32
+        description: ID de la cita
+      available:
+        type: string
+        description: 'Reservada, disponible o bloqueada'
+      owner_name:
+        type: string
+        description: Nombre del propietario de la agenda
+      subject:
+        type: string
+        description: Asunto de la cita
+      time:
+        type: string
+        description: 'Hora de la cita (HH:NN)'
+  Calendar:
+    type: object
+    required:
+      - concurrency
+      - id
+      - ignore_non_working_days
+      - is_group
+      - name
+      - owner_email
+      - owner_id
+      - owner_name
+      - schedule
+      - time_attention
+      - time_cancel_appointment
+      - time_confirm_appointment
+    properties:
+      concurrency:
+        type: integer
+        format: int32
+        description: Cantidad de citas que se pueden agendar en la misma hora
+      id:
+        type: integer
+        format: int32
+        description: ID del calendario
+      ignore_non_working_days:
+        type: integer
+        format: int32
+        description: >-
+          Si este campo esta en 1, entonces este calendario ignora los feriados
+          globales
+      is_group:
+        type: string
+        description: Si es grupo se coloca en 1 sino entonces es un usuario y se coloca 0
+      name:
+        type: string
+        description: Nombre de la agenda
+      owner_email:
+        type: string
+        description: Email del propietario del calendario
+      owner_id:
+        type: string
+        description: ID del usuario o grupo al que se le va a asignar la agenda
+      owner_name:
+        type: string
+        description: Nombre a quién pertenece la agenda
+      schedule:
+        type: string
+        description: Horario del trámite (Data serializada)
+      time_attention:
+        type: integer
+        format: int32
+        description: >-
+          Duración que puede tener una cita dentro de la agenda (Definido en
+          minutos)
+      time_cancel_appointment:
+        type: integer
+        format: int32
+        description: >-
+          Tiempo en que se puede cancelar una cita en cada agenda antes de que
+          inicie le cita
+      time_confirm_appointment:
+        type: integer
+        format: int32
+        description: >-
+          Tiempo para eliminar citas reservadas de una agenda que no han sido
+          confirmadas
+  CreateAppointment:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: ID de la cita que se insertó en DB
+  CreateCalendar:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: ID del calendario que se insertó en DB
+  DateAppointment:
+    type: object
+    required:
+      - YYYY-MM-DD
+    properties:
+      YYYY-MM-DD:
+        type: array
+        description: ''
+        items:
+          $ref: '#/definitions/AppointmentAvailable'
+  DayOff:
+    type: object
+    required:
+      - date_dayoff
+      - id
+      - name
+    properties:
+      date_dayoff:
+        type: string
+        description: Fecha del día no laboral (AAAA-MM-DD)
+      id:
+        type: integer
+        format: int32
+        description: ID del día no laboral
+      name:
+        type: string
+        description: Nombre del día no laboral
+  ErrorResponse:
+    type: object
+    required:
+      - response
+    properties:
+      response:
+        $ref: '#/definitions/GenericResponse'
+  GenericResponse:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: Código de status interno para operaciones request
+      message:
+        type: string
+        description: Mensaje de status interno para operaciones request
+  InputAppointmentAttended:
+    type: object
+    required:
+      - applyer_attended
+    properties:
+      applyer_attended:
+        type: integer
+        format: int32
+        description: Si la cita fue atendida por el solicitante 1 o 0
+  InputAppointmentCancel:
+    type: object
+    required:
+      - user_id_cancel
+      - user_name_cancel
+    properties:
+      cancelation_cause:
+        type: string
+        description: Motivo cancelación de la cita
+      user_id_cancel:
+        type: string
+        description: ID del usuario que canceló la cita
+      user_name_cancel:
+        type: string
+        description: Nombre del usuario que canceló la cita
+  InputAppointmentReserve:
+    type: object
+    required:
+      - applyer_email
+      - applyer_id
+      - applyer_name
+      - appointment_start_time
+      - calendar_id
+      - subject
+    properties:
+      applyer_email:
+        type: string
+        description: Email del solicitante de la cita
+      applyer_id:
+        type: string
+        description: ID del solicitante de la cita
+      applyer_name:
+        type: string
+        description: Nombre del solicitante de la cita
+      appointment_start_time:
+        type: string
+        description: 'Horario de la cita (AAAA-MM-DD HH:NN)'
+      calendar_id:
+        type: integer
+        format: int32
+        description: ID de la agenda a la que se hace la cita
+      subject:
+        type: string
+        description: Descripción del trámite por el cual se realiza la cita
+  InputBlockSchedule:
+    type: object
+    required:
+      - calendar_id
+      - cause
+      - end_date
+      - start_date
+      - user_id_block
+    properties:
+      calendar_id:
+        type: integer
+        format: int32
+        description: ID del calendario
+      cause:
+        type: string
+        description: Motivo de bloqueo de la cita
+      end_date:
+        type: string
+        description: 'Fecha en que finaliza el bloqueo de la cita (AAAA-MM-DD HH:NN)'
+      start_date:
+        type: string
+        description: 'Fecha en que inicia el bloqueo de la cita (AAAA-MM-DD HH:NN)'
+      user_id_block:
+        type: string
+        description: ID del usuario que bloquea el horario
+      user_name_block:
+        type: string
+        description: Nombre del usuario que bloquea el horario
+  InputCalendar:
+    type: object
+    required:
+      - concurrency
+      - ignore_non_working_days
+      - is_group
+      - name
+      - owner_email
+      - owner_id
+      - owner_name
+      - schedule
+      - time_attention
+      - time_cancel_appointment
+      - time_confirm_appointment
+    properties:
+      concurrency:
+        type: integer
+        format: int32
+        description: Cantidad de citas que se pueden agendar en la misma hora
+      ignore_non_working_days:
+        type: integer
+        format: int32
+        description: >-
+          Si este campo esta en 1, entonces este calendario ignora los feriados
+          globales sino coloque 0
+      is_group:
+        type: integer
+        format: int32
+        description: Si es grupo se coloca en 1 sino entonces es un usuario y se coloca 0
+      name:
+        type: string
+        description: Nombre de la agenda
+      owner_email:
+        type: string
+        description: Email del propietario de la agenda
+      owner_id:
+        type: string
+        description: ID del propietario de la agenda
+      owner_name:
+        type: string
+        description: Nombre del propietario de la agenda
+      schedule:
+        type: string
+        description: |-
+          Horario del trámite ej:
+
+          "schedule": {
+                  "lunes": {
+                      "0": "08:00-12:00",
+                      "1": "14:00-18:00",
+                      "2": "20:00-22:00"
+                  },
+                  "martes": {
+                      "0": "08:00-12:00",
+                      "1": "14:00-18:00"
+                  },
+                  "miercoles": {
+                      "0": "08:00-12:00",
+                      "1": "14:00-18:00"
+                  }
+              }
+      time_attention:
+        type: integer
+        format: int32
+        description: |-
+          Duración que puede tener una cita dentro de la agenda (Definido en
+                    minutos)
+      time_cancel_appointment:
+        type: integer
+        format: int32
+        description: Tiempo en el cual el usuario puede cancelar una cita con anterioridad
+      time_confirm_appointment:
+        type: integer
+        format: int32
+        description: >-
+          Tiempo que tiene un usuario para confirmar una cita reservada, de lo
+          contrario queda liberada
+  InputChangeApplication:
+    type: object
+    required:
+      - status
+    properties:
+      status:
+        type: integer
+        format: int32
+        description: Estado de a App
+  InputCreateApplication:
+    type: object
+    required:
+      - contact_email
+      - domain
+      - from_email
+      - from_name
+      - name
+    properties:
+      contact_email:
+        type: string
+        description: Email de contacto
+      domain:
+        type: string
+        description: Dominio de la App
+      from_email:
+        type: string
+        description: Email de notificación
+      from_name:
+        type: string
+        description: Nombre
+      name:
+        type: string
+        description: Nombre de la App
+  InputDayOff:
+    type: object
+    required:
+      - date_dayoff
+      - name
+    properties:
+      date_dayoff:
+        type: string
+        description: Fecha del día no laboral (AAAA-MM-DD)
+      name:
+        type: string
+        description: Nombre del día no laboral
+  InputUpdateApplication:
+    type: object
+    required:
+      - contact_email
+      - from_email
+      - from_name
+      - name
+    properties:
+      contact_email:
+        type: string
+        description: Email de contacto
+      from_email:
+        type: string
+        description: Email de notificación
+      from_name:
+        type: string
+        description: Nombre
+      name:
+        type: string
+        description: Nombre de la App
+  OutputApplications:
+    type: object
+    required:
+      - response
+    properties:
+      application:
+        type: array
+        description: Listado de aplicaciones
+        items:
+          $ref: '#/definitions/Application'
+      response:
+        $ref: '#/definitions/GenericResponse'
+  OutputAppointment:
+    type: object
+    required:
+      - count
+      - response
+    properties:
+      appointments:
+        type: array
+        description: Listado de citas futuras
+        items:
+          $ref: '#/definitions/Appointment'
+      count:
+        type: integer
+        format: int32
+      response:
+        $ref: '#/definitions/GenericResponse'
+  OutputAppointmentAvailable:
+    type: object
+    required:
+      - appointmentsavailable
+      - concurrency
+      - owner_name
+      - response
+    properties:
+      appointmentsavailable:
+        type: array
+        items:
+          $ref: '#/definitions/DateAppointment'
+      concurrency:
+        type: string
+        description: Concurrencia de la agenda
+      owner_name:
+        type: string
+        description: Propietario de la agenda
+      response:
+        $ref: '#/definitions/GenericResponse'
+  OutputCalendar:
+    type: object
+    required:
+      - count
+      - response
+    properties:
+      calendars:
+        type: array
+        items:
+          $ref: '#/definitions/Calendar'
+      count:
+        type: integer
+        format: int32
+        description: Total de registros
+      response:
+        $ref: '#/definitions/GenericResponse'
+  OutputCreateAppointment:
+    type: object
+    required:
+      - appointment
+      - response
+    properties:
+      appointment:
+        $ref: '#/definitions/CreateAppointment'
+      response:
+        $ref: '#/definitions/GenericResponse'
+  OutputCreateCalendar:
+    type: object
+    required:
+      - response
+    properties:
+      calendar:
+        $ref: '#/definitions/CreateCalendar'
+      response:
+        $ref: '#/definitions/GenericResponse'
+  OutputDayOff:
+    type: object
+    required:
+      - response
+    properties:
+      daysoff:
+        type: array
+        description: Listado de días no laborales
+        items:
+          $ref: '#/definitions/DayOff'
+      response:
+        $ref: '#/definitions/GenericResponse'
+  SuccessResponse:
+    type: object
+    required:
+      - response
+    properties:
+      response:
+        $ref: '#/definitions/GenericResponse'
