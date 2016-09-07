@@ -33,6 +33,7 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::put('appointments/confirm/{id}', 'AppointmentController@confirm');
     Route::put('appointments/cancel/{id}', 'AppointmentController@cancel');
     Route::put('appointments/assists/{id}', 'AppointmentController@assists');
+    Route::get('appointments/listByCalendar/{id}', 'AppointmentController@listByCalendar');
     Route::get('appointments/listByApplyer/{id}', 'AppointmentController@listByApplyer');
     Route::get('appointments/listByOwner/{id}', 'AppointmentController@listByOwner');
     Route::get('appointments/availability/{id}', 'AppointmentController@listAvailability');

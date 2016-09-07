@@ -44,10 +44,11 @@ class CalendarController extends Controller
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
-            $calendars = $this->calendars->listCalendar($appkey, $domain, $page);
+            $calendars = $this->calendars->listCalendar($appkey, $domain, $page, $records);
             
             if (isset($calendars['error']) && is_a($calendars['error'], 'Exception')) {
                 $resp = Resp::error(500, $calendars['error']->getCode(), '', $calendars['error']);
@@ -115,11 +116,13 @@ class CalendarController extends Controller
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $text = $request->input('text', '');
+        $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
             if (!empty($text)) {
-                $calendars = $this->calendars->searchByName($appkey, $domain, $text);
+                $calendars = $this->calendars->searchByName($appkey, $domain, $text, $page, $records);
 
                 if (isset($calendars['error']) && is_a($calendars['error'], 'Exception')) {
                     $resp = Resp::error(500, $calendars['error']->getCode(), '', $calendars['error']);
@@ -153,10 +156,12 @@ class CalendarController extends Controller
         $resp = array();
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
+        $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
         
         if (!empty($appkey) && !empty($domain)) {
             if ((int)$id > 0) {
-                $calendars = $this->calendars->listByOwnerId($appkey, $domain, $id);
+                $calendars = $this->calendars->listByOwnerId($appkey, $domain, $id, $page, $records);
 
                 if (isset($calendars['error']) && is_a($calendars['error'], 'Exception')) {
                     $resp = Resp::error(500, $calendars['error']->getCode(), '', $calendars['error']);

@@ -23,22 +23,28 @@ class CalendarRepository
      * @param string $appkey
      * @param string $domain
      * @param mixed $page int/null
+     * @param mixed $records int/null
      * @return Collection
      */
-    public function listCalendar($appkey, $domain, $page)
+    public function listCalendar($appkey, $domain, $page, $records)
     {
         $res = array();
         $page = (int)$page;
+        $records = (int)$records;
         
         try {            
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheCalendarList_'.$appkey.'_'.$domain.'_'.$page);
+            $cache_id = sha1('cacheCalendarList_'.$appkey.'_'.$domain.'_'.$page.'_'.$records);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
             if ($res === null) {
-                if ($page !== 0) {                    
-                    $per_page = (int)config('calendar.per_page');            
+                if ($page !== 0) {
+                    if ($records !== 0) {
+                        $per_page = $records;
+                    } else {
+                        $per_page = (int)config('calendar.per_page');
+                    }
 
                     $calendars = Calendar::where('appkey', $appkey)
                             ->where('domain', $domain)
@@ -98,29 +104,52 @@ class CalendarRepository
      * @param string $appkey
      * @param string $domain
      * @param int $text
+     * @param int $page
+     * @param int $records
      * @return Collection
      */
-    public function searchByName($appkey, $domain, $text)
+    public function searchByName($appkey, $domain, $text, $page, $records)
     {
         $res = array();
+        $page = (int)$page;
+        $records = (int)$records;
         
         try {
             $text = trim(strtolower($text));
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheCalendarSearchByName_'.$appkey.'_'.$domain.'_'.$this->sanitizeString($text));
+            $cache_id = sha1('cacheCalendarSearchByName_'.$appkey.'_'.$domain.'_'.$this->sanitizeString($text).'_'.$page.'_'.$records);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
             if ($res === null) {
-                if (!empty($text)) {                    
-                    $calendars = Calendar::where(function ($query) use ($appkey, $domain) {
-                        return $query->where('appkey', '=', $appkey)
-                              ->Where('domain', '=', $domain)
-                              ->where('status', 1);
-                    })->where(function ($query) use ($text) {
-                        return $query->Where('name', 'LIKE', '%'.$text.'%')
-                              ->orWhere('owner_name', 'LIKE', '%'.$text.'%');
-                    })->orderBy('name', 'asc')->get();
+                if (!empty($text)) {
+
+                    if ($page !== 0) {
+                        if ($records !== 0) {
+                            $per_page = $records;
+                        } else {
+                            $per_page = (int)config('calendar.per_page');
+                        }
+
+                        $calendars = Calendar::where(function ($query) use ($appkey, $domain) {
+                            return $query->where('appkey', '=', $appkey)
+                                  ->Where('domain', '=', $domain)
+                                  ->where('status', 1);
+                        })->where(function ($query) use ($text) {
+                            return $query->Where('name', 'LIKE', '%'.$text.'%')
+                                  ->orWhere('owner_name', 'LIKE', '%'.$text.'%');
+                        })->orderBy('name', 'asc')->paginate($per_page);
+
+                    } else {
+                        $calendars = Calendar::where(function ($query) use ($appkey, $domain) {
+                            return $query->where('appkey', '=', $appkey)
+                                  ->Where('domain', '=', $domain)
+                                  ->where('status', 1);
+                        })->where(function ($query) use ($text) {
+                            return $query->Where('name', 'LIKE', '%'.$text.'%')
+                                  ->orWhere('owner_name', 'LIKE', '%'.$text.'%');
+                        })->orderBy('name', 'asc')->get();
+                    }
                     
                     $cal_array = array();
                     $i = 0;
@@ -221,24 +250,43 @@ class CalendarRepository
      *      
      * @param string $appkey
      * @param string $domain
-     * @param int $id     
+     * @param int $id
+     * @param mixed $page int/null
+     * @param mixed $records int/null
      * @return Collection
      */
-    public function listByOwnerId($appkey, $domain, $id)
+    public function listByOwnerId($appkey, $domain, $id, $page, $records)
     {
         $res = array();
+        $page = (int)$page;
+        $records = (int)$records;
         
         try {            
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheCalendarListByOwnerId_'.$id);
+            $cache_id = sha1('cacheCalendarListByOwnerId_'.$appkey.'_'.$domain.'_'.$id.'_'.$page.'_'.$records);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
             if ($res === null) {
                 if ((int)$id > 0) {
-                    $calendars = Calendar::where('owner_id', $id)
+
+                    if ($page !== 0) {
+                        if ($records !== 0) {
+                            $per_page = $records;
+                        } else {
+                            $per_page = (int)config('calendar.per_page');
+                        }
+
+                        $calendars = Calendar::where('owner_id', $id)
+                            ->orderBy('name', 'asc')
+                            ->paginate($per_page);
+                        $res['count'] = $calendars->count();
+                    } else {
+                        $calendars = Calendar::where('owner_id', $id)
                             ->orderBy('name', 'asc')
                             ->get();
+                        $res['count'] = $calendars->count();
+                    }                    
                     
                     $cal_array = array();
                     $i = 0;
@@ -261,7 +309,6 @@ class CalendarRepository
                     }
 
                     $res['data'] = $cal_array;
-                    $res['count'] = 1;
                     $res['error'] = null;                    
                     
                     Cache::tags([$tag])->put($cache_id, $res, $ttl);

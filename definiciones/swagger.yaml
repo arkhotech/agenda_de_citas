@@ -275,6 +275,12 @@ paths:
           required: false
           type: integer
           format: int32
+        - name: records
+          in: query
+          description: Número de registros
+          required: false
+          type: integer
+          format: int32
         - name: appkey
           in: header
           description: App key
@@ -324,6 +330,12 @@ paths:
           required: false
           type: integer
           format: int32
+        - name: records
+          in: query
+          description: Número de registros
+          required: false
+          type: integer
+          format: int32
         - name: appkey
           in: header
           description: App key
@@ -370,6 +382,12 @@ paths:
         - name: page
           in: query
           description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: records
+          in: query
+          description: Número de registros
           required: false
           type: integer
           format: int32
@@ -695,12 +713,6 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: page
-          in: query
-          description: Parámetros de paginación
-          required: false
-          type: integer
-          format: int32
         - name: appkey
           in: header
           description: App key
@@ -711,6 +723,18 @@ paths:
           description: Dominios de una App
           required: true
           type: string
+        - name: page
+          in: query
+          description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: records
+          in: query
+          description: Número de registros
+          required: false
+          type: integer
+          format: int32
       responses:
         '200':
           description: Success
@@ -822,6 +846,18 @@ paths:
           required: true
           type: integer
           format: int32
+        - name: page
+          in: query
+          description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: records
+          in: query
+          description: Número de registros
+          required: false
+          type: integer
+          format: int32
         - name: appkey
           in: header
           description: App key
@@ -864,6 +900,18 @@ paths:
           description: Texto coincidente a buscar en el campo pertenece a o nombre agenda
           required: true
           type: string
+        - name: page
+          in: query
+          description: Parámetros de paginación
+          required: false
+          type: integer
+          format: int32
+        - name: records
+          in: query
+          description: Número de registros
+          required: false
+          type: integer
+          format: int32
         - name: appkey
           in: header
           description: App key

@@ -20,22 +20,24 @@ use \Illuminate\Database\QueryException;
 class AppointmentRepository
 {
     /**
-     * Obtiene todas las citas futuras por solicitante
+     * Obtiene todas listado de citas por calendario
      * 
      * @param string $appkey
      * @param string $domain
      * @param int $id
      * @param mixed $page int/null
+     * @param mixed $records int/null
      * @return Collection
      */
-    public function listAppointmentsByApplyerId($appkey, $domain, $id, $page)
+    public function listAppointmentsByCalendarId($appkey, $domain, $id, $page, $records)
     {
         $res = array();
         $page = (int)$page;
+        $records = (int)$records;
         
         try {            
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheAppointmentListByApplyer_'.$appkey.'_'.$domain.'_'.$id.'_'.$page);
+            $cache_id = sha1('cacheAppointmentListByCalendar_'.$appkey.'_'.$domain.'_'.$id.'_'.$page.'_'.$records);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
@@ -52,7 +54,104 @@ class AppointmentRepository
                     );
                     
                     if ($page !== 0) {
-                        $per_page = (int)config('calendar.per_page');
+                        if ($records !== 0) {
+                            $per_page = $records;
+                        } else {
+                            $per_page = (int)config('calendar.per_page');
+                        }
+
+                        $appointments = Appointment::select($columns)
+                                ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
+                                ->where('appointments.calendar_id', $id)
+                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where('is_canceled', '<>', 1)
+                                ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')
+                                ->paginate($per_page);
+                        
+                        $appointments_data = $appointments->items();                        
+                        $res['count'] = $appointments->total();
+                    } else {
+                        $appointments = Appointment::select($columns)
+                                ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
+                                ->where('appointments.calendar_id', $id)
+                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where('is_canceled', '<>', 1)
+                                ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
+                        
+                        $appointments_data = $appointments;
+                        $res['count'] = $appointments->count();
+                    }
+                    $res['error'] = null;                    
+                    
+                    $i = 0;
+                    $appointments_array = array();                    
+                    foreach ($appointments_data as $a) {
+                        $date = new \DateTime($a->appointment_start_time);
+                        $appointment_time = $date->format('Y-m-d\TH:i:sO');
+                        $appointments_array[$i]['appointment_id'] = $a->appointment_id;
+                        $appointments_array[$i]['subject'] = $a->subject;
+                        $appointments_array[$i]['applyer_name'] = $a->applyer_name;
+                        $appointments_array[$i]['owner_name'] = $a->owner_name;
+                        $appointments_array[$i]['appointment_time'] = $appointment_time;
+                        $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
+                        $appointments_array[$i]['calendar_id'] = $a->calendar_id;
+                        $i++;
+                    }
+                    $res['data'] = $appointments_array;
+                    
+                    Cache::tags([$tag])->put($cache_id, $res, $ttl);
+                }
+            }                
+            
+        } catch (QueryException $qe) {
+            $res['error'] = $qe;
+        } catch (Exception $e) {
+            $res['error'] = $e;
+        }        
+        
+        return $res;
+    }
+
+    /**
+     * Obtiene todas las citas futuras por solicitante
+     * 
+     * @param string $appkey
+     * @param string $domain
+     * @param int $id
+     * @param mixed $page int/null
+     * @param mixed $records int/null
+     * @return Collection
+     */
+    public function listAppointmentsByApplyerId($appkey, $domain, $id, $page, $records)
+    {
+        $res = array();
+        $page = (int)$page;
+        $records = (int)$records;
+        
+        try {            
+            $ttl = (int)config('calendar.cache_ttl');
+            $cache_id = sha1('cacheAppointmentListByApplyer_'.$appkey.'_'.$domain.'_'.$id.'_'.$page.'_'.$records);
+            $tag = sha1($appkey.'_'.$domain);
+            $res = Cache::tags($tag)->get($cache_id);
+            
+            if ($res === null) {
+                if ((int)$id > 0) {
+                    $columns = array(
+                        DB::raw('appointments.id AS appointment_id'),
+                        'subject',
+                        'applyer_name',
+                        'owner_name',
+                        'appointment_start_time',
+                        'applyer_attended',
+                        'calendar_id'
+                    );
+                    
+                    if ($page !== 0) {
+                        if ($records !== 0) {
+                            $per_page = $records;
+                        } else {
+                            $per_page = (int)config('calendar.per_page');
+                        }
 
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
@@ -113,16 +212,18 @@ class AppointmentRepository
      * @param string $domain
      * @param int $id
      * @param mixed $page int/null
+     * @param mixed $records int/null
      * @return Collection
      */
-    public function listAppointmentsByOwnerId($appkey, $domain, $id, $page)
+    public function listAppointmentsByOwnerId($appkey, $domain, $id, $page, $records)
     {
         $res = array();
         $page = (int)$page;
+        $records = (int)$records;
         
         try {            
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheAppointmentListByOwner_'.$appkey.'_'.$domain.'_'.$id.'_'.$page);
+            $cache_id = sha1('cacheAppointmentListByOwner_'.$appkey.'_'.$domain.'_'.$id.'_'.$page.'_'.$records);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
@@ -138,7 +239,11 @@ class AppointmentRepository
                     );
                     
                     if ($page !== 0) {
-                        $per_page = (int)config('calendar.per_page');            
+                        if ($records !== 0) {
+                            $per_page = $records;
+                        } else {
+                            $per_page = (int)config('calendar.per_page');
+                        }
 
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')

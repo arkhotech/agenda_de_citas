@@ -35,6 +35,42 @@ class AppointmentController extends Controller
     }
     
     /**
+     * Controller que despliega listado de citas por calendario
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function listByCalendar(Request $request, $id)
+    {
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
+        $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
+        $resp = array();
+        
+        if (!empty($appkey) && !empty($domain)) {
+            $appointments = $this->appointments->listAppointmentsByCalendarId($appkey, $domain, $id, $page, $records);
+            
+            if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
+                $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
+            } else {
+                if (count($appointments['data']) > 0) {                    
+                    $appointment['appointments'] = $appointments['data'];
+                    $appointment['count'] = $appointments['count'];
+                    $resp = Resp::make(200, $appointment);
+                } else {
+                    $resp = Resp::error(404, 2070);
+                }
+            }
+        } else {
+            $resp = Resp::error(400, 1000);
+        }
+        
+        return $resp;
+    }
+
+    /**
      * Controller que despliega listado de citas por solicitante
      *
      * @param  \Illuminate\Http\Request $request
@@ -42,14 +78,15 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function listByApplyer(Request $request, $id)
-    {  
+    {
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
-            $appointments = $this->appointments->listAppointmentsByApplyerId($appkey, $domain, $id, $page);
+            $appointments = $this->appointments->listAppointmentsByApplyerId($appkey, $domain, $id, $page, $records);
             
             if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                 $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
@@ -81,10 +118,11 @@ class AppointmentController extends Controller
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
-            $appointments = $this->appointments->listAppointmentsByOwnerId($appkey, $domain, $id, $page);
+            $appointments = $this->appointments->listAppointmentsByOwnerId($appkey, $domain, $id, $page, $records);
             
             if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                 $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
