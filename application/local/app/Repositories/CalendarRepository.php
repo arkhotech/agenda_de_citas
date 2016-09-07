@@ -139,6 +139,7 @@ class CalendarRepository
                             return $query->Where('name', 'LIKE', '%'.$text.'%')
                                   ->orWhere('owner_name', 'LIKE', '%'.$text.'%');
                         })->orderBy('name', 'asc')->paginate($per_page);
+                        $res['count'] = $calendars->total();
 
                     } else {
                         $calendars = Calendar::where(function ($query) use ($appkey, $domain) {
@@ -149,6 +150,7 @@ class CalendarRepository
                             return $query->Where('name', 'LIKE', '%'.$text.'%')
                                   ->orWhere('owner_name', 'LIKE', '%'.$text.'%');
                         })->orderBy('name', 'asc')->get();
+                        $res['count'] = $calendars->count();
                     }
                     
                     $cal_array = array();
@@ -171,8 +173,7 @@ class CalendarRepository
                         $i++;
                     }
 
-                    $res['data'] = $cal_array;                    
-                    $res['count'] = $calendars->count();
+                    $res['data'] = $cal_array;
                     $res['error'] = null;                    
                     
                     Cache::tags([$tag])->put($cache_id, $res, $ttl);
@@ -280,7 +281,7 @@ class CalendarRepository
                         $calendars = Calendar::where('owner_id', $id)
                             ->orderBy('name', 'asc')
                             ->paginate($per_page);
-                        $res['count'] = $calendars->count();
+                        $res['count'] = $calendars->total();
                     } else {
                         $calendars = Calendar::where('owner_id', $id)
                             ->orderBy('name', 'asc')
