@@ -1359,8 +1359,6 @@ definitions:
     type: object
     required:
       - applyer_email
-      - applyer_id
-      - applyer_name
       - appointment_start_time
       - calendar_id
     properties:

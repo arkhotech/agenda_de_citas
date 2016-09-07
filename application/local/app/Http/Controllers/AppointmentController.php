@@ -164,8 +164,8 @@ class AppointmentController extends Controller
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
                 'applyer_email' => 'bail|required|email|max:80',
-                'applyer_id' => 'bail|required|max:20',
-                'applyer_name' => 'bail|required|max:150',
+                'applyer_id' => 'max:20',
+                'applyer_name' => 'max:150',
                 'appointment_start_time' => 'bail|required|isodate',
                 'calendar_id' => 'bail|required|integer',
                 'subject' => 'max:80'
@@ -220,8 +220,8 @@ class AppointmentController extends Controller
             if ((int)$id > 0) {
                 $validator = Validator::make($data, [
                     'applyer_email' => 'bail|required|email|max:80',
-                    'applyer_id' => 'bail|required|max:20',
-                    'applyer_name' => 'bail|required|max:150',
+                    'applyer_id' => 'max:20',
+                    'applyer_name' => 'max:150',
                     'appointment_start_time' => 'bail|required|isodate',
                     'calendar_id' => 'bail|required|integer',
                     'subject' => 'max:80'
