@@ -39,20 +39,18 @@ PDO PHP Extension
 Mbstring PHP Extension
 Tokenizer PHP Extension
 
-Instalar un servidor Web
+- Instalar un servidor Web (Apache - Nginx)
+- Instalar un gestor de cache (Redis - Memcached)
+- Instalar un gestor de Base de datos (MySQL)
 
-Clonar repositorio dentro del servidor web
+- Clonar repositorio dentro del servidor web
 
-https://github.com/arkhotech/cal-service.git
+https://github.com/arkhotech/agenda_de_citas.git
 
-La rama mas actualizada es feature/services
+- Crear Base de datos, puede utilizar cualquier nombre, sin embargo este debe ser utilizado en la configuración
 
-Instalar MySQL
+- La estructura de la Base de datos, se encuentra en el script structure.sql
+	Si desea algunos datos de prueba puede ejecutar el script data.sql
 
-Crear Base de datos, puede utilizar cualquier nombre
-
-Instalar el script structure.sql
-
-Instalar datos de prueba data.sql
-
-Abrir el archivo .env que se encuentra en la raíz y modificar las variables de configuración a sus necesidades
+- El archivo .env que se encuentra en la raíz (application) es en donde configuramos todas nuestras variables de entorno
+	Favor ingresar la información correspondiente de su configuración
