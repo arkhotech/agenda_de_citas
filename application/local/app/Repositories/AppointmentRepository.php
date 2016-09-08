@@ -394,7 +394,6 @@ class AppointmentRepository
                         $day_of_Week = new \DateTime($tmp_date->format('Y-m-d'));
                         $day_of_Week = CalendarRepository::dayOfWeeks($day_of_Week->format('l'));
                         $times = isset($schedule[$day_of_Week]) ? $schedule[$day_of_Week] : array();
-                        $time_range = array();
                         
                         foreach ($times as $t) {
                             $_time = explode('-', $t);
@@ -503,6 +502,7 @@ class AppointmentRepository
                         );                    
                         
                         //Citas
+                        $appointments = null;
                         if ($date === null) {
                             $months = new \DateTime(date('Y-m-d H:i:s'));
                             $interval = new \DateInterval('P'.$month_max_availability.'M');
@@ -563,7 +563,6 @@ class AppointmentRepository
                             $day_of_Week = new \DateTime($tmp_date->format('Y-m-d'));
                             $day_of_Week = CalendarRepository::dayOfWeeks($day_of_Week->format('l'));
                             $times = isset($schedule[$day_of_Week]) ? $schedule[$day_of_Week] : array();
-                            $time_range = array();
                             
                             foreach ($times as $t) {
                                 $_time = explode('-', $t);
