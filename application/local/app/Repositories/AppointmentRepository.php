@@ -413,8 +413,8 @@ class AppointmentRepository
 
                                         if ($ind > -1) {
                                             $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
-                                            $time_range[$k]['subject'] = $appointment_array[$ind]['subject'];
-                                            $time_range[$k]['applyer_name'] = $appointment_array[$ind]['applyer_name'];
+                                            $time_range[$k]['subject'] = $appointment_array[$ind]['subject'] != null ? $appointment_array[$ind]['subject'] : '';
+                                            $time_range[$k]['applyer_name'] = $appointment_array[$ind]['applyer_name'] != null ? $appointment_array[$ind]['applyer_name'] : '';
                                             $time_range[$k]['applyer_email'] = $appointment_array[$ind]['applyer_email'];
                                             $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
                                             $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
