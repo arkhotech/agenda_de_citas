@@ -418,6 +418,7 @@ class AppointmentRepository
                                             $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
                                             $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
                                             $time_range[$k]['available'] = 'R';
+                                            $time_range[$k]['block_id'] = 0;
                                         } else {
                                             $time_range[$k]['appointment_id'] = '';
                                             $time_range[$k]['subject'] = '';
@@ -425,7 +426,13 @@ class AppointmentRepository
                                             $time_range[$k]['applyer_email'] = '';
                                             $time_range[$k]['appointment_start_time'] = '';
                                             $time_range[$k]['appointment_end_time'] = '';
-                                            $time_range[$k]['available'] = $ind_block > -1 ? 'B' : 'D';
+                                            if ($ind_block > -1) {
+                                                $time_range[$k]['available'] = 'B';
+                                                $time_range[$k]['block_id'] = $blockschedules[0]['id'];
+                                            } else {
+                                                $time_range[$k]['available'] = 'D';
+                                                $time_range[$k]['block_id'] = 0;
+                                            }
                                         }
                                     }
                                     
