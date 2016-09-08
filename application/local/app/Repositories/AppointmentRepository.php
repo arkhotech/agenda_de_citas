@@ -409,7 +409,7 @@ class AppointmentRepository
                                         
                                     for ($k=0; $k<$concurrency; $k++) {
                                         $ind = $this->getIndex($appointment_array, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'),  'appointment', $k);
-                                        $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', $k);
+                                        $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', 0);
 
                                         if ($ind > -1) {
                                             $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
