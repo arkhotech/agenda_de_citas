@@ -56,7 +56,7 @@ https://github.com/arkhotech/agenda_de_citas.git
 
 - Ingresar al directorio /application/local/storage/
 	- Crear los siguientes ficheros
-		/app
-		/framework/cache
-		/framework/sessions
-		/framework/views
+		- /app
+		- /framework/cache
+		- /framework/sessions
+		- /framework/views
