@@ -1101,6 +1101,45 @@ paths:
           description: Error 500
           schema:
             $ref: '#/definitions/ErrorResponse'
+  /daysOff/bulkLoad:
+    post:
+      tags:
+        - DaysOff
+      description: Crea días no laborables basado en un array
+      operationId: postDaysOffBulkLoad
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de la aplicación
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/InputDayOffBulkLoad'
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
   '/daysOff/{day_off_id}/':
     delete:
       tags:
@@ -1579,6 +1618,14 @@ definitions:
       name:
         type: string
         description: Nombre del día no laboral
+  InputDayOffBulkLoad:
+    type: object
+    properties:
+      daysOffBulk:
+        type: array
+        description: Array de daysOff
+        items:
+          $ref: '#/definitions/InputDayOff'
   InputUpdateApplication:
     type: object
     required:

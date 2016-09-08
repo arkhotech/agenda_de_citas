@@ -168,6 +168,62 @@ class DayOffRepository
         
         return $res;
     }
+
+    /**
+     * Crea un nuevo registro de tipo dayOff basado en un array
+     * 
+     * @param string $appkey
+     * @param string $domain
+     * @param array $data     
+     * @return Collection
+     */
+    public function createDayOffBulkLoad($appkey, $domain, $data)
+    {
+        $res = array();
+        
+        try {            
+            $apps = App::where('appkey', $data['appkey'])
+                            ->where('domain', $data['domain'])
+                            ->where('status', 1)->value('appkey');
+
+            if ($apps) {
+                $cal = new CalendarRepository();
+                
+                $bulk = $data['daysOffBulk'];
+                foreach ($bulk as $dayoff) {
+
+                    if ($dayoff['date_dayoff'] >= date('Y-m-d')) {
+                        //Verifico que no hayan citas programadas para ese dia
+                        if (!$cal->hasAvailableAppointmentByDate($appkey, $domain, $dayoff['date_dayoff'])) {
+                            $dayoff['appkey'] = $appkey;
+                            $dayoff['domain'] = $domain;
+                            $dayoff = DayOff::create($dayoff);
+                            $res['error'] = null;
+
+                            $tag = sha1($appkey.'_'.$domain);
+                            Cache::tags($tag)->flush();
+                        } else {
+                            $res['error'] = new \Exception('', 1080);
+                        }
+                    } else {
+                        $res['error'] = new \Exception('', 1090);
+                    }
+                }
+            } else {
+                $res['error'] = new \Exception('', 1030);
+            }
+        } catch (QueryException $qe) {
+            if ($qe->getCode() == 23000) {
+                $res['error'] = new \Exception('', 1040);
+            } else {
+                $res['error'] = $qe;
+            }
+        } catch (Exception $e) {
+            $res['error'] = $e;
+        }
+        
+        return $res;
+    }
     
     /**
      * Elimina un registro de tipo dayOff

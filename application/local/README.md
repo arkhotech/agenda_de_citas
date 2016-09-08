@@ -54,3 +54,10 @@ https://github.com/arkhotech/agenda_de_citas.git
 
 - El archivo .env que se encuentra en la raíz (application) es en donde configuramos todas nuestras variables de entorno
 	Favor ingresar la información correspondiente de su configuración
+
+- Ingresar al directorio /application/local/storage/
+	- Crear los siguientes ficheros
+		/app
+		/framework/cache
+		/framework/sessions
+		/framework/views

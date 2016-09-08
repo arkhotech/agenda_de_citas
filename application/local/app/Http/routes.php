@@ -25,6 +25,7 @@ Route::group(array('prefix' => 'v1'), function() {
     //DayOff
     Route::get('daysOff', 'DayOffController@index');
     Route::post('daysOff', 'DayOffController@store');
+    Route::post('daysOff/bulkLoad', 'DayOffController@bulkLoad');
     Route::delete('daysOff/{id}', 'DayOffController@destroy');
     
     //Appointment    

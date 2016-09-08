@@ -115,6 +115,53 @@ class DayOffController extends Controller
     }
 
     /**
+     * Crea un nuevo registro de tipo dayoff basado en un array
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function bulkLoad(Request $request)
+    {
+        $resp = array();
+        $data = $request->json()->all();
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
+        $data['appkey'] = $appkey;
+        $data['domain'] = $domain;
+
+        if (!empty($appkey) && !empty($domain)) {
+            $validator = Validator::make($data, [
+                'daysOffBulk' => 'required',
+                'appkey' => 'required|max:15',
+                'domain' => 'required|max:150'
+            ]);
+
+            if ($validator->fails()) {                        
+                $messages = $validator->errors();
+                $message = '';            
+                foreach ($messages->all() as $key => $msg) {
+                    $message = $msg;
+                    break;
+                }
+
+                $resp = Resp::error(400, 1020, $message);
+            } else {
+                $dayoffs = $this->daysoff->createDayOffBulkLoad($appkey, $domain, $data);
+
+                if (isset($dayoffs['error']) && is_a($dayoffs['error'], 'Exception')) {                
+                    $resp = Resp::error(500, $dayoffs['error']->getCode(), '', $dayoffs['error']);
+                } else {                
+                    $resp = Resp::make(201);
+                }
+            }
+        } else {
+            return Resp::error(400, 1000); 
+        }
+        
+        return $resp;
+    }
+
+    /**
      * Elimina un registro de tipo dayoff
      * 
      * @param  \Illuminate\Http\Request $request
