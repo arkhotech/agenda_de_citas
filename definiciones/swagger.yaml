@@ -118,8 +118,8 @@ paths:
     get:
       tags:
         - Appointments
-      description: Lista la disponiblidad de citas en una fecha dada
-      operationId: getAppointmentsAvailableCalendar_id
+      description: Lista la disponiblidad de citas por calendario en una fecha dada
+      operationId: getAppointmentsAvailabilityByCalendarId
       consumes: []
       produces:
         - application/json
@@ -150,6 +150,54 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/OutputAppointmentAvailable'
+        '400':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: Error 404
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Error 500
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/appointments/availability/listByOwner/{owner_id}':
+    get:
+      tags:
+        - Appointments
+      description: Lista la disponiblidad de citas por owner en una fecha dada
+      operationId: getAppointmentsAvailabilityByOwnerId
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: owner_id
+          in: path
+          description: ID del propietario
+          required: true
+          type: integer
+          format: int32
+        - name: date
+          in: query
+          description: Fecha a obtener disponibildad de cita (AAAA-MM-DD)
+          required: false
+          type: string
+        - name: appkey
+          in: header
+          description: App key
+          required: true
+          type: string
+        - name: domain
+          in: header
+          description: Dominio de una aplicación
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OutputAppointmentsAvailable'
         '400':
           description: Error 400
           schema:
@@ -1381,6 +1429,35 @@ definitions:
         description: ''
         items:
           $ref: '#/definitions/AppointmentAvailable'
+  CalendarAppointments:
+    type: object
+    required:
+      - calendar_id
+      - name
+      - concurrency
+      - owner_name
+      - appointmentsAvailable
+      - response
+    properties:
+      calendar_id:
+        type: integer
+        format: int32
+        description: Id de calendario
+      name:
+        type: string
+        description: Nombre de calendario
+      concurrency:
+        type: string
+        description: Concurrencia de la agenda
+      owner_name:
+        type: string
+        description: Propietario de la agenda
+      appointmentsAvailable:
+        type: array
+        items:
+          $ref: '#/definitions/DateAppointment'      
+      response:
+        $ref: '#/definitions/GenericResponse'
   DayOff:
     type: object
     required:
@@ -1694,6 +1771,10 @@ definitions:
         description: Propietario de la agenda
       response:
         $ref: '#/definitions/GenericResponse'
+  OutputAppointmentsAvailable:
+    type: array
+    items:
+      $ref: '#/definitions/CalendarAppointments'
   OutputCalendar:
     type: object
     required:

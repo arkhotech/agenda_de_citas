@@ -143,14 +143,14 @@ class AppointmentController extends Controller
     }
     
     /**
-     * Controller que despliega listado de citas por solicitante
+     * Controller que despliega listado de citas por calendario
      *
      * @param  \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function listAvailability(Request $request, $id)
-    {        
+    {
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $date = $request->input('date', null);
@@ -172,6 +172,51 @@ class AppointmentController extends Controller
                         $appointment['appointmentsavailable'] = $appointments['data'];
                         
                         $resp = Resp::make(200, $appointment);
+                    } else {
+                        $resp = Resp::error(404, 2070);
+                    }
+                }
+            } else {
+                $resp = Resp::error(404, 1010);
+            }
+        } else {
+            $resp = Resp::error(400, 1000);
+        }
+        
+        return $resp;
+    }
+
+    /**
+     * Controller que despliega listado de citas por propietario
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function listAvailabilityByOwner(Request $request, $id)
+    {
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
+        $date = $request->input('date', null);
+        $resp = array();
+        
+        if (!empty($appkey) && !empty($domain)) {
+            $cal = new CalendarRepository();
+            $calendars = $cal->listByOwnerId($appkey, $domain, $id, 0, 0);
+
+            if ($calendars['error'] === null && $calendars['count'] > 0) {                
+                $appointments = $this->appointments->listAppointmentsAvailabilityByOwner($appkey, $domain, $id, $date, $calendars['data']);
+
+                if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
+                    $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
+                } else {
+                    if (count($appointments) > 0) {
+                        //$allAppointments['calendar_id'] = $appointments['calendar_id'];
+                        //$allAppointments['owner_name'] = $appointments['owner_name'];
+                        //$allAppointments['concurrency'] = $appointments['concurrency'];
+                        //$allAppointments['appointmentsavailable'] = $appointments['appointmentsavailable'];
+                        
+                        $resp = Resp::make(200, $appointments);
                     } else {
                         $resp = Resp::error(404, 2070);
                     }

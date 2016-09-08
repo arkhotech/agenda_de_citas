@@ -457,6 +457,180 @@ class AppointmentRepository
         
         return $res;
     }
+
+    /**
+     * Obtiene todas las citas y su disponibilidad por propietario
+     * 
+     * @param string $appkey
+     * @param string $domain
+     * @param int $owner_id
+     * @param date $date
+     * @param int $calendar_array
+     * @return Collection
+     */
+    public function listAppointmentsAvailabilityByOwner($appkey, $domain, $owner_id, $date = null, $calendar_array = array())
+    {        
+        $response = array();
+        try {
+            
+            foreach ($calendar_array as $calendar) {
+
+                $res = array();
+
+                $ttl = (int)config('calendar.cache_ttl');
+                $month_max_availability = (int)config('calendar.month_max_appointments');
+                $calendar_id = isset($calendar['id']) ? $calendar['id'] : '';
+                $calendar_name = isset($calendar['name']) ? $calendar['name'] : '';
+                $owner_name = isset($calendar['owner_name']) ? $calendar['owner_name'] : '';
+                $schedule = isset($calendar['schedule']) ? $calendar['schedule'] : array();
+                $time_attention = isset($calendar['time_attention']) ? $calendar['time_attention'] : 0;
+                $concurrency = isset($calendar['concurrency']) ? $calendar['concurrency'] : 1;
+                $cache_id = sha1('cacheAppointmentListAvailability_'.$owner_id);
+                $tag = sha1($appkey.'_'.$domain);
+                $cache = Cache::tags($tag)->get($cache_id);
+                
+                if (is_null($cache)) {
+                    if ((int)$owner_id > 0) {
+                        $columns = array(
+                            DB::raw('appointments.id AS appointment_id'),
+                            'subject',
+                            'applyer_name',
+                            'applyer_email',
+                            'appointment_start_time',
+                            'appointment_end_time',
+                            'schedule',
+                            'time_attention'
+                        );                    
+                        
+                        //Citas
+                        if ($date === null) {
+                            $months = new \DateTime(date('Y-m-d H:i:s'));
+                            $interval = new \DateInterval('P'.$month_max_availability.'M');
+                            $max_date_time = $months->add($interval)->format('Y-m-d H:i:s');
+                        
+                            $appointments = Appointment::select($columns)
+                                ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                                ->where('owner_id', $owner_id)
+                                ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
+                                ->where('appointment_start_time', '<=', $max_date_time)
+                                ->where('is_canceled', '<>', 1)                            
+                                ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
+                        } else {
+                            $appointment_date = new \DateTime($date);
+                            $max_date_time = $appointment_date->format('Y-m-d');                        
+                            
+                            $appointments = Appointment::select($columns)
+                                ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                                ->where('owner_id', $owner_id)
+                                ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))
+                                ->where('is_canceled', '<>', 1)                            
+                                ->where('is_reserved', 0)->get();
+                        }
+                        
+                        $appointment_array = array();
+                        $i = 0;
+                        foreach ($appointments as $appointment) {
+                            $date1 = new \DateTime($appointment->appointment_start_time);
+                            $date2 = new \DateTime($appointment->appointment_end_time);
+                            $appointment_array[$i]['appointment_id'] = $appointment->appointment_id;
+                            $appointment_array[$i]['subject'] = $appointment->subject;
+                            $appointment_array[$i]['applyer_name'] = $appointment->applyer_name;
+                            $appointment_array[$i]['applyer_email'] = $appointment->applyer_email;                        
+                            $appointment_array[$i]['appointment_start_time'] = $date1->format('Y-m-d\TH:i:sO');
+                            $appointment_array[$i]['appointment_end_time'] = $date2->format('Y-m-d\TH:i:sO');                        
+                            $appointment_array[$i]['time'] = '';
+                            $appointment_array[$i]['available'] = '';
+                            $i++;
+                        }
+                        
+                        //Bloqueos de citas
+                        $blockschedule = new BlockScheduleRepository();
+                        $blockschedule_rs = $blockschedule->listBlockScheduleByUserIdBlock($appkey, $domain, $owner_id);
+                        $blockschedules = $blockschedule_rs['error'] === null ? $blockschedule_rs['data'] : array();
+                        
+                        if ($date === null) {
+                            $tmp_date = new \DateTime(date('Y-m-d'));
+                        } else {
+                            $tmp_date = new \DateTime($date);
+                        }
+                        
+                        $max_date = new \DateTime($max_date_time);
+                        $appointment_availability = array();
+                        
+                        while ($tmp_date->format('Y-m-d') <= $max_date->format('Y-m-d')) {
+                            
+                            //Armo un array por rango de horario
+                            $day_of_Week = new \DateTime($tmp_date->format('Y-m-d'));
+                            $day_of_Week = CalendarRepository::dayOfWeeks($day_of_Week->format('l'));
+                            $times = isset($schedule[$day_of_Week]) ? $schedule[$day_of_Week] : array();
+                            $time_range = array();
+                            
+                            foreach ($times as $t) {
+                                $_time = explode('-', $t);
+                                if (is_array($_time) && count($_time) == 2) {
+                                    $time_ini = new \DateTime($tmp_date->format('Y-m-d').' '.$_time[0].':00');
+                                    $time_end = new \DateTime($tmp_date->format('Y-m-d').' '.$_time[1].':00');
+                                    
+                                    while ($time_ini->format('Y-m-d H:i:s') < $time_end->format('Y-m-d H:i:s')) {
+                                        $time_range = array();
+                                        $timeEnd = new \DateTime($time_ini->format('Y-m-d H:i:s'));
+                                        $timeEnd->add(new \DateInterval('PT'.$time_attention.'M'));
+                                            
+                                        for ($k=0; $k<$concurrency; $k++) {
+                                            $ind = $this->getIndex($appointment_array, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'),  'appointment', $k);
+                                            $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', $k);
+
+                                            if ($ind > -1) {
+                                                $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
+                                                $time_range[$k]['subject'] = $appointment_array[$ind]['subject'] != null ? $appointment_array[$ind]['subject'] : '';
+                                                $time_range[$k]['applyer_name'] = $appointment_array[$ind]['applyer_name'] != null ? $appointment_array[$ind]['applyer_name'] : '';
+                                                $time_range[$k]['applyer_email'] = $appointment_array[$ind]['applyer_email'];
+                                                $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
+                                                $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
+                                                $time_range[$k]['available'] = 'R';
+                                            } else {
+                                                $time_range[$k]['appointment_id'] = '';
+                                                $time_range[$k]['subject'] = '';
+                                                $time_range[$k]['applyer_name'] = '';
+                                                $time_range[$k]['applyer_email'] = '';
+                                                $time_range[$k]['appointment_start_time'] = '';
+                                                $time_range[$k]['appointment_end_time'] = '';
+                                                $time_range[$k]['available'] = $ind_block > -1 ? 'B' : 'D';
+                                            }
+                                        }
+                                        
+                                        $appointment_availability[$tmp_date->format('Y-m-d')][$time_ini->format('H:i')] = $time_range;
+                                        $time_ini->add(new \DateInterval('PT'.$time_attention.'M'));
+                                    }
+                                }
+                            } // End foreach times
+                            
+                            //Armo el array por dias que tendra el array de rango de horarios
+                            $tmp_date->add(new \DateInterval('P1D'));
+
+                        } // End while
+                        
+                        $res['calendar_id'] = $calendar_id;
+                        $res['name'] = $calendar_name;
+                        $res['owner_name'] = $owner_name;
+                        $res['concurrency'] = $concurrency;
+                        $res['appointmentsavailable'] = $appointment_availability;                        
+                        
+                        Cache::tags([$tag])->put($cache_id, $cache, $ttl);
+                    } // End if owner_id > 0
+                } // End if res === null
+                array_push($response, $res);                
+                //$response['error'] = null;
+            } // End foreach calendar_array
+            
+        } catch (QueryException $qe) {
+            $res['error'] = $qe;
+        } catch (Exception $e) {
+            $res['error'] = $e;
+        }        
+        
+        return $response;
+    }
     
     /**
      * Crea un nuevo registro de tipo cita
