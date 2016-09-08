@@ -488,7 +488,7 @@ class AppointmentRepository
                 $tag = sha1($appkey.'_'.$domain);
                 $cache = Cache::tags($tag)->get($cache_id);
                 
-                if (is_null($cache)) {
+                if ($cache === null) {
                     if ((int)$owner_id > 0) {
                         $columns = array(
                             DB::raw('appointments.id AS appointment_id'),
@@ -502,7 +502,6 @@ class AppointmentRepository
                         );                    
                         
                         //Citas
-                        $appointments = null;
                         if ($date === null) {
                             $months = new \DateTime(date('Y-m-d H:i:s'));
                             $interval = new \DateInterval('P'.$month_max_availability.'M');
@@ -511,6 +510,7 @@ class AppointmentRepository
                             $appointments = Appointment::select($columns)
                                 ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->where('owner_id', $owner_id)
+                                ->where('calendar_id', $calendar_id)
                                 ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('appointment_start_time', '<=', $max_date_time)
                                 ->where('is_canceled', '<>', 1)                            
@@ -522,6 +522,7 @@ class AppointmentRepository
                             $appointments = Appointment::select($columns)
                                 ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->where('owner_id', $owner_id)
+                                ->where('calendar_id', $calendar_id)
                                 ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)                            
                                 ->where('is_reserved', 0)->get();
