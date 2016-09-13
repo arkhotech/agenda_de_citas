@@ -47,6 +47,7 @@ class AppointmentRepository
                         DB::raw('appointments.id AS appointment_id'),
                         'subject',
                         'applyer_name',
+                        'applyer_email',
                         'owner_name',
                         'appointment_start_time',
                         'applyer_attended',
@@ -91,6 +92,7 @@ class AppointmentRepository
                         $appointments_array[$i]['appointment_id'] = $a->appointment_id;
                         $appointments_array[$i]['subject'] = $a->subject;
                         $appointments_array[$i]['applyer_name'] = $a->applyer_name;
+                        $appointments_array[$i]['applyer_email'] = $a->applyer_email;
                         $appointments_array[$i]['owner_name'] = $a->owner_name;
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
                         $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
@@ -140,6 +142,7 @@ class AppointmentRepository
                         DB::raw('appointments.id AS appointment_id'),
                         'subject',
                         'applyer_name',
+                        'applyer_email',
                         'owner_name',
                         'appointment_start_time',
                         'applyer_attended',
@@ -184,6 +187,7 @@ class AppointmentRepository
                         $appointments_array[$i]['appointment_id'] = $a->appointment_id;
                         $appointments_array[$i]['subject'] = $a->subject;
                         $appointments_array[$i]['applyer_name'] = $a->applyer_name;
+                        $appointments_array[$i]['applyer_email'] = $a->applyer_email;
                         $appointments_array[$i]['owner_name'] = $a->owner_name;
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
                         $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
@@ -233,6 +237,7 @@ class AppointmentRepository
                         DB::raw('appointments.id AS appointment_id'),
                         'subject',
                         'applyer_name',
+                        'applyer_email',
                         'owner_name',
                         'appointment_start_time',
                         'applyer_attended',
@@ -277,6 +282,7 @@ class AppointmentRepository
                         $appointments_array[$i]['appointment_id'] = $a->appointment_id;
                         $appointments_array[$i]['subject'] = $a->subject;
                         $appointments_array[$i]['applyer_name'] = $a->applyer_name;
+                        $appointments_array[$i]['applyer_email'] = $a->applyer_email;
                         $appointments_array[$i]['owner_name'] = $a->owner_name;
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
                         $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
