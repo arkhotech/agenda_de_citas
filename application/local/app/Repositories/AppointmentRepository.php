@@ -324,7 +324,7 @@ class AppointmentRepository
             $schedule = isset($calendar_array[0]['schedule']) ? $calendar_array[0]['schedule'] : array();
             $time_attention = isset($calendar_array[0]['time_attention']) ? $calendar_array[0]['time_attention'] : 0;
             $concurrency = isset($calendar_array[0]['concurrency']) ? $calendar_array[0]['concurrency'] : 1;
-            $cache_id = sha1('cacheAppointmentListAvailability_'.$calendar_id);
+            $cache_id = sha1('cacheAppointmentListAvailability_'.$appkey.'_'.$domain.'_'.$calendar_id);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
@@ -499,7 +499,7 @@ class AppointmentRepository
                 $schedule = isset($calendar['schedule']) ? $calendar['schedule'] : array();
                 $time_attention = isset($calendar['time_attention']) ? $calendar['time_attention'] : 0;
                 $concurrency = isset($calendar['concurrency']) ? $calendar['concurrency'] : 1;
-                $cache_id = sha1('cacheAppointmentListAvailability_'.$owner_id);
+                $cache_id = sha1('cacheAppointmentListAvailability_'.$appkey.'_'.$domain.'_'.$owner_id);
                 $tag = sha1($appkey.'_'.$domain);
                 $cache = Cache::tags($tag)->get($cache_id);
                 
@@ -1202,60 +1202,4 @@ class AppointmentRepository
         
         return $index;
     }
-
-    public function testMail($appkey, $domain)
-    {
-        try {
-
-            Log::error('Domain and Appkey ' . $appkey . ' - ' . $domain);
-            $res = array();
-            // Get base_uri and path
-            $base_uri = config('calendar.base_uri');
-            $path = config('calendar.path_test');
-            $token_app = config('calendar.token_app');
-
-            // Create a client with a base URI
-            Log::error('::::::::::::CLIENTE::::::::::::');
-            $client = new \GuzzleHttp\Client(['base_uri' => $base_uri]);
-            Log::error('::::::::::::END CLIENTE::::::::::::');
-            $response = $client->post($path, ['form_params' => [
-                                                                'from' => 'mvargas@formax.cl',
-                                                                'subject' => 'Prueba de correo API - Simple',
-                                                                'body' => 'Su cita a sido confirmada exitosamente',
-                                                                'token_app' => $token_app,
-                                                                'test_email_receiver' => 'manuelvargasmejia@gmail.com'
-                                                            ]
-                                                        ]
-                                                    );
-            Log::error('::::::::::::RESPONSE::::::::::::');
-            Log::error('Antes del isset');
-            if (isset($response)) {
-                Log::error('Response MV:::::::::::::::: ' . $response->getBody());
-                $res['data'] = $response->getBody();
-                $res['error'] = null;
-            } else {
-                $res['error'] = $response === false ? new \Exception('', 500) : null;
-            }
-
-        } catch (GuzzleHttp\Exception\ClientException $qe) {
-            $res['error'] = $qe->getMessage();
-        } catch (GuzzleHttp\Exception\RequestException $qe) {
-            $res['error'] = $qe->getMessage();
-        } catch (ClientException $qe) {
-            $res['error'] = $qe;
-        } catch (RequestException $qe) {
-            $res['error'] = $qe;
-        } catch (Exception $e) {
-            $res['error'] = $e;
-        }
-
-        return $res;
-
-        /*Mail::send($template, $data, function ($m) use ($data) {
-            $m->from('hello@app.com', 'Your Application');
-            $m->to($data['to_email'], $data['to_name'])->subject($data['subject']);
-        });*/
-    }
-
-
 }
