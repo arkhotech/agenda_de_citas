@@ -382,11 +382,13 @@ class AppointmentRepository
                         $i++;
                     }
                     $num_appointment = count($appointment_array);
-                                        
+
                     //Bloqueos de citas
                     $blockschedule = new BlockScheduleRepository();
                     $blockschedule_rs = $blockschedule->listBlockScheduleByCalendarId($appkey, $domain, $calendar_id);
                     $blockschedules = $blockschedule_rs['error'] === null ? $blockschedule_rs['data'] : array();
+
+                    $num_blocks = count($blockschedules);                    
                     
                     if ($date === null) {
                         $tmp_date = new \DateTime(date('Y-m-d'));
@@ -418,7 +420,7 @@ class AppointmentRepository
                                         
                                     for ($k=0; $k<$concurrency; $k++) {
                                         $ind = $this->getIndex($appointment_array, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'),  'appointment', $num_appointment);
-                                        $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', 1);
+                                        $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', $num_blocks);
 
                                         if ($ind > -1) {
                                             $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
@@ -439,7 +441,7 @@ class AppointmentRepository
                                             $time_range[$k]['appointment_end_time'] = '';
                                             if ($ind_block > -1) {
                                                 $time_range[$k]['available'] = 'B';
-                                                $time_range[$k]['block_id'] = $blockschedules[0]['id'];
+                                                $time_range[$k]['block_id'] = $blockschedules[$ind_block]['id'];
                                             } else {
                                                 $time_range[$k]['available'] = 'D';
                                                 $time_range[$k]['block_id'] = 0;
@@ -567,6 +569,8 @@ class AppointmentRepository
                         $blockschedule = new BlockScheduleRepository();
                         $blockschedule_rs = $blockschedule->listBlockScheduleByUserIdBlock($appkey, $domain, $owner_id);
                         $blockschedules = $blockschedule_rs['error'] === null ? $blockschedule_rs['data'] : array();
+
+                        $num_blocks = count($blockschedules);
                         
                         if ($date === null) {
                             $tmp_date = new \DateTime(date('Y-m-d'));
@@ -597,7 +601,7 @@ class AppointmentRepository
                                             
                                         for ($k=0; $k<$concurrency; $k++) {
                                             $ind = $this->getIndex($appointment_array, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'),  'appointment', $num_appointment);
-                                            $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', 1);
+                                            $ind_block = $this->getIndex($blockschedules, $time_ini->format('Y-m-d H:i:s'), $timeEnd->format('Y-m-d H:i:s'), 'blockschedule', $num_blocks);
 
                                             if ($ind > -1) {
                                                 $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
@@ -616,7 +620,13 @@ class AppointmentRepository
                                                 $time_range[$k]['applyer_email'] = '';
                                                 $time_range[$k]['appointment_start_time'] = '';
                                                 $time_range[$k]['appointment_end_time'] = '';
-                                                $time_range[$k]['available'] = $ind_block > -1 ? 'B' : 'D';
+                                                if ($ind_block > -1) {
+                                                    $time_range[$k]['available'] = 'B';
+                                                    $time_range[$k]['block_id'] = $blockschedules[$ind_block]['id'];
+                                                } else {
+                                                    $time_range[$k]['available'] = 'D';
+                                                    $time_range[$k]['block_id'] = 0;
+                                                }
                                             }
                                         }
                                         
