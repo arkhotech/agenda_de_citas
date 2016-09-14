@@ -51,7 +51,7 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::post('apps', 'AppController@store');
     Route::put('apps', 'AppController@update');
     Route::put('apps/changeStatus', 'AppController@changeStatus');
-
+    
 });
 
 Route::any('{all}', function(){
