@@ -213,38 +213,38 @@ class Response {
     {
 		$codes = array(
             //Generic
-            1000 => 'headers params appkey and/or domain do not exist',
-            1020 => 'Missing params request or malformed',
-            1030 => 'Appkey or domain do not exist',            
+            1000 => 'Parametros de header appkey y/o dominio no proporcionados',
+            1020 => 'Perdida de parametros o petición mal formada',
+            1030 => 'Appkey o dominio no existe',
             
             //Calendar
-            1010 => 'No calendar found',            
-			1040 => 'Calendar name must be unique by appkey and domain',
-            1050 => 'Can not update row. Calendar has appointments availables',
-            1060 => 'Can not disable row. Calendar has appointments availables',
+            1010 => 'Calendario no encontrado',
+			1040 => 'Nombre de calendario debe ser unico por Appkey y dominio',
+            1050 => 'No se puede editar. Calendario tiene citas disponibles',
+            1060 => 'No se puede editar. Calendario tiene citas disponibles',
             
             //DayOff
-            1070 => 'No dayoff found',
-			1080 => 'There are available appointments in this date',
-            1090 => 'Date must be greater or equal to current date',
+            1070 => 'No hay días feriados',
+			1080 => 'Hay citas disponibles en esta fecha',
+            1090 => 'Fecha final debe ser mayor o igual a la fecha actual',
             
             //Appointment
-            2010 => 'Start date must be greater or equal to current date',
-            2020 => 'Appointment time is in non working day',
-            2030 => 'Appointment time is in schedule blocked',
-            2040 => 'Appointment time is not into calendar schedule',
-            2050 => 'Appointment is overlapping with another',
-            2060 => 'Can not cancel appointment because of time to cancel',
-            2070 => 'No appointment found',
+            2010 => 'Fecha de inicio debe ser mayor o igual a la fecha actual',
+            2020 => 'Fecha de cita está asociado un día no laboral',
+            2030 => 'Fecha de cita está asociada a un horario bloqueado',
+            2040 => 'Fecha de cita no está asociada al horario del calendario',
+            2050 => 'La Cita esta en solapamiento con otra',
+            2060 => 'No puede cancelar la cita, tiempo de espera agotado',
+            2070 => 'No hay citas',
             
             //BlockSchedule
-            2080 => 'End date must be greater than start date',
-            2090 => 'Start date must be greater or equal to current date',
+            2080 => 'Fecha final debe ser mayor a la fecha de inicio',
+            2090 => 'Fecha de inicio debe ser mayor o igual a la fecha final',
 
             //App
-            4010 => 'No app found',
-            4020 => 'App outdated, same fields',
-            4030 => 'Status unchanged, same field'
+            4010 => 'No hay applicaciones',
+            4020 => 'Aplicación no editada, campos similares',
+            4030 => 'Estado de aplicación no cambiado, mismo estado'
         );
         
 		$result = (isset($codes[$code])) ? $codes[$code] : 'Unknown Status Code';
