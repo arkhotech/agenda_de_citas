@@ -37,7 +37,7 @@ class CalendarRepository
             $cache_id = sha1('cacheCalendarList_'.$appkey.'_'.$domain.'_'.$page.'_'.$records);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
-            
+             
             if ($res === null) {
                 if ($page !== 0) {
                     if ($records !== 0) {

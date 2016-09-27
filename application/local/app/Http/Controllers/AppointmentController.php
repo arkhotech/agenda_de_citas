@@ -238,7 +238,7 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
         $resp = array();
         $data = $request->json()->all();
         $appkey = $request->header('appkey');
@@ -247,13 +247,20 @@ class AppointmentController extends Controller
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
                 'applyer_email' => 'bail|required|email|max:80',
-                'applyer_id' => 'max:20',
-                'applyer_name' => 'max:150',
+                'applyer_id' => 'bail|required|max:20',
+                'applyer_name' => 'bail|required|max:150',
                 'appointment_start_time' => 'bail|required|isodate',
                 'calendar_id' => 'bail|required|integer',
-                'subject' => 'max:80'
+                'subject' => 'bail|required|max:80',
+                'metadata' => 'max:255'
             ]);
-
+            
+            if (isset($data['metadata'])) {
+                $data['metadata'] = json_encode($data['metadata']);
+            } else {
+                return Resp::error(400, 1020, 'El campo metadata debe tener un json válido');
+            }
+        
             if ($validator->fails()) {
                 $messages = $validator->errors();
                 $message = '';            
@@ -267,8 +274,14 @@ class AppointmentController extends Controller
                 $validate = $this->appointments->isValidAppointment($appkey, $domain, $data['calendar_id'], $data['appointment_start_time']);
                 if (!$validate['is_ok']) {                    
                     return Resp::error(406, $validate['error_code']);
-                } else {                    
-                    $appointment = $this->appointments->createAppointment($appkey, $domain, $data);
+                } else {
+                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['applyer_id'], $data['appointment_start_time']);
+                    
+                    if ($isOverlapping) {
+                        return Resp::error(400, 1020, 'Ya tiene una cita reservada para este día');
+                    } else {
+                        $appointment = $this->appointments->createAppointment($appkey, $domain, $data);
+                    }
                 }
                 
                 if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                
@@ -323,7 +336,7 @@ class AppointmentController extends Controller
                     $validate = $this->appointments->isValidAppointment($appkey, $domain, $data['calendar_id'], $data['appointment_start_time'], $id);
                     if (!$validate['is_ok']) {                    
                         return Resp::error(406, $validate['error_code']);
-                    } else {                    
+                    } else {
                         $appointment = $this->appointments->updateAppointment($appkey, $domain, $id, $data);
                     }
 

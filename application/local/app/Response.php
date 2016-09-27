@@ -146,59 +146,59 @@ class Response {
 		$codes = array(
 
 			// Informational 1xx
-            100 => 'Continue',
-			101 => 'Switching Protocols',
+            100 => 'Continuará',
+			101 => 'Protocolos de conmutación',
 
 			// Success 2xx
 			200 => 'OK',
-			201 => 'Created',
-			202 => 'Accepted',
-			203 => 'Non-Authoritative Information',
-			204 => 'No Content',
-			205 => 'Reset Content',
-			206 => 'Partial Content',
+			201 => 'Creado',
+			202 => 'Aceptado',
+			203 => 'Información no autorizada',
+			204 => 'Sin contenido',
+			205 => 'Contenido reseteado',
+			206 => 'Contenido parcial',
 
 			// Redirection 3xx
-			300 => 'Multiple Choices',
-			301 => 'Moved Permanently',
-			302 => 'Found',  // 1.1
-			303 => 'See Other',
-			304 => 'Not Modified',
-			305 => 'Use Proxy',
+			300 => 'Multiples opciones',
+			301 => 'Se ha movido permanentemente',
+			302 => 'Encontrado',  // 1.1
+			303 => 'Ver otro',
+			304 => 'No modificado',
+			305 => 'Usa proxy',
 			// 306 is deprecated but reserved
-			307 => 'Temporary Redirect',
+			307 => 'Temporalmente redireccionado',
 
 			// Client Error 4xx
-			400 => 'Bad Request',
-			401 => 'Unauthorized',
-			402 => 'Payment Required',
-			403 => 'Forbidden',
-			404 => 'Not Found',
-			405 => 'Method Not Allowed',
-			406 => 'Not Acceptable',
-			407 => 'Proxy Authentication Required',
-			408 => 'Request Timeout',
-			409 => 'Conflict',
-			410 => 'Gone',
-			411 => 'Length Required',
-			412 => 'Precondition Failed',
-			413 => 'Request Entity Too Large',
-			414 => 'Request-URI Too Long',
-			415 => 'Unsupported Media Type',
-			416 => 'Requested Range Not Satisfiable',
-			417 => 'Expectation Failed',
+			400 => 'Mala petición',
+			401 => 'Desautorizado',
+			402 => 'Pago requerido',
+			403 => 'Prohibido',
+			404 => 'No encontrado',
+			405 => 'Método no permitido',
+			406 => 'No aceptado',
+			407 => 'Se requiere autenticación al proxy',
+			408 => 'Petición llegó a su tiempo de espera',
+			409 => 'Conflicto',
+			410 => 'Ir',
+			411 => 'Se requiere longitud',
+			412 => 'Falló precondición',
+			413 => 'Petición a una entidad muy grande',
+			414 => 'Petición a URI muy grande',
+			415 => 'Tipo de media no soportado',
+			416 => 'Rango de petición no satisface',
+			417 => 'Falló lo esperado',
 
 			// Server Error 5xx
-			500 => 'Internal Server Error',
-			501 => 'Not Implemented',
-			502 => 'Bad Gateway',
-			503 => 'Service Unavailable',
-			504 => 'Gateway Timeout',
-			505 => 'HTTP Version Not Supported',
-			509 => 'Bandwidth Limit Exceeded'
+			500 => 'Error interno en el servidor',
+			501 => 'No implementado',
+			502 => 'Puerta de enlace incorrecta',
+			503 => 'Servicio no disponible',
+			504 => 'Puerta de enlace llegó a su tiempo de espera',
+			505 => 'Bersión HTTP no soportada',
+			509 => 'Se excedió el límite de ancho de banda'
 		);
 
-		$result = (isset($codes[$code])) ? $codes[$code] : 'Unknown Status Code';
+		$result = (isset($codes[$code])) ? $codes[$code] : 'Código de estado desconocido';
 
 		return $result;
 	}
@@ -213,41 +213,41 @@ class Response {
     {
 		$codes = array(
             //Generic
-            1000 => 'Parametros de header appkey y/o dominio no proporcionados',
-            1020 => 'Perdida de parametros o petición mal formada',
+            1000 => 'Parámetros de header appkey y/o dominio no proporcionados',
+            1020 => 'Faltan parámetros o petición mal formada',
             1030 => 'Appkey o dominio no existe',
             
             //Calendar
             1010 => 'Calendario no encontrado',
-			1040 => 'Nombre de calendario debe ser unico por Appkey y dominio',
-            1050 => 'No se puede editar. Calendario tiene citas disponibles',
-            1060 => 'No se puede editar. Calendario tiene citas disponibles',
+			1040 => 'El nombre del calendario debe ser único por Appkey y dominio',
+            1050 => 'No se puede editar el registro. El calendario tiene citas disponibles',
+            1060 => 'No se puede deshabilitar el registro. El calendario tiene citas disponibles',
             
             //DayOff
             1070 => 'No hay días feriados',
 			1080 => 'Hay citas disponibles en esta fecha',
-            1090 => 'Fecha final debe ser mayor o igual a la fecha actual',
+            1090 => 'La fecha final debe ser mayor o igual a la fecha actual',
             
             //Appointment
-            2010 => 'Fecha de inicio debe ser mayor o igual a la fecha actual',
-            2020 => 'Fecha de cita está asociado un día no laboral',
-            2030 => 'Fecha de cita está asociada a un horario bloqueado',
-            2040 => 'Fecha de cita no está asociada al horario del calendario',
-            2050 => 'La Cita esta en solapamiento con otra',
+            2010 => 'La fecha de inicio debe ser mayor o igual a la fecha actual',
+            2020 => 'La fecha de cita está asociado a un día no laboral',
+            2030 => 'La fecha de cita está asociada a un horario bloqueado',
+            2040 => 'La fecha de cita no está asociada al horario del calendario',
+            2050 => 'La cita se está cruzando con otra',
             2060 => 'No puede cancelar la cita, tiempo de espera agotado',
             2070 => 'No hay citas',
             
             //BlockSchedule
-            2080 => 'Fecha final debe ser mayor a la fecha de inicio',
-            2090 => 'Fecha de inicio debe ser mayor o igual a la fecha final',
+            2080 => 'La fecha final debe ser mayor a la fecha de inicio',
+            2090 => 'La fecha de inicio debe ser mayor o igual a la fecha actual',
 
             //App
             4010 => 'No hay applicaciones',
             4020 => 'Aplicación no editada, campos similares',
-            4030 => 'Estado de aplicación no cambiado, mismo estado'
+            4030 => 'Estado de aplicación no cambió, mismo estado'
         );
         
-		$result = (isset($codes[$code])) ? $codes[$code] : 'Unknown Status Code';
+		$result = (isset($codes[$code])) ? $codes[$code] : 'Código de estado desconocido';
 
 		return $result;
 	}
