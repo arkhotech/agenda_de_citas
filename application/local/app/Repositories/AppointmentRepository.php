@@ -51,7 +51,8 @@ class AppointmentRepository
                         'owner_name',
                         'appointment_start_time',
                         'applyer_attended',
-                        'calendar_id'
+                        'calendar_id',
+                        'metadata'
                     );
                     
                     if ($page !== 0) {
@@ -97,6 +98,7 @@ class AppointmentRepository
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
                         $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
                         $appointments_array[$i]['calendar_id'] = $a->calendar_id;
+                        $appointments_array[$i]['metadata'] = $a->metadata;
                         $i++;
                     }
                     $res['data'] = $appointments_array;
@@ -146,7 +148,8 @@ class AppointmentRepository
                         'owner_name',
                         'appointment_start_time',
                         'applyer_attended',
-                        'calendar_id'
+                        'calendar_id',
+                        'metadata'
                     );
                     
                     if ($page !== 0) {
@@ -192,6 +195,7 @@ class AppointmentRepository
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
                         $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
                         $appointments_array[$i]['calendar_id'] = $a->calendar_id;
+                        $appointments_array[$i]['metadata'] = $a->metadata;
                         $i++;
                     }
                     $res['data'] = $appointments_array;
@@ -241,7 +245,8 @@ class AppointmentRepository
                         'owner_name',
                         'appointment_start_time',
                         'applyer_attended',
-                        'calendar_id'
+                        'calendar_id',
+                        'metadata'
                     );
                     
                     if ($page !== 0) {
@@ -287,6 +292,7 @@ class AppointmentRepository
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
                         $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
                         $appointments_array[$i]['calendar_id'] = $a->calendar_id;
+                        $appointments_array[$i]['metadata'] = $a->metadata;
                         $i++;
                     }
                     $res['data'] = $appointments_array;
@@ -337,6 +343,7 @@ class AppointmentRepository
                         'applyer_email',
                         'appointment_start_time',
                         'appointment_end_time',
+                        'metadata',
                         'schedule',
                         'time_attention'
                     );                    
@@ -374,9 +381,10 @@ class AppointmentRepository
                         $appointment_array[$i]['appointment_id'] = $appointment->appointment_id;
                         $appointment_array[$i]['subject'] = $appointment->subject;
                         $appointment_array[$i]['applyer_name'] = $appointment->applyer_name;
-                        $appointment_array[$i]['applyer_email'] = $appointment->applyer_email;                        
+                        $appointment_array[$i]['applyer_email'] = $appointment->applyer_email;
                         $appointment_array[$i]['appointment_start_time'] = $date1->format('Y-m-d\TH:i:sO');
-                        $appointment_array[$i]['appointment_end_time'] = $date2->format('Y-m-d\TH:i:sO');                        
+                        $appointment_array[$i]['appointment_end_time'] = $date2->format('Y-m-d\TH:i:sO');
+                        $appointment_array[$i]['metadata'] = $appointment->metadata;
                         $appointment_array[$i]['time'] = '';
                         $appointment_array[$i]['available'] = '';
                         $i++;
@@ -429,6 +437,7 @@ class AppointmentRepository
                                             $time_range[$k]['applyer_email'] = $appointment_array[$ind]['applyer_email'];
                                             $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
                                             $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
+                                            $time_range[$k]['metadata'] = $appointment_array[$ind]['metadata'];
                                             $time_range[$k]['available'] = 'R';
                                             $time_range[$k]['block_id'] = 0;
                                             unset($appointment_array[$ind]);
@@ -439,6 +448,7 @@ class AppointmentRepository
                                             $time_range[$k]['applyer_email'] = '';
                                             $time_range[$k]['appointment_start_time'] = '';
                                             $time_range[$k]['appointment_end_time'] = '';
+                                            $time_range[$k]['metadata'] = '';
                                             if ($ind_block > -1) {
                                                 $time_range[$k]['available'] = 'B';
                                                 $time_range[$k]['block_id'] = $blockschedules[$ind_block]['id'];
@@ -517,6 +527,7 @@ class AppointmentRepository
                             'applyer_email',
                             'appointment_start_time',
                             'appointment_end_time',
+                            'metadata',
                             'schedule',
                             'time_attention'
                         );                    
@@ -556,9 +567,10 @@ class AppointmentRepository
                             $appointment_array[$i]['appointment_id'] = $appointment->appointment_id;
                             $appointment_array[$i]['subject'] = $appointment->subject;
                             $appointment_array[$i]['applyer_name'] = $appointment->applyer_name;
-                            $appointment_array[$i]['applyer_email'] = $appointment->applyer_email;                        
+                            $appointment_array[$i]['applyer_email'] = $appointment->applyer_email;
                             $appointment_array[$i]['appointment_start_time'] = $date1->format('Y-m-d\TH:i:sO');
-                            $appointment_array[$i]['appointment_end_time'] = $date2->format('Y-m-d\TH:i:sO');                        
+                            $appointment_array[$i]['appointment_end_time'] = $date2->format('Y-m-d\TH:i:sO');
+                            $appointment_array[$i]['metadata'] = $appointment->metadata;
                             $appointment_array[$i]['time'] = '';
                             $appointment_array[$i]['available'] = '';
                             $i++;
@@ -610,6 +622,7 @@ class AppointmentRepository
                                                 $time_range[$k]['applyer_email'] = $appointment_array[$ind]['applyer_email'];
                                                 $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
                                                 $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
+                                                $time_range[$k]['metadata'] = $appointment_array[$ind]['metadata'];
                                                 $time_range[$k]['available'] = 'R';
                                                 $time_range[$k]['block_id'] = 0;
                                                 unset($appointment_array[$ind]);
@@ -620,6 +633,7 @@ class AppointmentRepository
                                                 $time_range[$k]['applyer_email'] = '';
                                                 $time_range[$k]['appointment_start_time'] = '';
                                                 $time_range[$k]['appointment_end_time'] = '';
+                                                $time_range[$k]['metadata'] = '';
                                                 if ($ind_block > -1) {
                                                     $time_range[$k]['available'] = 'B';
                                                     $time_range[$k]['block_id'] = $blockschedules[$ind_block]['id'];
@@ -821,7 +835,7 @@ class AppointmentRepository
             if ($res === null) {
                 if ((int)$id > 0) {
                     $appointments = Appointment::join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
-                            ->select('calendars.*', 'appointments.appointment_start_time')
+                            ->select('calendars.*', 'appointments.appointment_start_time', 'appointments.metadata')
                             ->where('appointments.id', $id)->get();
 
                     $res['data'] = $appointments;
