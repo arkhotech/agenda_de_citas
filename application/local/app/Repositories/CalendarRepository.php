@@ -279,11 +279,13 @@ class CalendarRepository
                         }
 
                         $calendars = Calendar::where('owner_id', $id)
+                            ->where('status', 1)
                             ->orderBy('name', 'asc')
                             ->paginate($per_page);
                         $res['count'] = $calendars->total();
                     } else {
                         $calendars = Calendar::where('owner_id', $id)
+                            ->where('status', 1)
                             ->orderBy('name', 'asc')
                             ->get();
                         $res['count'] = $calendars->count();
