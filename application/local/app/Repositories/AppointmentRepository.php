@@ -707,7 +707,7 @@ class AppointmentRepository
                 $data['is_reserved'] = 1;
                 $data['reservation_date'] = date('Y-m-d H:i:s');
                 $data['is_canceled'] = 0;
-                $data['applyer_attended'] = 0;
+                $data['applyer_attended'] = -1;
                 
                 $appointment = Appointment::create($data);
                 $res['id'] = $appointment->id;
