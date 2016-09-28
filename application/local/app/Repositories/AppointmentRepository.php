@@ -1079,7 +1079,7 @@ class AppointmentRepository
                 $day_off = false;
                 if (!(bool)$ignore_non_working_days) {
                     $dayoff = new DayOffRepository();
-                    $day_off = $dayoff->isDayOff($appkey, $domain, $start_date, $end_date);
+                    $day_off = $dayoff->isDayOff($appkey, $start_date, $end_date);
                 }
                 
                 if ($day_off) {

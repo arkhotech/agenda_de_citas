@@ -42,11 +42,10 @@ class DayOffController extends Controller
     public function index(Request $request)
     {  
         $appkey = $request->header('appkey');
-        $domain = $request->header('domain');
         $resp = array();
         
-        if (!empty($appkey) && !empty($domain)) {
-            $daysoff = $this->daysoff->listDayOff($appkey, $domain);
+        if (!empty($appkey)) {
+            $daysoff = $this->daysoff->listDayOff($appkey);
             
             if (isset($daysoff['error']) && is_a($daysoff['error'], 'Exception')) {
                 $resp = Resp::error(500, $daysoff['error']->getCode(), '', $daysoff['error']);
@@ -79,14 +78,12 @@ class DayOffController extends Controller
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $data['appkey'] = $appkey;
-        $data['domain'] = $domain;
         
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
                 'name' => 'bail|required|max:70',
                 'date_dayoff' => 'bail|required|isodate',
-                'appkey' => 'required|max:15',
-                'domain' => 'required|max:150'
+                'appkey' => 'required|max:15'
             ]);
 
             if ($validator->fails()) {                        
@@ -127,13 +124,11 @@ class DayOffController extends Controller
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $data['appkey'] = $appkey;
-        $data['domain'] = $domain;
 
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
                 'daysOffBulk' => 'required',
-                'appkey' => 'required|max:15',
-                'domain' => 'required|max:150'
+                'appkey' => 'required|max:15'
             ]);
 
             if ($validator->fails()) {                        
@@ -171,14 +166,13 @@ class DayOffController extends Controller
     public function destroy(Request $request, $id)
     {
         $appkey = $request->header('appkey');
-        $domain = $request->header('domain');
         $resp = array();
         
-        if (!empty($appkey) && !empty($domain)) {
+        if (!empty($appkey)) {
             if ((int)$id <= 0) {
                 $resp = Resp::error(400, 1020);            
             } else {
-                $daysoff = $this->daysoff->destroyDayOff($appkey, $domain, $id);
+                $daysoff = $this->daysoff->destroyDayOff($appkey, $id);
 
                 if (isset($daysoff['error']) && is_a($daysoff['error'], 'Exception')) {                
                     $resp = Resp::error(500, $daysoff['error']->getCode(), '', $daysoff['error']);

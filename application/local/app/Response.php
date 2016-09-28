@@ -227,13 +227,14 @@ class Response {
             1070 => 'No hay días feriados',
 			1080 => 'Hay citas disponibles en esta fecha',
             1090 => 'La fecha final debe ser mayor o igual a la fecha actual',
+            2000 => 'La appkey no existe',
             
             //Appointment
-            2010 => 'La fecha de inicio debe ser mayor o igual a la fecha actual',
-            2020 => 'La fecha de cita está asociado a un día no laboral',
-            2030 => 'La fecha de cita está asociada a un horario bloqueado',
-            2040 => 'La fecha de cita no está asociada al horario del calendario',
-            2050 => 'La cita se está cruzando con otra',
+            2010 => 'La fecha de la cita debe ser mayor o igual a la fecha actual',
+            2020 => 'La fecha de la cita que desea reservar es un día no laboral',
+            2030 => 'La fecha de la cita que desea reservar es un horario bloqueado',
+            2040 => 'La fecha de cita no corresponde al horario del calendario',
+            2050 => 'La fecha de la cita se está cruzando con otra',
             2060 => 'No puede cancelar la cita, tiempo de espera agotado',
             2070 => 'No hay citas',
             

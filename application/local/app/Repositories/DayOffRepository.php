@@ -19,23 +19,22 @@ use \Illuminate\Database\QueryException;
 class DayOffRepository
 {
     /**
-     * Obtiene todos los dias no laborales por una appkey y domain del ano actual
+     * Obtiene todos los dias no laborales por una appkey del ano actual
      * 
      * @param string $appkey
-     * @param string $domain
      * @return Collection
      */
-    public function listDayOff($appkey, $domain)
+    public function listDayOff($appkey)
     {
         $res = array();
         $ano = date('Y');
         
         try {            
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheDayOffList_'.$appkey.'_'.$domain.'_'.$ano);            
-            $tag = sha1($appkey.'_'.$domain);
+            $cache_id = sha1('cacheDayOffList_'.$appkey.'_'.$ano);            
+            $tag = sha1($appkey);
             $res = Cache::tags($tag)->get($cache_id);
-                    
+            
             if ($res === null) {                
                 $columns = array(
                     'id',
@@ -44,7 +43,6 @@ class DayOffRepository
                 );
                 $daysoff = DayOff::select($columns)
                         ->where('appkey', $appkey)
-                        ->where('domain', $domain)
                         ->where(DB::raw('YEAR(date_dayoff)'), $ano)->get();
                 
                 $daysoff_array = array();
@@ -77,13 +75,12 @@ class DayOffRepository
     /**
      * Retorna true si la fecha enviada se encuentra registrada en DB
      * 
-     * @param string $appkey
-     * @param string $domain
+     * @param string $appkey     
      * @param date $start_date
      * @param date $end_date
      * @return boolean
      */
-    public function isDayOff($appkey, $domain, $start_date, $end_date)
+    public function isDayOff($appkey, $start_date, $end_date)
     {
         $res = true;
         
@@ -93,15 +90,14 @@ class DayOffRepository
             $end_date = new \DateTime($end_date);
             $end_date = $end_date->format('Y-m-d');
             
-            if ($appkey && $domain && $start_date && $end_date) {
+            if ($appkey && $start_date && $end_date) {
                 $ttl = (int)config('calendar.cache_ttl');
-                $cache_id = sha1('cacheIsDayOff_'.$appkey.'_'.$domain.'_'.$start_date.'_'.$end_date);                
-                $tag = sha1($appkey.'_'.$domain);
+                $cache_id = sha1('cacheIsDayOff_'.$appkey.'_'.$start_date.'_'.$end_date);                
+                $tag = sha1($appkey);
                 $res = Cache::tags($tag)->get($cache_id);
                 
                 if ($res === null) {
                     $daysoff = DayOff::where('appkey', $appkey)
-                            ->where('domain', $domain)
                             ->where('date_dayoff', '>=', $start_date)
                             ->where('date_dayoff', '<=', $end_date)->get();
                     
@@ -132,8 +128,8 @@ class DayOffRepository
         $res = array();
         
         try {            
-            $apps = App::where('appkey', $data['appkey'])
-                            ->where('domain', $data['domain'])
+            $apps = App::where('appkey', $appkey)
+                            ->where('domain', $domain)
                             ->where('status', 1)->value('appkey');
             
             if ($apps) {
@@ -145,7 +141,7 @@ class DayOffRepository
                         $dayoff = DayOff::create($data);
                         $res['error'] = null;
 
-                        $tag = sha1($appkey.'_'.$domain);
+                        $tag = sha1($appkey);
                         Cache::tags($tag)->flush();
                     } else {
                         $res['error'] = new \Exception('', 1080);
@@ -158,7 +154,7 @@ class DayOffRepository
             }
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 1040);
+                $res['error'] = new \Exception('', 2000);
             } else {
                 $res['error'] = $qe;
             }
@@ -182,8 +178,8 @@ class DayOffRepository
         $res = array();
         
         try {            
-            $apps = App::where('appkey', $data['appkey'])
-                            ->where('domain', $data['domain'])
+            $apps = App::where('appkey', $appkey)
+                            ->where('domain', $domain)
                             ->where('status', 1)->value('appkey');
 
             if ($apps) {
@@ -196,11 +192,10 @@ class DayOffRepository
                         //Verifico que no hayan citas programadas para ese dia
                         if (!$cal->hasAvailableAppointmentByDate($appkey, $domain, $dayoff['date_dayoff'])) {
                             $dayoff['appkey'] = $appkey;
-                            $dayoff['domain'] = $domain;
                             $dayoff = DayOff::create($dayoff);
                             $res['error'] = null;
 
-                            $tag = sha1($appkey.'_'.$domain);
+                            $tag = sha1($appkey);
                             Cache::tags($tag)->flush();
                         } else {
                             $res['error'] = new \Exception('', 1080);
@@ -229,11 +224,10 @@ class DayOffRepository
      * Elimina un registro de tipo dayOff
      *      
      * @param string $appkey
-     * @param string $domain
      * @param int $id     
      * @return Collection
      */
-    public function destroyDayOff($appkey, $domain, $id)
+    public function destroyDayOff($appkey, $id)
     {
         $res = array();
         
@@ -241,7 +235,7 @@ class DayOffRepository
             $dayoff = DayOff::destroy($id);
             $res['error'] = $dayoff === false ? new \Exception('', 500) : null;
             
-            $tag = sha1($appkey.'_'.$domain);
+            $tag = sha1($appkey);
             Cache::tags($tag)->flush();
         } catch (QueryException $qe) {            
                 $res['error'] = $qe;

@@ -19,12 +19,10 @@ class DayOff extends Model
 	protected $fillable = array(
         'name',
         'date_dayoff',
-        'appkey',
-        'domain'
+        'appkey'
     );
     
     protected $hidden = array(
-        'appkey',
-        'domain'
+        'appkey'
     );
 }
