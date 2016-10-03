@@ -43,7 +43,8 @@ class DayOffRepository
                 );
                 $daysoff = DayOff::select($columns)
                         ->where('appkey', $appkey)
-                        ->where(DB::raw('YEAR(date_dayoff)'), $ano)->get();
+                        ->where(DB::raw('YEAR(date_dayoff)'), $ano)
+                        ->orderBy('date_dayoff', 'ASC')->get();
                 
                 $daysoff_array = array();
                 $days_array = array();
