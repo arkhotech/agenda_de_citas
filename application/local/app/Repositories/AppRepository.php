@@ -9,7 +9,6 @@
 namespace App\Repositories;
 
 use App\App;
-use DB;
 use Illuminate\Support\Facades\Cache;
 use \Illuminate\Database\QueryException;
 
@@ -99,7 +98,9 @@ class AppRepository
         $res = array();
         
         try {
-
+            unset($data['appkey']);
+            unset($data['domain']);
+            
             $app = App::where('appkey', $appkey)
                         ->where('domain', $domain)
                         ->update($data);

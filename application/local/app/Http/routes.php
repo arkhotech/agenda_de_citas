@@ -52,6 +52,9 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::put('apps', 'AppController@update');
     Route::put('apps/changeStatus', 'AppController@changeStatus');
     
+    //Mail
+    Route::get('sendmail', 'MailController@index');
+    //Route::get('apps', 'MailController@index');
 });
 
 Route::any('{all}', function(){

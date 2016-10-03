@@ -12,13 +12,13 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -57,6 +57,7 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'P' => 
         array (
             'Psy\\' => 4,
+            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Predis\\' => 7,
             'PhpParser\\' => 10,
@@ -67,6 +68,7 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         ),
         'L' => 
         array (
+            'League\\OAuth2\\Client\\' => 21,
             'League\\Flysystem\\' => 17,
         ),
         'I' => 
@@ -187,6 +189,10 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         array (
             0 => __DIR__ . '/..' . '/psy/psysh/src/Psy',
         ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
@@ -202,6 +208,10 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'League\\OAuth2\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
         'League\\Flysystem\\' => 
         array (
@@ -254,15 +264,32 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
     );
 
     public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'SecurityLib' => 
+            array (
+                0 => __DIR__ . '/..' . '/ircmaxell/security-lib/lib',
+            ),
+        ),
+        'R' => 
+        array (
+            'RandomLib' => 
+            array (
+                0 => __DIR__ . '/..' . '/ircmaxell/random-lib/lib',
+            ),
+        ),
         'P' => 
         array (
-            'Psr\\Log\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/psr/log',
-            ),
             'Prophecy\\' => 
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
+            ),
+        ),
+        'O' => 
+        array (
+            'OAuth2' => 
+            array (
+                0 => __DIR__ . '/..' . '/adoy/oauth2/src',
             ),
         ),
         'M' => 
@@ -281,6 +308,13 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
             'JakubOnderka\\PhpConsoleColor' => 
             array (
                 0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
+            ),
+        ),
+        'H' => 
+        array (
+            'Httpful' => 
+            array (
+                0 => __DIR__ . '/..' . '/nategood/httpful/src',
             ),
         ),
         'D' => 
@@ -317,6 +351,7 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'App\\Http\\Controllers\\CalendarController' => __DIR__ . '/../..' . '/app/Http/Controllers/CalendarController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DayOffController' => __DIR__ . '/../..' . '/app/Http/Controllers/DayOffController.php',
+        'App\\Http\\Controllers\\MailController' => __DIR__ . '/../..' . '/app/Http/Controllers/MailController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
@@ -324,6 +359,7 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Http\\Requests\\Request' => __DIR__ . '/../..' . '/app/Http/Requests/Request.php',
         'App\\Jobs\\Job' => __DIR__ . '/../..' . '/app/Jobs/Job.php',
+        'App\\MailService' => __DIR__ . '/../..' . '/app/MailService.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
@@ -903,6 +939,21 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'Httpful\\Bootstrap' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Bootstrap.php',
+        'Httpful\\Exception\\ConnectionErrorException' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Exception/ConnectionErrorException.php',
+        'Httpful\\Handlers\\CsvHandler' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Handlers/CsvHandler.php',
+        'Httpful\\Handlers\\FormHandler' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Handlers/FormHandler.php',
+        'Httpful\\Handlers\\JsonHandler' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Handlers/JsonHandler.php',
+        'Httpful\\Handlers\\MimeHandlerAdapter' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Handlers/MimeHandlerAdapter.php',
+        'Httpful\\Handlers\\XHtmlHandler' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Handlers/XHtmlHandler.php',
+        'Httpful\\Handlers\\XmlHandler' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Handlers/XmlHandler.php',
+        'Httpful\\Http' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Http.php',
+        'Httpful\\Httpful' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Httpful.php',
+        'Httpful\\Mime' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Mime.php',
+        'Httpful\\Proxy' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Proxy.php',
+        'Httpful\\Request' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Request.php',
+        'Httpful\\Response' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Response.php',
+        'Httpful\\Response\\Headers' => __DIR__ . '/..' . '/nategood/httpful/src/Httpful/Response/Headers.php',
         'IlluminateQueueClosure' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Queue/IlluminateQueueClosure.php',
         'Illuminate\\Auth\\Access\\AuthorizationException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/AuthorizationException.php',
         'Illuminate\\Auth\\Access\\Gate' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Gate.php',
@@ -1519,6 +1570,25 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'League\\Flysystem\\Util\\ContentListingFormatter' => __DIR__ . '/..' . '/league/flysystem/src/Util/ContentListingFormatter.php',
         'League\\Flysystem\\Util\\MimeType' => __DIR__ . '/..' . '/league/flysystem/src/Util/MimeType.php',
         'League\\Flysystem\\Util\\StreamHasher' => __DIR__ . '/..' . '/league/flysystem/src/Util/StreamHasher.php',
+        'League\\OAuth2\\Client\\Grant\\AbstractGrant' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/AbstractGrant.php',
+        'League\\OAuth2\\Client\\Grant\\AuthorizationCode' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/AuthorizationCode.php',
+        'League\\OAuth2\\Client\\Grant\\ClientCredentials' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/ClientCredentials.php',
+        'League\\OAuth2\\Client\\Grant\\Exception\\InvalidGrantException' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/Exception/InvalidGrantException.php',
+        'League\\OAuth2\\Client\\Grant\\GrantFactory' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/GrantFactory.php',
+        'League\\OAuth2\\Client\\Grant\\Password' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/Password.php',
+        'League\\OAuth2\\Client\\Grant\\RefreshToken' => __DIR__ . '/..' . '/league/oauth2-client/src/Grant/RefreshToken.php',
+        'League\\OAuth2\\Client\\Provider\\AbstractProvider' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/AbstractProvider.php',
+        'League\\OAuth2\\Client\\Provider\\Exception\\IdentityProviderException' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/Exception/IdentityProviderException.php',
+        'League\\OAuth2\\Client\\Provider\\GenericProvider' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/GenericProvider.php',
+        'League\\OAuth2\\Client\\Provider\\GenericResourceOwner' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/GenericResourceOwner.php',
+        'League\\OAuth2\\Client\\Provider\\ResourceOwnerInterface' => __DIR__ . '/..' . '/league/oauth2-client/src/Provider/ResourceOwnerInterface.php',
+        'League\\OAuth2\\Client\\Token\\AccessToken' => __DIR__ . '/..' . '/league/oauth2-client/src/Token/AccessToken.php',
+        'League\\OAuth2\\Client\\Tool\\ArrayAccessorTrait' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/ArrayAccessorTrait.php',
+        'League\\OAuth2\\Client\\Tool\\BearerAuthorizationTrait' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/BearerAuthorizationTrait.php',
+        'League\\OAuth2\\Client\\Tool\\MacAuthorizationTrait' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/MacAuthorizationTrait.php',
+        'League\\OAuth2\\Client\\Tool\\QueryBuilderTrait' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/QueryBuilderTrait.php',
+        'League\\OAuth2\\Client\\Tool\\RequestFactory' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/RequestFactory.php',
+        'League\\OAuth2\\Client\\Tool\\RequiredParameterTrait' => __DIR__ . '/..' . '/league/oauth2-client/src/Tool/RequiredParameterTrait.php',
         'Mockery' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
         'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',
@@ -1669,6 +1739,14 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'Monolog\\Processor\\UidProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Processor/UidProcessor.php',
         'Monolog\\Processor\\WebProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Processor/WebProcessor.php',
         'Monolog\\Registry' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Registry.php',
+        'OAuth2\\Client' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/Client.php',
+        'OAuth2\\Exception' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/Client.php',
+        'OAuth2\\GrantType\\AuthorizationCode' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/GrantType/AuthorizationCode.php',
+        'OAuth2\\GrantType\\ClientCredentials' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/GrantType/ClientCredentials.php',
+        'OAuth2\\GrantType\\IGrantType' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/GrantType/IGrantType.php',
+        'OAuth2\\GrantType\\Password' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/GrantType/Password.php',
+        'OAuth2\\GrantType\\RefreshToken' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/GrantType/RefreshToken.php',
+        'OAuth2\\InvalidArgumentException' => __DIR__ . '/..' . '/adoy/oauth2/src/OAuth2/Client.php',
         'PHPUnit_Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit_Extensions_GroupTestSuite' => __DIR__ . '/..' . '/phpunit/phpunit/src/Extensions/GroupTestSuite.php',
         'PHPUnit_Extensions_PhptTestCase' => __DIR__ . '/..' . '/phpunit/phpunit/src/Extensions/PhptTestCase.php',
@@ -2741,6 +2819,26 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'Psy\\VarDumper\\Dumper' => __DIR__ . '/..' . '/psy/psysh/src/Psy/VarDumper/Dumper.php',
         'Psy\\VarDumper\\Presenter' => __DIR__ . '/..' . '/psy/psysh/src/Psy/VarDumper/Presenter.php',
         'Psy\\VarDumper\\PresenterAware' => __DIR__ . '/..' . '/psy/psysh/src/Psy/VarDumper/PresenterAware.php',
+        'RandomLib\\AbstractMcryptMixer' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/AbstractMcryptMixer.php',
+        'RandomLib\\AbstractMixer' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/AbstractMixer.php',
+        'RandomLib\\AbstractSource' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/AbstractSource.php',
+        'RandomLib\\Factory' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Factory.php',
+        'RandomLib\\Generator' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Generator.php',
+        'RandomLib\\Mixer' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Mixer.php',
+        'RandomLib\\Mixer\\Hash' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Mixer/Hash.php',
+        'RandomLib\\Mixer\\McryptRijndael128' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Mixer/McryptRijndael128.php',
+        'RandomLib\\Mixer\\XorMixer' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Mixer/XorMixer.php',
+        'RandomLib\\Source' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source.php',
+        'RandomLib\\Source\\CAPICOM' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/CAPICOM.php',
+        'RandomLib\\Source\\MTRand' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/MTRand.php',
+        'RandomLib\\Source\\MicroTime' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/MicroTime.php',
+        'RandomLib\\Source\\OpenSSL' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/OpenSSL.php',
+        'RandomLib\\Source\\Rand' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/Rand.php',
+        'RandomLib\\Source\\Random' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/Random.php',
+        'RandomLib\\Source\\RandomBytes' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/RandomBytes.php',
+        'RandomLib\\Source\\Sodium' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/Sodium.php',
+        'RandomLib\\Source\\URandom' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/URandom.php',
+        'RandomLib\\Source\\UniqID' => __DIR__ . '/..' . '/ircmaxell/random-lib/lib/RandomLib/Source/UniqID.php',
         'SebastianBergmann\\Comparator\\ArrayComparator' => __DIR__ . '/..' . '/sebastian/comparator/src/ArrayComparator.php',
         'SebastianBergmann\\Comparator\\Comparator' => __DIR__ . '/..' . '/sebastian/comparator/src/Comparator.php',
         'SebastianBergmann\\Comparator\\ComparisonFailure' => __DIR__ . '/..' . '/sebastian/comparator/src/ComparisonFailure.php',
@@ -2777,6 +2875,16 @@ class ComposerStaticInit64800a1d6ef230918d53e19f318d25b4
         'SebastianBergmann\\RecursionContext\\Exception' => __DIR__ . '/..' . '/sebastian/recursion-context/src/Exception.php',
         'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => __DIR__ . '/..' . '/sebastian/recursion-context/src/InvalidArgumentException.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'SecurityLib\\AbstractFactory' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/AbstractFactory.php',
+        'SecurityLib\\BaseConverter' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/BaseConverter.php',
+        'SecurityLib\\BigMath' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/BigMath.php',
+        'SecurityLib\\BigMath\\BCMath' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/BigMath/BCMath.php',
+        'SecurityLib\\BigMath\\GMP' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/BigMath/GMP.php',
+        'SecurityLib\\BigMath\\PHPMath' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/BigMath/PHPMath.php',
+        'SecurityLib\\Enum' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/Enum.php',
+        'SecurityLib\\Hash' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/Hash.php',
+        'SecurityLib\\Strength' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/Strength.php',
+        'SecurityLib\\Util' => __DIR__ . '/..' . '/ircmaxell/security-lib/lib/SecurityLib/Util.php',
         'SuperClosure\\Analyzer\\AstAnalyzer' => __DIR__ . '/..' . '/jeremeamia/SuperClosure/src/Analyzer/AstAnalyzer.php',
         'SuperClosure\\Analyzer\\ClosureAnalyzer' => __DIR__ . '/..' . '/jeremeamia/SuperClosure/src/Analyzer/ClosureAnalyzer.php',
         'SuperClosure\\Analyzer\\Token' => __DIR__ . '/..' . '/jeremeamia/SuperClosure/src/Analyzer/Token.php',

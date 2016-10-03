@@ -12,6 +12,7 @@ use DB;
 use Log;
 use App\Calendar;
 use App\Appointment;
+use App\MailService;
 use App\Repositories\BlockScheduleRepository;
 use App\Repositories\CalendarRepository;
 use Illuminate\Support\Facades\Cache;
@@ -760,7 +761,14 @@ class AppointmentRepository
                 $data['appointment_end_time'] = $end_date;
                 
                 $appointment = Appointment::where('id', $id)->update($data);
-                $res['error'] = null;
+                $mail = new MailService();
+                $resp_mail = $mail->setEmail($appkey, $domain, $id, 'modify');
+                
+                if ($resp_mail['error']) {
+                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                } else {
+                    $res['error'] = null;
+                }
                 
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
@@ -794,9 +802,11 @@ class AppointmentRepository
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
-            if ($res === null) {
-                if ((int)$id > 0) {
-                    $appointments = Appointment::where('id', $id)->get();
+            if ($res === null) {                
+                if ((int)$id > 0) {                    
+                    $appointments = Appointment::select(array('appointments.*', 'calendars.name', 'calendars.owner_name'))
+                                ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                                ->where('appointments.id', $id)->get();
                     
                     $res['data'] = $appointments;
                     $res['count'] = $appointments->count();
@@ -872,13 +882,20 @@ class AppointmentRepository
                 $data['confirmation_date'] = date('Y-m-d H:i:s');
                 $data['is_reserved'] = 0;
                 $appointment = Appointment::where('id', $id)->update($data);
-                $res['error'] = null;
+                $mail = new MailService();
+                $resp_mail = $mail->setEmail($appkey, $domain, $id, 'confirmation');
+
+                if ($resp_mail['error']) {
+                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                } else {
+                    $res['error'] = null;
+                }
                 
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
             }
         } catch (QueryException $qe) {
-                $res['error'] = $qe;
+            $res['error'] = $qe;
         } catch (Exception $e) {
             $res['error'] = $e;
         }
@@ -909,13 +926,20 @@ class AppointmentRepository
                 $columns['cancelation_date'] = date('Y-m-d H:i:s');
                 $columns['is_canceled'] = 1;
                 $appointment = Appointment::where('id', $id)->update($columns);
-                $res['error'] = null;
+                $mail = new MailService();
+                $resp_mail = $mail->setEmail($appkey, $domain, $id, 'cancel');
+                
+                if ($resp_mail['error']) {
+                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                } else {
+                    $res['error'] = null;
+                }               
                 
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
             }
         } catch (QueryException $qe) {
-                $res['error'] = $qe;
+            $res['error'] = $qe;
         } catch (Exception $e) {
             $res['error'] = $e;
         }
@@ -1275,10 +1299,5 @@ class AppointmentRepository
         }
 
         return $index;
-    }
-    
-    public function sendEmail($emailTemplate, $data)
-    {
-        return true;
     }
 }

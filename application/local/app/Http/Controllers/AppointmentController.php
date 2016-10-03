@@ -371,7 +371,7 @@ class AppointmentController extends Controller
         $appointment_start_time = '';
         $id = (int)$id;
         
-        $appointment = $this->appointments->listAppointmentById($appkey, $domain, $id);        
+        $appointment = $this->appointments->listAppointmentById($appkey, $domain, $id);
         if (isset($appointment['data']) && (int)$appointment['count'] > 0) {
             foreach ($appointment['data'] as $a) {            
                 $calendar_id = (int)$a->calendar_id;
@@ -397,7 +397,7 @@ class AppointmentController extends Controller
             } else {
                 return Resp::error(400, 1000);
             }
-        } else {
+        } else {            
             return Resp::error(404, 2070);
         }
         
