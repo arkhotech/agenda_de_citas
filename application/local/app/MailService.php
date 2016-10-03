@@ -96,7 +96,7 @@ class MailService {
                                         $motivo_cancelacion = !empty($a->cancelation_cause) ? trim($a->cancelation_cause) : 'No indicado';
                                         $applyer_email = trim($a->applyer_email);
                                         $owner_email =  trim($a->owner_email);
-
+                                        
                                         if (!empty($a->metadata)) {
                                             $metadata = json_decode($a->metadata, true);
                                             if (isset($metadata['nombre_tramite']) && !empty($metadata['nombre_tramite'])) {
@@ -127,32 +127,44 @@ class MailService {
                                             $nombre_tramite,
                                             $nombre_agenda,
                                             $motivo_cancelacion,
-                                        );
+                                        );                                        
                                         $body = base64_encode(str_replace($search, $owner_replace, $html_owner));
+                                        
+                                        if (!empty($from_email) && !empty($owner_email)) {
+                                            $send_mail_owner = $this->sendMail($from_email, $subject, $body, array($owner_email));
 
-                                        $send_mail_owner = $this->sendMail($from_email, $subject, $body, array($owner_email));
-                                        if (!$send_mail_owner['error']) {
-                                            $applyer_replace = array(
-                                                $nombre_app,
-                                                $nombre_ciudadano,
-                                                $dia,
-                                                $mes,
-                                                $ano,
-                                                $hora,
-                                                $fecha_cita,
-                                                $nombre_tramite,
-                                                $nombre_agenda,
-                                                $motivo_cancelacion,
-                                            );
-                                            $body = base64_encode(str_replace($search, $applyer_replace, $html_applyer));
-                                            $send_mail_applyer = $this->sendMail($from_email, $subject, $body, array($applyer_email));
-                                            if ($send_mail_applyer['error']) {
+                                            if (!$send_mail_owner['error']) {
+                                                $applyer_replace = array(
+                                                    $nombre_app,
+                                                    $nombre_ciudadano,
+                                                    $dia,
+                                                    $mes,
+                                                    $ano,
+                                                    $hora,
+                                                    $fecha_cita,
+                                                    $nombre_tramite,
+                                                    $nombre_agenda,
+                                                    $motivo_cancelacion,
+                                                );
+                                                $body = base64_encode(str_replace($search, $applyer_replace, $html_applyer));
+                                                
+                                                if (!empty($from_email) && !empty($applyer_email)) {
+                                                    $send_mail_applyer = $this->sendMail($from_email, $subject, $body, array($applyer_email));
+                                                    if ($send_mail_applyer['error']) {
+                                                        $res['error'] = true;
+                                                        $res['errorMessage'] = $send_mail_applyer['errorMessage'];
+                                                    }
+                                                } else {
+                                                    $res['error'] = true;
+                                                    $res['errorMessage'] = 'Hay campos vacios que son requeridos para el envío de correos electrónicos';
+                                                }
+                                            } else {
                                                 $res['error'] = true;
-                                                $res['errorMessage'] = $send_mail_applyer['errorMessage'];
+                                                $res['errorMessage'] = $send_mail_owner['errorMessage'];
                                             }
                                         } else {
                                             $res['error'] = true;
-                                            $res['errorMessage'] = $send_mail_owner['errorMessage'];
+                                            $res['errorMessage'] = 'Hay campos vacios que son requeridos para el envío de correos electrónicos';
                                         }
                                     }
                                 } else {
@@ -202,7 +214,7 @@ class MailService {
             $client_secret = config('calendar.client_secret_send_mail');            
             $urlAccessToken = config('calendar.endpoint_service_get_token_sendmail');
             $token_app = config('calendar.token_app_send_mail');
-            $path = config('calendar.path_send_email_test');
+            $path = config('calendar.path_send_email');
             $urlService = config('calendar.endpoint_service_sendmail');
             $urlSendMail = $urlService . $path;
             $client = new Client();        
@@ -241,8 +253,7 @@ class MailService {
                     'subject' => $subject,
                     'body' => $body,
                     'to' => $to,
-                    'token_app' => $token_app,
-                    'test_email_receiver' => array('gescalante@arkho.tech')
+                    'token_app' => $token_app
                 );
                 
                 $response = Request::post($urlSendMail)
@@ -259,6 +270,8 @@ class MailService {
                 } else if ($response->code != 200) {
                     $res['error'] = true;
                     $res['errorMessage'] = isset($response->body->error_description) ? $response->body->error_description : $response->body->error;
+                } else {
+                    
                 }
             } else {
                 $res['error'] = true;

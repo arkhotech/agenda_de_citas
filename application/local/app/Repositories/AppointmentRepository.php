@@ -804,7 +804,7 @@ class AppointmentRepository
             
             if ($res === null) {                
                 if ((int)$id > 0) {                    
-                    $appointments = Appointment::select(array('appointments.*', 'calendars.name', 'calendars.owner_name'))
+                    $appointments = Appointment::select(array('appointments.*', 'calendars.name', 'calendars.owner_name', 'calendars.owner_email'))
                                 ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->where('appointments.id', $id)->get();
                     
