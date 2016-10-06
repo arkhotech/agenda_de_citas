@@ -26,6 +26,7 @@ class Calendar extends Model
         'time_attention',
         'concurrency',
         'ignore_non_working_days',
+        'time_confirm_appointment',
         'time_cancel_appointment',
         'appkey',
         'domain',

@@ -76,8 +76,11 @@ class AppController extends Controller
             'domain' => 'required|max:150',
             'name' => 'required|max:70',
             'contact_email' => 'required|max:150',
-            'from_email' => 'required|max:150',
-            'from_name' => 'required|max:70'
+            'from_email' => 'required|max:80',
+            'from_name' => 'required|max:80',
+            'html_confirmation_email' => 'required',
+            'html_modify_email' => 'required',
+            'html_cancel_email' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -113,15 +116,18 @@ class AppController extends Controller
     public function update(Request $request)
     {        
         $resp = array();
-        $appkey = $request->input('appkey');
-        $domain = $request->input('domain');
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
         $data = $request->json()->all();
         
         $validator = Validator::make($data, [
             'name' => 'required|max:70',
             'contact_email' => 'required|max:150',
-            'from_email' => 'required|max:150',
-            'from_name' => 'required|max:70'
+            'from_email' => 'required|max:80',
+            'from_name' => 'required|max:80',
+            'html_confirmation_email' => 'required',
+            'html_modify_email' => 'required',
+            'html_cancel_email' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -155,8 +161,8 @@ class AppController extends Controller
     public function changeStatus(Request $request)
     {        
         $resp = array();
-        $appkey = $request->input('appkey');
-        $domain = $request->input('domain');
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
         $data = $request->json()->all();
         
         $validator = Validator::make($data, [

@@ -73,6 +73,64 @@ class BlockScheduleRepository
         
         return $res;
     }
+
+    /**
+     * Lista todos los blockschedules por user_id_block / owner_id
+     * 
+     * @param string $appkey
+     * @param string $domain
+     * @return Collection
+     */
+    public function listBlockScheduleByUserIdBlock($appkey, $domain, $id)
+    {
+      $res = array();
+
+        try {
+
+            $ttl = (int)config('calendar.cache_ttl');
+            $cache_id = sha1('cacheBlockScheduleList_'.$appkey.'_'.$domain.'_'.$id);
+            $tag = sha1($appkey.'_'.$domain);
+            $res = Cache::tags($tag)->get($cache_id);
+                    
+            if ($res === null) {
+                
+                if (!empty($appkey) && !empty($domain)) {
+                    $blockSchedules = BlockSchedule::where('user_id_block', $id)->get()   ;
+                } else {
+                    $blockSchedules = BlockSchedule::all();
+                }
+                
+                $i = 0;
+                $blockSchedule_array = array();
+                foreach ($blockSchedules as $blockSchedule) {
+                    $date_ini = new \DateTime($blockSchedule->start_date);
+                    $date_end = new \DateTime($blockSchedule->end_date);
+                    $blockSchedule_array[$i]['id'] = $blockSchedule->id;
+                    $blockSchedule_array[$i]['calendar_id'] = $blockSchedule->calendar_id;
+                    $blockSchedule_array[$i]['user_id_block'] = $blockSchedule->user_id_block;
+                    $blockSchedule_array[$i]['user_name_block'] = $blockSchedule->user_name_block;
+                    $blockSchedule_array[$i]['start_date'] = $date_ini->format('Y-m-d\TH:i:sO');
+                    $blockSchedule_array[$i]['end_date'] = $date_end->format('Y-m-d\TH:i:sO');
+                    $blockSchedule_array[$i]['cause'] = $blockSchedule->cause;
+                    $blockSchedule_array[$i]['created_date'] = $blockSchedule->created_date;
+                    
+                    $i++;
+                }
+                
+                $res['data'] = $blockSchedule_array;
+                $res['count'] = $blockSchedules->count();                
+                $res['error'] = null;
+
+                Cache::tags([$tag])->put($cache_id, $res, $ttl);
+            }
+        } catch (QueryException $qe) {
+            $res['error'] = $qe;
+        } catch (Exception $e) {
+            $res['error'] = $e;
+        }        
+        
+        return $res;
+    }
     
     /**
      * Crea un nuevo registro de tipo block schedule

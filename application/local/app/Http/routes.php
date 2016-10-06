@@ -25,6 +25,7 @@ Route::group(array('prefix' => 'v1'), function() {
     //DayOff
     Route::get('daysOff', 'DayOffController@index');
     Route::post('daysOff', 'DayOffController@store');
+    Route::post('daysOff/bulkLoad', 'DayOffController@bulkLoad');
     Route::delete('daysOff/{id}', 'DayOffController@destroy');
     
     //Appointment    
@@ -33,9 +34,11 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::put('appointments/confirm/{id}', 'AppointmentController@confirm');
     Route::put('appointments/cancel/{id}', 'AppointmentController@cancel');
     Route::put('appointments/assists/{id}', 'AppointmentController@assists');
+    Route::get('appointments/listByCalendar/{id}', 'AppointmentController@listByCalendar');
     Route::get('appointments/listByApplyer/{id}', 'AppointmentController@listByApplyer');
     Route::get('appointments/listByOwner/{id}', 'AppointmentController@listByOwner');
     Route::get('appointments/availability/{id}', 'AppointmentController@listAvailability');
+    Route::get('appointments/availability/listByOwner/{id}', 'AppointmentController@listAvailabilityByOwner');
     Route::get('appointments/deleteAppointmentsPendingToConfirm', 'AppointmentController@destroyAppointmentsPendingToConfirm');
     
     //BlockSchedule
@@ -49,4 +52,11 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::put('apps', 'AppController@update');
     Route::put('apps/changeStatus', 'AppController@changeStatus');
     
+    //Mail
+    Route::get('sendmail', 'MailController@index');
+    //Route::get('apps', 'MailController@index');
 });
+
+Route::any('{all}', function(){
+    return 'API Agenda de Citas - ArkhoTech';
+})->where('all', '.*');

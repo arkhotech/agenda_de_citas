@@ -1,0 +1,314 @@
+---
+swagger: '2.0'
+
+################################################################################
+#                              API Information                                 #
+################################################################################
+info:
+  version: v1
+  title: API de correos
+  description: |
+    API para enviar correos
+
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
+host: apis.digital.gob.cl
+basePath: /correo/v1
+schemes:
+  - http
+produces:
+  - application/json; charse=utf-8
+consumes:
+  - application/json; charse=utf-8
+security:
+  - OauthSecurity:
+      - sendmail
+      
+
+################################################################################
+#                                           Paths                              #
+################################################################################
+paths:
+  /send:
+    post:
+      tags:
+        - Enviar correo a destinatarios
+      description: |
+        Recurso para enviar correo a los destinatarios seleccionados (To, Bcc, Cc)
+      parameters:
+        - name: Mensaje
+          in: body
+          required: True
+          description: |
+                      Mensaje Body en formato JSON
+          schema:
+            $ref: '#/definitions/body_api_correo'
+      responses:
+        200:
+          description: "Correo enviado exitosamente"
+          schema:
+            required:
+              - MessageId
+            type: object
+            properties:
+              MessageId: 
+                description: "ID del mensaje en SES AWS"
+                type: string
+        202:
+          description: "Mensaje enviado pero no se pudo guardar el ID del mensaje"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Message sent, but it was not possible to save the id"
+                type: string
+        400:
+          description: "Request mal formado"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Bad Request"
+                type: string                        
+        401:
+          description: "Aplicación no autorizada"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "This app is not Authorized"
+        403:
+          description: "Remitente no verificado en SES AWS"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Source Email address is not verified"
+        409:
+          description: "Cuando falla algún checksum de los archivos enviados"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Checksum error"                       
+        500:
+          description: "Error Interno"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Internal Error"                                       
+
+  /send-test:
+    post:
+      tags:
+        - Enviar correo a un destinatario de pruebas
+      description: |
+        Recurso para probar la API
+      parameters:
+        - name: Mensaje
+          in: body
+          required: True
+          description: |
+                      Mensaje Body en formato JSON
+          schema:
+            $ref: '#/definitions/body_api_correo_test'
+      responses:
+        200:
+          description: "Correo enviado exitosamente"
+          schema:
+            required:
+              - MessageId
+            type: object
+            properties:
+              MessageId: 
+                description: "ID del mensaje en SES AWS"
+                type: string
+        202:
+          description: "Mensaje enviado pero no se pudo guardar el ID del mensaje"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Message sent, but it was not possible to save the id"
+                type: string
+        400:
+          description: "Request mal formado"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Bad Request"
+                type: string                        
+        401:
+          description: "Aplicación no autorizada"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "This app is not Authorized"
+        403:
+          description: "Remitente no verificado en SES AWS"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Source Email address is not verified"
+        409:
+          description: "Cuando falla algún checksum de los archivos enviados"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Checksum error"                       
+        500:
+          description: "Error Interno"
+          schema:
+            required:
+              - error          
+            type: object
+            properties:
+             error: 
+                description: "Internal Error"  
+################################################################################
+#                                           Security                           #
+################################################################################             
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    scopes:
+      sendmail: "Scope para enviar correos"
+    flow: application
+    tokenUrl: https://apis.digital.gob.cl/correo/v1/oauth2/token                
+
+################################################################################
+#                                 Definitions                                  #
+################################################################################
+definitions:
+  body_api_correo:
+    type: object
+    required:
+      - from
+      - subject
+      - body
+      - to
+      - token_app
+    properties:
+      from:
+        type: string
+      subject:
+        type: string
+        format: base64
+      body:
+        type: string
+        format: base64
+        description: "Cuerpo del mensaje en formato HTML"        
+      to:
+        type: array
+        items:
+          type: string
+      bcc:
+        type: array
+        items:
+          type: string 
+      cc:
+        type: array      
+        items:
+          type: string
+      token_app:
+        type: string
+      files:
+        type: array      
+        items:
+          type: object
+          properties:
+            file_name:
+              type: string
+              description: "nombre del archivo con su extension"
+            content:
+              type: string
+              format: base64
+              description: "Archivo encodeado en base64"              
+            checksum:
+              type: string
+              format: sha256
+          required:
+            - file_name
+            - content
+            - checksum
+  body_api_correo_test:
+    type: object
+    required:
+      - from
+      - subject
+      - body
+      - to
+      - token_app
+    properties:
+      from:
+        type: string
+      subject:
+        type: string
+        format: base64
+      body:
+        type: string
+        format: base64
+        description: "Cuerpo del mensaje en formato HTML"        
+      to:
+        type: array
+        items:
+          type: string
+      bcc:
+        type: array
+        items:
+          type: string 
+      cc:
+        type: array      
+        items:
+          type: string
+      token_app:
+        type: string
+      files:
+        type: array      
+        items:
+          type: object
+          properties:
+            file_name:
+              type: string
+              description: "nombre del archivo con su extension"
+            content:
+              type: string
+              format: base64
+              description: "Archivo encodeado en base64"              
+            checksum:
+              type: string
+              format: sha256
+          required:
+            - file_name
+            - content
+            - checksum
+      test_email_receiver:            
+        type: string

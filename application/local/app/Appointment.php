@@ -27,6 +27,7 @@ class Appointment extends Model
         'is_reserved',
         'reservation_date',
         'confirmation_date',
+        'metadata',
         'user_id_cancel',
         'user_name_cancel',
         'is_canceled',

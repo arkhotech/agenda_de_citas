@@ -35,6 +35,42 @@ class AppointmentController extends Controller
     }
     
     /**
+     * Controller que despliega listado de citas por calendario
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function listByCalendar(Request $request, $id)
+    {
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
+        $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
+        $resp = array();
+        
+        if (!empty($appkey) && !empty($domain)) {
+            $appointments = $this->appointments->listAppointmentsByCalendarId($appkey, $domain, $id, $page, $records);
+            
+            if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
+                $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
+            } else {
+                if (count($appointments['data']) > 0) {                    
+                    $appointment['appointments'] = $appointments['data'];
+                    $appointment['count'] = $appointments['count'];
+                    $resp = Resp::make(200, $appointment);
+                } else {
+                    $resp = Resp::error(404, 2070);
+                }
+            }
+        } else {
+            $resp = Resp::error(400, 1000);
+        }
+        
+        return $resp;
+    }
+
+    /**
      * Controller que despliega listado de citas por solicitante
      *
      * @param  \Illuminate\Http\Request $request
@@ -42,14 +78,15 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function listByApplyer(Request $request, $id)
-    {  
+    {
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
-            $appointments = $this->appointments->listAppointmentsByApplyerId($appkey, $domain, $id, $page);
+            $appointments = $this->appointments->listAppointmentsByApplyerId($appkey, $domain, $id, $page, $records);
             
             if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                 $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
@@ -81,10 +118,11 @@ class AppointmentController extends Controller
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $page = $request->input('page', 0);
+        $records = $request->input('records', 0);
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
-            $appointments = $this->appointments->listAppointmentsByOwnerId($appkey, $domain, $id, $page);
+            $appointments = $this->appointments->listAppointmentsByOwnerId($appkey, $domain, $id, $page, $records);
             
             if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                 $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
@@ -105,14 +143,14 @@ class AppointmentController extends Controller
     }
     
     /**
-     * Controller que despliega listado de citas por solicitante
+     * Controller que despliega listado de citas por calendario
      *
      * @param  \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function listAvailability(Request $request, $id)
-    {        
+    {
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
         $date = $request->input('date', null);
@@ -147,6 +185,51 @@ class AppointmentController extends Controller
         
         return $resp;
     }
+
+    /**
+     * Controller que despliega listado de citas por propietario
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function listAvailabilityByOwner(Request $request, $id)
+    {
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
+        $date = $request->input('date', null);
+        $resp = array();
+        
+        if (!empty($appkey) && !empty($domain)) {
+            $cal = new CalendarRepository();
+            $calendars = $cal->listByOwnerId($appkey, $domain, $id, 0, 0);
+
+            if ($calendars['error'] === null && $calendars['count'] > 0) {                
+                $appointments = $this->appointments->listAppointmentsAvailabilityByOwner($appkey, $domain, $id, $date, $calendars['data']);
+
+                if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
+                    $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
+                } else {
+                    if (count($appointments) > 0) {
+                        //$allAppointments['calendar_id'] = $appointments['calendar_id'];
+                        //$allAppointments['owner_name'] = $appointments['owner_name'];
+                        //$allAppointments['concurrency'] = $appointments['concurrency'];
+                        //$allAppointments['appointmentsavailable'] = $appointments['appointmentsavailable'];
+                        
+                        $resp = Resp::make(200, $appointments);
+                    } else {
+                        $resp = Resp::error(404, 2070);
+                    }
+                }
+            } else {
+                $resp = Resp::error(404, 1010);
+            }
+        } else {
+            $resp = Resp::error(400, 1000);
+        }
+        
+        return $resp;
+    }
     
     /**
      * Crea un nuevo registro de tipo appointment
@@ -155,7 +238,7 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
         $resp = array();
         $data = $request->json()->all();
         $appkey = $request->header('appkey');
@@ -168,9 +251,16 @@ class AppointmentController extends Controller
                 'applyer_name' => 'bail|required|max:150',
                 'appointment_start_time' => 'bail|required|isodate',
                 'calendar_id' => 'bail|required|integer',
-                'subject' => 'bail|required|max:80'
+                'subject' => 'max:80',
+                'metadata' => 'max:255'
             ]);
-
+            
+            if (isset($data['metadata'])) {
+                $data['metadata'] = json_encode($data['metadata']);
+            } else {
+                return Resp::error(400, 1020, 'El campo metadata debe tener un json válido');
+            }
+        
             if ($validator->fails()) {
                 $messages = $validator->errors();
                 $message = '';            
@@ -184,8 +274,14 @@ class AppointmentController extends Controller
                 $validate = $this->appointments->isValidAppointment($appkey, $domain, $data['calendar_id'], $data['appointment_start_time']);
                 if (!$validate['is_ok']) {                    
                     return Resp::error(406, $validate['error_code']);
-                } else {                    
-                    $appointment = $this->appointments->createAppointment($appkey, $domain, $data);
+                } else {
+                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['applyer_id'], $data['appointment_start_time']);
+                    
+                    if ($isOverlapping) {
+                        return Resp::error(400, 1020, 'Ya tiene una cita reservada para este día');
+                    } else {
+                        $appointment = $this->appointments->createAppointment($appkey, $domain, $data);
+                    }
                 }
                 
                 if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                
@@ -220,11 +316,11 @@ class AppointmentController extends Controller
             if ((int)$id > 0) {
                 $validator = Validator::make($data, [
                     'applyer_email' => 'bail|required|email|max:80',
-                    'applyer_id' => 'bail|required|max:20',
-                    'applyer_name' => 'bail|required|max:150',
+                    'applyer_id' => 'max:20',
+                    'applyer_name' => 'max:150',
                     'appointment_start_time' => 'bail|required|isodate',
                     'calendar_id' => 'bail|required|integer',
-                    'subject' => 'bail|required|max:80'
+                    'subject' => 'max:80'
                 ]);
 
                 if ($validator->fails()) {
@@ -240,7 +336,7 @@ class AppointmentController extends Controller
                     $validate = $this->appointments->isValidAppointment($appkey, $domain, $data['calendar_id'], $data['appointment_start_time'], $id);
                     if (!$validate['is_ok']) {                    
                         return Resp::error(406, $validate['error_code']);
-                    } else {                    
+                    } else {
                         $appointment = $this->appointments->updateAppointment($appkey, $domain, $id, $data);
                     }
 
@@ -275,7 +371,7 @@ class AppointmentController extends Controller
         $appointment_start_time = '';
         $id = (int)$id;
         
-        $appointment = $this->appointments->listAppointmentById($appkey, $domain, $id);        
+        $appointment = $this->appointments->listAppointmentById($appkey, $domain, $id);
         if (isset($appointment['data']) && (int)$appointment['count'] > 0) {
             foreach ($appointment['data'] as $a) {            
                 $calendar_id = (int)$a->calendar_id;
@@ -301,7 +397,7 @@ class AppointmentController extends Controller
             } else {
                 return Resp::error(400, 1000);
             }
-        } else {
+        } else {            
             return Resp::error(404, 2070);
         }
         
