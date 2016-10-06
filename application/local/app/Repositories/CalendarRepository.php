@@ -559,7 +559,7 @@ class CalendarRepository
                             $timeObjEnd >= $date_end->format('Y-m-d H:i:s'))
                         return true;
                 } else {
-                    throw new Exception('Invalid field schedule', 1020);
+                    throw new Exception('Campo horario inválido', 1020);
                 }
             }
         }
