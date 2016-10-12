@@ -216,6 +216,7 @@ class Response {
             1000 => 'Parámetros de header appkey y/o dominio no proporcionados',
             1020 => 'Faltan parámetros o petición mal formada',
             1030 => 'Appkey o dominio no existe',
+            5000 => 'Appkey no existe',
             
             //Calendar
             1010 => 'Calendario no encontrado',
@@ -228,6 +229,7 @@ class Response {
 			1080 => 'Hay citas disponibles en esta fecha',
             1090 => 'La fecha final debe ser mayor o igual a la fecha actual',
             2000 => 'La appkey no existe',
+            2001 => 'La fecha ya ha sido registrada',
             
             //Appointment
             2010 => 'La fecha de la cita debe ser mayor o igual a la fecha actual',

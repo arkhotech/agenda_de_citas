@@ -721,7 +721,6 @@ class AppointmentRepository
             }
         } catch (QueryException $qe) {
             $res['error'] = $qe;
-            die($qe->getMessage()); 
         } catch (Exception $e) {
             $res['error'] = $e;
         }
@@ -1137,6 +1136,7 @@ class AppointmentRepository
                 }
             }
         } else {
+            $val = false;
             $code = 1010;
         }
         

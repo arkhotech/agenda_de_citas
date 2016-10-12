@@ -1145,6 +1145,10 @@ paths:
           description: Error 400
           schema:
             $ref: '#/definitions/ErrorResponse'
+        '406':
+          description: Error 400
+          schema:
+            $ref: '#/definitions/ErrorResponse'
         '500':
           description: Error 500
           schema:

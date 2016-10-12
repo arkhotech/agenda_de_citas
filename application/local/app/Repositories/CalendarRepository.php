@@ -208,7 +208,10 @@ class CalendarRepository
             
             if ($res === null) {
                 if ((int)$id > 0) {
-                    $calendars = Calendar::where('id', $id)->get();
+                    $calendars = Calendar::where('id', $id)
+                            ->where('appkey', $appkey)
+                            ->where('domain', $domain)
+                            ->where('status', 1)->get();
                     
                     $cal_array = array();
                     $i = 0;
@@ -491,24 +494,22 @@ class CalendarRepository
      * 
      * @param mixed $id null/int
      * @param string appkey
-     * @param string domain
      * @return boolean
      */
-    public function hasAvailableAppointmentByDate($appkey, $domain, $date)
+    public function hasAvailableAppointmentByDate($appkey, $date)
     {
         $resp = true;
         try {
-            if (!empty($appkey) && !empty($domain) && !empty($date)) {
+            if (!empty($appkey) && !empty($date)) {
                 $ttl = (int)config('calendar.cache_ttl');
-                $cache_id = sha1('cacheCalendarAppointmentByDate_'.$appkey.'_'.$domain.'_'.$date);
-                $tag = sha1($appkey.'_'.$domain);
+                $cache_id = sha1('cacheCalendarAppointmentByDate_'.$appkey.'_'.$date);
+                $tag = sha1($appkey);
                 $resp = Cache::tags($tag)->get($cache_id);
                 
                 if ($resp === null) {
                     $results = Calendar::join('appointments', 'calendars.id', '=', 'appointments.calendar_id')
                         ->select('calendars.id', 'appointment_start_time')
                         ->where('appkey', $appkey)
-                        ->where('domain', $domain)
                         ->where('ignore_non_working_days', 0)
                         ->where(DB::raw('DATE(appointment_start_time)'), $date)
                         ->orderBy('appointment_start_time', 'ASC')
