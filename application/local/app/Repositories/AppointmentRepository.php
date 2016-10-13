@@ -1007,46 +1007,38 @@ class AppointmentRepository
     
     /**
      * Elimina citas cuya reserva haya pasado cierto tiempo
-     *
-     * @param string $appkey
-     * @param string $domain
+     *     
      * @return Collection
      */
-    public function deleteAppointmentsPendingToConfirm($appkey, $domain)
+    public function deleteAppointmentsPendingToConfirm()
     {
         $res = array();
         
         try {
-            
-            if (!empty($appkey) && !empty($domain)) {
-                $columns = array(
-                    'appointments.id',
-                    'reservation_date',
-                    'time_confirm_appointment'
-                );
-                $now = new \DateTime(date('Y-m-d H:i:s'));
-                
-                $appointments = Appointment::select($columns)
-                        ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
-                        ->where('appointments.is_reserved', 1)
-                        ->where('appointments.is_canceled', 0)
-                        ->where('calendars.appkey', $appkey)
-                        ->where('calendars.domain', $domain)->get();
-                
-                foreach ($appointments as $appointment) {                     
-                    $time_to_confirm = (int)$appointment->time_confirm_appointment;                    
-                    $reservation_date = new \DateTime($appointment->reservation_date);
-                    $diff = $reservation_date->diff($now);
-                    if ($diff->format('%R%h') >= $time_to_confirm) {
-                        $this->destroyAppointment($appkey, $domain, (int)$appointment->id);
-                    }
-                }                
-                
-                $res['error'] = null;
-                
-                $tag = sha1($appkey.'_'.$domain);
-                Cache::tags($tag)->flush();
-            }
+            $columns = array(
+                'appointments.id',
+                'reservation_date',
+                'time_confirm_appointment',
+                'appkey',
+                'domain'
+            );
+            $now = new \DateTime(date('Y-m-d H:i:s'));
+
+            $appointments = Appointment::select($columns)
+                    ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                    ->where('appointments.is_reserved', 1)
+                    ->where('appointments.is_canceled', 0)->get();
+
+            foreach ($appointments as $appointment) {
+                $time_to_confirm = (int)$appointment->time_confirm_appointment;                    
+                $reservation_date = new \DateTime($appointment->reservation_date);
+                $diff = $reservation_date->diff($now);
+                if ($diff->format('%R%h') >= $time_to_confirm) {
+                    $this->destroyAppointment($appointment->appkey, $appointment->domain, (int)$appointment->id);
+                }
+            }                
+
+            $res['error'] = null;            
         } catch (QueryException $qe) {
                 $res['error'] = $qe;
         } catch (Exception $e) {

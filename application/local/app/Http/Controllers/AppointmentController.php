@@ -470,26 +470,19 @@ class AppointmentController extends Controller
     
     /**
      * Elimina un registro de tipo dayoff
-     * 
-     * @param  \Illuminate\Http\Request $request
+     *      
      * @return \Illuminate\Http\Response
      */
-    public function destroyAppointmentsPendingToConfirm(Request $request)
+    public function destroyAppointmentsPendingToConfirm()
     {
-        $appkey = $request->header('appkey');
-        $domain = $request->header('domain');
         $resp = array();
         
-        if (!empty($appkey) && !empty($domain)) {            
-            $appointments = $this->appointments->deleteAppointmentsPendingToConfirm($appkey, $domain);
+        $appointments = $this->appointments->deleteAppointmentsPendingToConfirm();
 
-            if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {                
-                $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
-            } else {
-                $resp = Resp::make(200);
-            }
+        if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {                
+            $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
         } else {
-            return Resp::error(400, 1000);
+            $resp = Resp::make(200);
         }
         
         return $resp;
