@@ -1037,7 +1037,8 @@ class AppointmentRepository
                     $this->destroyAppointment($appointment->appkey, $appointment->domain, (int)$appointment->id);
                 }
             }                
-
+            
+            Cache::flush();
             $res['error'] = null;            
         } catch (QueryException $qe) {
                 $res['error'] = $qe;
