@@ -383,8 +383,7 @@ class CalendarRepository
     {
         $res = array();
         $up = array();
-        try {
-            
+        try {            
             if (!$this->hasAvailableAppointments($appkey, $domain, $id)) {
                 unset($data['status']);
 
@@ -394,7 +393,7 @@ class CalendarRepository
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
             } else {
-                $up['owner_id'] = $data['owner_id'];
+                /*$up['owner_id'] = $data['owner_id'];
                 $up['owner_name'] = $data['owner_name'];
                 $up['time_cancel_appointment'] = $data['time_cancel_appointment'];
                 $up['time_confirm_appointment'] = $data['time_confirm_appointment'];
@@ -403,7 +402,8 @@ class CalendarRepository
                 $res['error'] = $calendar === false ? new \Exception('', 500) : null;
                 
                 $tag = sha1($appkey.'_'.$domain);
-                Cache::tags($tag)->flush();
+                Cache::tags($tag)->flush();*/
+                $res['error'] = new \Exception('', 1050);
             }
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {

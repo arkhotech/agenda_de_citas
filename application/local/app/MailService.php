@@ -34,13 +34,17 @@ class MailService {
         
         if (!empty($appkey) && !empty($domain) && (int)$appointment_id > 0 && 
             !empty($template_type)) {
+            
+            $nombre_app = '';
+            $from_email = '';
+            
             try {
                 $app_obj = new AppRepository();
                 $app = $app_obj->listApp($appkey, $domain);
                 
                 if (isset($app['error']) && $app['error'] !== null) {
                     $res['error'] = true;
-                    $res['errorMessage'] = 'Hubo un error al obtener información de la app. Descripción: ' . $app['error']->getMessage();
+                    $res['errorMessage'] = 'Hubo un error al obtener información de la app. Descripción: ' . $app['error']->getMessage() . ' Appkey: ' . $appkey . ' Domain: ' . $domain;
                 } else {                    
                     if (isset($app['data']) && (int)$app['count'] > 0) {
                         foreach ($app['data'] as $_app) {            
@@ -72,14 +76,14 @@ class MailService {
                         
                         if (empty($html_applyer)) {
                             $res['error'] = true;
-                            $res['errorMessage'] = 'Debe configurar la plantilla de correo electrónico de ' . $html_text;
+                            $res['errorMessage'] = 'Debe configurar la plantilla de correo electrónico de ' . $html_text . ' Cuenta: ' .$nombre_app;
                         } else {    
                             $appointment = new AppointmentRepository();
                             $appointments = $appointment->listAppointmentById($appkey, $domain, $appointment_id);
 
                             if (isset($appointments['error']) && $appointments['error'] !== null) {
                                 $res['error'] = true;
-                                $res['errorMessage'] = 'Hubo un error al obtener información de la cita. Descripción: ' . $appointments['error']->getMessage();
+                                $res['errorMessage'] = 'Hubo un error al obtener información de la cita. Descripción: ' . $appointments['error']->getMessage() . ' ID cita: ' . $appointment_id;
                             } else {
                                 if (isset($appointments['data']) && (int)$appointments['count'] > 0) {
                                     foreach ($appointments['data'] as $a) { 
@@ -152,30 +156,30 @@ class MailService {
                                                     $send_mail_applyer = $this->sendMail($from_email, $subject, $body, array($applyer_email));
                                                     if ($send_mail_applyer['error']) {
                                                         $res['error'] = true;
-                                                        $res['errorMessage'] = $send_mail_applyer['errorMessage'];
+                                                        $res['errorMessage'] = $send_mail_applyer['errorMessage'] . ' Cuenta: ' . $nombre_app . ' ID cita: ' . $appointment_id;
                                                     }
                                                 } else {
                                                     $res['error'] = true;
-                                                    $res['errorMessage'] = 'Hay campos vacios que son requeridos para el envío de correos electrónicos';
+                                                    $res['errorMessage'] = 'Hay campos vacios que son requeridos para el envío de correos electrónicos. Cuenta: ' . $nombre_app . ' ID cita: ' . $appointment_id;
                                                 }
                                             } else {
                                                 $res['error'] = true;
-                                                $res['errorMessage'] = $send_mail_owner['errorMessage'];
+                                                $res['errorMessage'] = $send_mail_owner['errorMessage'] . ' Cuenta: ' . $nombre_app . ' ID cita: ' . $appointment_id;
                                             }
                                         } else {
                                             $res['error'] = true;
-                                            $res['errorMessage'] = 'Hay campos vacios que son requeridos para el envío de correos electrónicos';
+                                            $res['errorMessage'] = 'Hay campos vacios que son requeridos para el envío de correos electrónicos. Cuenta: ' . $nombre_app . ' ID cita: ' . $appointment_id;
                                         }
                                     }
                                 } else {
                                     $res['error'] = true;
-                                    $res['errorMessage'] = 'El Id de la cita enviada no se encontró en la base de datos';
+                                    $res['errorMessage'] = 'El Id de la cita enviada no se encontró en la base de datos. ID cita: ' . $appointment_id;
                                 }
                             }
                         }
                     } else {
                         $res['error'] = true;
-                        $res['errorMessage'] = 'La appkey y/o domain no se encontraron en la base de datos';
+                        $res['errorMessage'] = 'La appkey y/o domain no se encontraron en la base de datos. Appkey: ' . $appkey . ' Domain: ' . $domain;
                     }
                 }
             } catch (Exception $ex) {
@@ -285,7 +289,7 @@ class MailService {
             $res['error'] = true;
             $res['errorMessage'] = $ex->getMessage();
         }
-        
+            
         return $res;
     }
     

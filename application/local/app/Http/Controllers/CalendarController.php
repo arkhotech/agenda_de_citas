@@ -288,7 +288,7 @@ class CalendarController extends Controller
             } else {
                 $validate = $this->validateSchedule($data['schedule']);
                 if (!$validate) {
-                    return Resp::error(400, 1020, 'input param schedule missing or malformed');
+                    return Resp::error(400, 1020, 'El campo horario no tiene el formato correcto');
                 }
 
                 $data['schedule'] = serialize($data['schedule']);

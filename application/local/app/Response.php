@@ -239,6 +239,7 @@ class Response {
             2050 => 'La fecha de la cita se está cruzando con otra',
             2060 => 'No puede cancelar la cita, tiempo de espera agotado',
             2070 => 'No hay citas',
+            2071 => 'No se puede confirmar la cita porque se encuentra cancelada',
             
             //BlockSchedule
             2080 => 'La fecha final debe ser mayor a la fecha de inicio',

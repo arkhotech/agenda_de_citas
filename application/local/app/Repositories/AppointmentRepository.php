@@ -767,7 +767,9 @@ class AppointmentRepository
                 }
                 
                 if ($resp_mail['error']) {
-                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                    Log::error('Message: ' . $resp_mail['errorMessage']);
+                    $res['error'] = null;
+                    //$res['error'] = new \Exception($resp_mail['errorMessage']);
                 } else {
                     $res['error'] = null;
                 }
@@ -881,20 +883,27 @@ class AppointmentRepository
         try {
             
             if ((int)$id > 0) {
-                $data['confirmation_date'] = date('Y-m-d H:i:s');
-                $data['is_reserved'] = 0;
-                $appointment = Appointment::where('id', $id)->update($data);
-                $mail = new MailService();
-                $resp_mail = $mail->setEmail($appkey, $domain, $id, 'confirmation');
+                $appo = Appointment::where('id', $id)->first();
+                if (!$appo->is_canceled) {
+                    $data['confirmation_date'] = date('Y-m-d H:i:s');
+                    $data['is_reserved'] = 0;
+                    $appointment = Appointment::where('id', $id)->update($data);
+                    $mail = new MailService();
+                    $resp_mail = $mail->setEmail($appkey, $domain, $id, 'confirmation');
 
-                if ($resp_mail['error']) {
-                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                    if ($resp_mail['error']) {
+                        Log::error('Message: ' . $resp_mail['errorMessage']);
+                        $res['error'] = null;
+                        //$res['error'] = new \Exception($resp_mail['errorMessage']);
+                    } else {
+                        $res['error'] = null;
+                    }
+
+                    $tag = sha1($appkey.'_'.$domain);
+                    Cache::tags($tag)->flush();
                 } else {
-                    $res['error'] = null;
+                    $res['error'] = new \Exception('', 2071);
                 }
-                
-                $tag = sha1($appkey.'_'.$domain);
-                Cache::tags($tag)->flush();
             }
         } catch (QueryException $qe) {
             $res['error'] = $qe;
@@ -932,7 +941,9 @@ class AppointmentRepository
                 $resp_mail = $mail->setEmail($appkey, $domain, $id, 'cancel');
                 
                 if ($resp_mail['error']) {
-                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                    Log::error('Message: ' . $resp_mail['errorMessage']);
+                    $res['error'] = null;
+                    //$res['error'] = new \Exception($resp_mail['errorMessage']);
                 } else {
                     $res['error'] = null;
                 }               
