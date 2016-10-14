@@ -360,8 +360,7 @@ class AppointmentRepository
                             ->where('calendar_id', $calendar_id)
                             ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                             ->where('appointment_start_time', '<=', $max_date_time)
-                            ->where('is_canceled', '<>', 1)                            
-                            ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
+                            ->where('is_canceled', '<>', 1)->orderBy('appointment_start_time', 'ASC')->get();
                     } else {                        
                         $appointment_date = new \DateTime($date);
                         $max_date_time = $appointment_date->format('Y-m-d');                        
@@ -370,8 +369,7 @@ class AppointmentRepository
                             ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                             ->where('calendar_id', $calendar_id)
                             ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))
-                            ->where('is_canceled', '<>', 1)                            
-                            ->where('is_reserved', 0)->get();
+                            ->where('is_canceled', '<>', 1)->get();
                     }
                     
                     $appointment_array = array();
