@@ -758,8 +758,13 @@ class AppointmentRepository
                 $data['appointment_end_time'] = $end_date;
                 
                 $appointment = Appointment::where('id', $id)->update($data);
-                $mail = new MailService();
-                $resp_mail = $mail->setEmail($appkey, $domain, $id, 'modify');
+                $appo = Appointment::where('id', $id)->first();
+                
+                $resp_mail['error'] = false;
+                if (!$appo->is_reserved && $appo->confirmation_date) {
+                    $mail = new MailService();
+                    $resp_mail = $mail->setEmail($appkey, $domain, $id, 'modify');
+                }
                 
                 if ($resp_mail['error']) {
                     $res['error'] = new \Exception($resp_mail['errorMessage']);
