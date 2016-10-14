@@ -1033,7 +1033,7 @@ class AppointmentRepository
                 $time_to_confirm = (int)$appointment->time_confirm_appointment;                    
                 $reservation_date = new \DateTime($appointment->reservation_date);
                 $diff = $reservation_date->diff($now);
-                if ($diff->format('%R%h') >= $time_to_confirm) {
+                if ($diff->format('%R%i') >= $time_to_confirm) {
                     $this->destroyAppointment($appointment->appkey, $appointment->domain, (int)$appointment->id);
                 }
             }                
