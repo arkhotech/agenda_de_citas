@@ -29,6 +29,7 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::delete('daysOff/{id}', 'DayOffController@destroy');
     
     //Appointment    
+    Route::get('appointments/{id}', 'AppointmentController@findById');
     Route::post('appointments/reserve', 'AppointmentController@store');
     Route::put('appointments/{id}', 'AppointmentController@update');
     Route::put('appointments/confirm/{id}', 'AppointmentController@confirm');

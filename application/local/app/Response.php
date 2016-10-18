@@ -240,6 +240,7 @@ class Response {
             2060 => 'No puede cancelar la cita, tiempo de espera agotado',
             2070 => 'No hay citas',
             2071 => 'No se puede confirmar la cita porque se encuentra cancelada',
+            2072 => 'Cita no encontrada',
             
             //BlockSchedule
             2080 => 'La fecha final debe ser mayor a la fecha de inicio',
