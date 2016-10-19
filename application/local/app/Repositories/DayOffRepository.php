@@ -175,15 +175,15 @@ class DayOffRepository
                 
                 if ($data['date_dayoff'] >= date('Y-m-d')) {
                     //Verifico que no hayan citas programadas para ese dia
-                    if (!$cal->hasAvailableAppointmentByDate($appkey, $data['date_dayoff'])) {
+                    //if (!$cal->hasAvailableAppointmentByDate($appkey, $data['date_dayoff'])) {
                         $dayoff = DayOff::create($data);
                         $res['error'] = null;
 
                         $tag = sha1($appkey);
                         Cache::tags($tag)->flush();
-                    } else {
+                    /*} else {
                         $res['error'] = new \Exception('', 1080);
-                    }
+                    }*/
                 } else {
                     $res['error'] = new \Exception('', 1090);
                 }
@@ -228,16 +228,16 @@ class DayOffRepository
 
                     if ($dayoff['date_dayoff'] >= date('Y-m-d')) {
                         //Verifico que no hayan citas programadas para ese dia
-                        if (!$cal->hasAvailableAppointmentByDate($appkey, $domain, $dayoff['date_dayoff'])) {
+                        //if (!$cal->hasAvailableAppointmentByDate($appkey, $domain, $dayoff['date_dayoff'])) {
                             $dayoff['appkey'] = $appkey;
                             $dayoff = DayOff::create($dayoff);
                             $res['error'] = null;
 
                             $tag = sha1($appkey);
                             Cache::tags($tag)->flush();
-                        } else {
+                        /*} else {
                             $res['error'] = new \Exception('', 1080);
-                        }
+                        }*/
                     } else {
                         $res['error'] = new \Exception('', 1090);
                     }
