@@ -40,7 +40,7 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::get('appointments/listByOwner/{id}', 'AppointmentController@listByOwner');
     Route::get('appointments/availability/{id}', 'AppointmentController@listAvailability');
     Route::get('appointments/availability/listByOwner/{id}', 'AppointmentController@listAvailabilityByOwner');
-    Route::get('appointments/deleteAppointmentsPendingToConfirm', 'AppointmentController@destroyAppointmentsPendingToConfirm');
+    Route::delete('appointments/deleteAppointmentsPendingToConfirm', 'AppointmentController@destroyAppointmentsPendingToConfirm');
     
     //BlockSchedule
     Route::get('blockSchedules/listByCalendarId/{calendar_id}', 'BlockScheduleController@index');

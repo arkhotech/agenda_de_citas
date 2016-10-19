@@ -506,12 +506,12 @@ class AppointmentController extends Controller
     }
     
     /**
-     * Elimina un registro de tipo dayoff
+     * Elimina todas las citas reservadas pendientes por confirmar
      *      
      * @return \Illuminate\Http\Response
      */
     public function destroyAppointmentsPendingToConfirm()
-    {
+    {        
         $resp = array();
         
         $appointments = $this->appointments->deleteAppointmentsPendingToConfirm();
