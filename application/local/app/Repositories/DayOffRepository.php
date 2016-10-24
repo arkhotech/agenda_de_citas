@@ -28,7 +28,7 @@ class DayOffRepository
     public function listDayOff($appkey, $year = 0)
     {
         $res = array();
-        $ano = (int)$year > 0 ? (int)$year : date('Y');
+        $ano = $year;
                 
         try {            
             $ttl = (int)config('calendar.cache_ttl');
@@ -42,10 +42,17 @@ class DayOffRepository
                     'name',
                     'date_dayoff',
                 );
-                $daysoff = DayOff::select($columns)
+                
+                if ($ano > 0) {
+                    $daysoff = DayOff::select($columns)
+                            ->where('appkey', $appkey)
+                            ->where(DB::raw('YEAR(date_dayoff)'), $ano)
+                            ->orderBy('date_dayoff', 'ASC')->get();
+                } else {
+                    $daysoff = DayOff::select($columns)
                         ->where('appkey', $appkey)
-                        ->where(DB::raw('YEAR(date_dayoff)'), $ano)
                         ->orderBy('date_dayoff', 'ASC')->get();
+                }
                 
                 $daysoff_array = array();
                 $days_array = array();

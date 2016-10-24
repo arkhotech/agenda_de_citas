@@ -42,7 +42,7 @@ class DayOffController extends Controller
     public function index(Request $request)
     {  
         $appkey = $request->header('appkey');
-        $year = $request->input('year');
+        $year = (int)$request->input('year');
         
         $resp = array();
         
