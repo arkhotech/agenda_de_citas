@@ -22,13 +22,14 @@ class DayOffRepository
      * Obtiene todos los dias no laborales por una appkey del ano actual
      * 
      * @param string $appkey
+     * @param int $year
      * @return Collection
      */
-    public function listDayOff($appkey)
+    public function listDayOff($appkey, $year = 0)
     {
         $res = array();
-        $ano = date('Y');
-        
+        $ano = (int)$year > 0 ? (int)$year : date('Y');
+                
         try {            
             $ttl = (int)config('calendar.cache_ttl');
             $cache_id = sha1('cacheDayOffList_'.$appkey.'_'.$ano);            

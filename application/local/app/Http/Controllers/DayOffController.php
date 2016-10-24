@@ -42,10 +42,12 @@ class DayOffController extends Controller
     public function index(Request $request)
     {  
         $appkey = $request->header('appkey');
+        $year = $request->input('year');
+        
         $resp = array();
         
         if (!empty($appkey)) {
-            $daysoff = $this->daysoff->listDayOff($appkey);
+            $daysoff = $this->daysoff->listDayOff($appkey, $year);
             
             if (isset($daysoff['error']) && is_a($daysoff['error'], 'Exception')) {
                 $resp = Resp::error(500, $daysoff['error']->getCode(), '', $daysoff['error']);
