@@ -45,8 +45,9 @@ Route::group(array('prefix' => 'v1'), function() {
     //BlockSchedule
     Route::get('blockSchedules/listByCalendarId/{calendar_id}', 'BlockScheduleController@index');
     Route::post('blockSchedules', 'BlockScheduleController@store');
+    Route::post('blockSchedules/bulkCreate', 'BlockScheduleController@bulkCreate');
     Route::delete('blockSchedules/{block_schedule_id}', 'BlockScheduleController@destroy');
-
+    
     //App
     Route::get('apps', 'AppController@index');
     Route::post('apps', 'AppController@store');

@@ -245,6 +245,7 @@ class Response {
             //BlockSchedule
             2080 => 'La fecha final debe ser mayor a la fecha de inicio',
             2090 => 'La fecha de inicio debe ser mayor o igual a la fecha actual',
+            2091 => 'El parámetro range no está bien definido, debe ser un array con elementos',
 
             //App
             4010 => 'No hay applicaciones',
