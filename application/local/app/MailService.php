@@ -79,7 +79,7 @@ class MailService {
                             $res['errorMessage'] = 'Debe configurar la plantilla de correo electrónico de ' . $html_text . ' Cuenta: ' .$nombre_app;
                         } else {    
                             $appointment = new AppointmentRepository();
-                            $appointments = $appointment->listAppointmentById($appkey, $domain, $appointment_id);
+                            $appointments = $appointment->listAppointmentById($appkey, $domain, $appointment_id, false);
 
                             if (isset($appointments['error']) && $appointments['error'] !== null) {
                                 $res['error'] = true;

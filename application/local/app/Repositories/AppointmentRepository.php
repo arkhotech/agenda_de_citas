@@ -793,10 +793,11 @@ class AppointmentRepository
      *      
      * @param string $appkey
      * @param string $domain
-     * @param int $id     
+     * @param int $id
+     * @param bool $cache
      * @return Collection
      */
-    public function listAppointmentById($appkey, $domain, $id)
+    public function listAppointmentById($appkey, $domain, $id, $cache = true)
     {
         $res = array();
         
@@ -804,7 +805,7 @@ class AppointmentRepository
             $ttl = (int)config('calendar.cache_ttl');
             $cache_id = sha1('cacheAppointmentListById_'.$id);
             $tag = sha1($appkey.'_'.$domain);
-            $res = Cache::tags($tag)->get($cache_id);
+            $res = $cache === true ? Cache::tags($tag)->get($cache_id) : null;
             
             if ($res === null) {                
                 if ((int)$id > 0) {                    
