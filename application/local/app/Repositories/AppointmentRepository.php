@@ -323,18 +323,20 @@ class AppointmentRepository
      */
     public function listAppointmentsAvailability($appkey, $domain, $calendar_id, $date = null, $calendar_array = array())
     {        
-        $res = array();        
-        try {            
+        $res = array();
+        $date = $date === null ? '' : $date;
+        
+        try {
             $ttl = (int)config('calendar.cache_ttl');
             $month_max_availability = (int)config('calendar.month_max_appointments');            
             $owner_name = isset($calendar_array[0]['owner_name']) ? $calendar_array[0]['owner_name'] : '';
             $schedule = isset($calendar_array[0]['schedule']) ? $calendar_array[0]['schedule'] : array();
             $time_attention = isset($calendar_array[0]['time_attention']) ? $calendar_array[0]['time_attention'] : 0;
             $concurrency = isset($calendar_array[0]['concurrency']) ? $calendar_array[0]['concurrency'] : 1;
-            $cache_id = sha1('cacheAppointmentListAvailability_'.$appkey.'_'.$domain.'_'.$calendar_id);
+            $cache_id = sha1('cacheAppointmentListAvailability_'.$appkey.'_'.$domain.'_'.$calendar_id.'_'.$date);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
-            
+            Cache::flush();
             if ($res === null) {
                 if ((int)$calendar_id > 0) {
                     $columns = array(
@@ -350,7 +352,7 @@ class AppointmentRepository
                     );                    
                     
                     //Citas
-                    if ($date === null) {
+                    if (empty($date)) {
                         $months = new \DateTime(date('Y-m-d H:i:s'));
                         $interval = new \DateInterval('P'.$month_max_availability.'M');
                         $max_date_time = $months->add($interval)->format('Y-m-d H:i:s');
@@ -361,15 +363,31 @@ class AppointmentRepository
                             ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                             ->where('appointment_start_time', '<=', $max_date_time)
                             ->where('is_canceled', '<>', 1)->orderBy('appointment_start_time', 'ASC')->get();
-                    } else {                        
-                        $appointment_date = new \DateTime($date);
-                        $max_date_time = $appointment_date->format('Y-m-d');                        
+                    } else {                                                
+                        $date_format = explode('-', $date);
                         
-                        $appointments = Appointment::select($columns)
-                            ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
-                            ->where('calendar_id', $calendar_id)
-                            ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))
-                            ->where('is_canceled', '<>', 1)->get();
+                        if (count($date_format) == 2) {
+                            $date = date('Y-m-d');
+                            $last_day_month = date('Y-m-t', strtotime($date));
+                            $appointment_date = new \DateTime($last_day_month);                            
+                            $max_date_time = $appointment_date->format('Y-m-d');
+                            
+                            $appointments = Appointment::select($columns)
+                                ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                                ->where('calendar_id', $calendar_id)
+                                ->where(DB::raw('YEAR(appointment_start_time)'), (int)$date_format[0])
+                                ->where(DB::raw('MONTH(appointment_start_time)'), (int)$date_format[1])
+                                ->where('is_canceled', '<>', 1)->get();
+                        } else {
+                            $appointment_date = new \DateTime($date);
+                            $max_date_time = $appointment_date->format('Y-m-d');
+                            
+                            $appointments = Appointment::select($columns)
+                                ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                                ->where('calendar_id', $calendar_id)
+                                ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))
+                                ->where('is_canceled', '<>', 1)->get();
+                        }
                     }
                     
                     $appointment_array = array();
@@ -397,7 +415,7 @@ class AppointmentRepository
 
                     $num_blocks = count($blockschedules);                    
                     
-                    if ($date === null) {
+                    if (empty($date)) {
                         $tmp_date = new \DateTime(date('Y-m-d'));
                     } else {
                         $tmp_date = new \DateTime($date);
