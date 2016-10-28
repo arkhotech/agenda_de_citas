@@ -1256,10 +1256,9 @@ class AppointmentRepository
      * @param date $start_time
      * @return boolean
      */
-    public function isOverlappingAppointmentByUser($appkey, $domain, $applyer_id, $start_time)
+    public function isOverlappingAppointmentByUser($appkey, $domain, $calendar_id, $applyer_id, $start_time)
     {        
         $resp = true;
-        
         try {            
             $ttl = (int)config('calendar.cache_ttl');
             $cache_id = sha1('cacheisOverlappingAppointmentByUser_'.$appkey.'_'.$domain.'_'.$applyer_id.'_'.$start_time);
@@ -1271,6 +1270,7 @@ class AppointmentRepository
                     $start_time = new \DateTime($start_time);
                     $start_time = $start_time->format('Y-m-d H:i:s');
                     
+                    $calendar = Calendar::where('id', $calendar_id)->get();
                     $appointments = Appointment::join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->select('appointments.id')
                                 ->where('calendars.appkey', $appkey)
@@ -1278,8 +1278,12 @@ class AppointmentRepository
                                 ->where('appointments.applyer_id', $applyer_id)
                                 ->where('appointments.is_canceled', '<>', 1)
                                 ->where('appointments.appointment_start_time', $start_time)->get();
-                    
-                    $resp = $appointments->count() > 0 ? true : false;
+
+                    if ($appointments->count() < $calendar[0]->concurrency) {
+                        $resp = false;
+                    } else {
+                        $resp = true;
+                    }
                     Cache::tags([$tag])->put($cache_id, $resp, $ttl);                    
                 }
             }

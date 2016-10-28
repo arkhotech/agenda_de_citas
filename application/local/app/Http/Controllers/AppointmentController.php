@@ -312,7 +312,7 @@ class AppointmentController extends Controller
                 if (!$validate['is_ok']) {                    
                     return Resp::error(406, $validate['error_code']);
                 } else {
-                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['applyer_id'], $data['appointment_start_time']);
+                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['calendar_id'], $data['applyer_id'], $data['appointment_start_time']);
                     
                     if ($isOverlapping) {
                         return Resp::error(400, 1020, 'Ya tiene una cita reservada para este día');
