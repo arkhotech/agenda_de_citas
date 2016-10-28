@@ -1241,7 +1241,6 @@ class AppointmentRepository
     public function isOverlappingAppointmentByUser($appkey, $domain, $calendar_id, $applyer_id, $start_time)
     {        
         $resp = true;
-        Log::error('Entro a overlapping');
         try {            
             $ttl = (int)config('calendar.cache_ttl');
             $cache_id = sha1('cacheisOverlappingAppointmentByUser_'.$appkey.'_'.$domain.'_'.$applyer_id.'_'.$start_time);
