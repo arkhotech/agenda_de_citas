@@ -367,9 +367,10 @@ class AppointmentRepository
                         $date_format = explode('-', $date);
                         
                         if (count($date_format) == 2) {
-                            $date = date('Y-m-d');
+                            $date = $date . '-01';
                             $last_day_month = date('Y-m-t', strtotime($date));
-                            $appointment_date = new \DateTime($last_day_month);                            
+                            $appointment_date = new \DateTime($last_day_month);
+                            $appointment_date->add(new \DateInterval('P6D'));
                             $max_date_time = $appointment_date->format('Y-m-d');
                             
                             $appointments = Appointment::select($columns)
@@ -419,6 +420,9 @@ class AppointmentRepository
                         $tmp_date = new \DateTime(date('Y-m-d'));
                     } else {
                         $tmp_date = new \DateTime($date);
+                        if (count($date_format) == 2) {
+                            $tmp_date->sub(new \DateInterval('P6D'));
+                        }
                     }
                     
                     $max_date = new \DateTime($max_date_time);
