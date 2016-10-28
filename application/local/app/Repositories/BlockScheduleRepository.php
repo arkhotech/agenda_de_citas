@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use DB;
 use Log;
 use App\BlockSchedule;
 use App\Calendar;
@@ -173,6 +174,84 @@ class BlockScheduleRepository
         } catch (QueryException $qe) {
             $res['error'] = $qe;
         } catch (Exception $e) {
+            $res['error'] = $e;
+        }
+        
+        return $res;        
+    }
+    
+    /**
+     * Crea un nuevo registro de tipo blockschedule basado en un array
+     * 
+     * @param string $appkey
+     * @param string $domain
+     * @param array $data     
+     * @return Collection
+     */
+    public function createBulkBlockSchedule($appkey, $domain, $data)
+    {
+        $res = array();
+        
+        try {
+            
+            DB::beginTransaction();
+            
+            $calendar = Calendar::where('id', $data['calendar_id'])->get();
+            
+            if ($calendar->count() > 0) {
+                if (isset($data['range']) && count($data['range']) > 0) {
+                    foreach ($data['range'] as $item) {
+                        if (isset($item['start_date']) && $item['start_date'] != '' &&
+                            isset($item['end_date']) && $item['end_date'] != '') {
+                            $start_date_obj = new \DateTime($item['start_date']);
+                            $start_date = $start_date_obj->format('Y-m-d H:i:s');
+                            $end_date_obj = new \DateTime($item['end_date']);
+                            $end_date = $end_date_obj->format('Y-m-d H:i:s');
+
+                            if ($start_date >= date('Y-m-d H:i:s')) {
+                                if ($end_date > $start_date) {
+                                    $row['calendar_id'] = $data['calendar_id'];
+                                    $row['user_id_block'] = $data['user_id_block'];
+                                    $row['user_name_block'] = $data['user_name_block'];
+                                    $row['start_date'] = $start_date;
+                                    $row['end_date'] = $end_date;
+                                    $row['cause'] = $data['cause'];
+                                    $row['created_date'] = date('Y-m-d H:i:s');                                
+                                    BlockSchedule::create($row);
+                                    $res['error'] = null;
+
+                                } else {
+                                    $res['error'] = new \Exception('', 2080);
+                                }
+                            } else {
+                                $res['error'] = new \Exception('', 2090);
+                            }
+                        } else {
+                            $res['error'] = new \Exception('', 2091);
+                        }
+                        
+                        if (isset($res['error']) && $res['error'] !== null) {
+                            DB::rollBack();
+                            return $res;
+                        }
+                    }
+                    
+                    DB::commit();
+                    
+                    $tag = sha1($appkey.'_'.$domain);
+                    Cache::tags($tag)->flush();
+                } else {
+                    $res['error'] = new \Exception('', 2091);
+                }
+            } else {
+                DB::rollBack();
+                $res['error'] = new \Exception('', 1010);
+            }
+        } catch (QueryException $qe) {
+            DB::rollBack();
+            $res['error'] = $qe;
+        } catch (Exception $e) {
+            DB::rollBack();
             $res['error'] = $e;
         }
         

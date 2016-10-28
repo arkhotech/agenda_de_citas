@@ -29,6 +29,7 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::delete('daysOff/{id}', 'DayOffController@destroy');
     
     //Appointment    
+    Route::get('appointments/{id}', 'AppointmentController@findById');
     Route::post('appointments/reserve', 'AppointmentController@store');
     Route::put('appointments/{id}', 'AppointmentController@update');
     Route::put('appointments/confirm/{id}', 'AppointmentController@confirm');
@@ -39,13 +40,14 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::get('appointments/listByOwner/{id}', 'AppointmentController@listByOwner');
     Route::get('appointments/availability/{id}', 'AppointmentController@listAvailability');
     Route::get('appointments/availability/listByOwner/{id}', 'AppointmentController@listAvailabilityByOwner');
-    Route::get('appointments/deleteAppointmentsPendingToConfirm', 'AppointmentController@destroyAppointmentsPendingToConfirm');
+    Route::delete('appointments/deleteAppointmentsPendingToConfirm', 'AppointmentController@destroyAppointmentsPendingToConfirm');
     
     //BlockSchedule
     Route::get('blockSchedules/listByCalendarId/{calendar_id}', 'BlockScheduleController@index');
     Route::post('blockSchedules', 'BlockScheduleController@store');
+    Route::post('blockSchedules/bulkCreate', 'BlockScheduleController@bulkCreate');
     Route::delete('blockSchedules/{block_schedule_id}', 'BlockScheduleController@destroy');
-
+    
     //App
     Route::get('apps', 'AppController@index');
     Route::post('apps', 'AppController@store');

@@ -42,10 +42,12 @@ class DayOffController extends Controller
     public function index(Request $request)
     {  
         $appkey = $request->header('appkey');
+        $year = (int)$request->input('year');
+        
         $resp = array();
         
         if (!empty($appkey)) {
-            $daysoff = $this->daysoff->listDayOff($appkey);
+            $daysoff = $this->daysoff->listDayOff($appkey, $year);
             
             if (isset($daysoff['error']) && is_a($daysoff['error'], 'Exception')) {
                 $resp = Resp::error(500, $daysoff['error']->getCode(), '', $daysoff['error']);
@@ -76,10 +78,9 @@ class DayOffController extends Controller
         $resp = array();
         $data = $request->json()->all();
         $appkey = $request->header('appkey');
-        $domain = $request->header('domain');
         $data['appkey'] = $appkey;
         
-        if (!empty($appkey) && !empty($domain)) {
+        if (!empty($appkey)) {
             $validator = Validator::make($data, [
                 'name' => 'bail|required|max:70',
                 'date_dayoff' => 'bail|required|isodate',
@@ -96,16 +97,20 @@ class DayOffController extends Controller
 
                 $resp = Resp::error(400, 1020, $message);
             } else {
-                $dayoffs = $this->daysoff->createDayOff($appkey, $domain, $data);
-
-                if (isset($dayoffs['error']) && is_a($dayoffs['error'], 'Exception')) {                
-                    $resp = Resp::error(500, $dayoffs['error']->getCode(), '', $dayoffs['error']);
-                } else {                
-                    $resp = Resp::make(201);
+                if (!$this->daysoff->dayOffExists($appkey, $data['date_dayoff'])) {
+                    $dayoffs = $this->daysoff->createDayOff($appkey, $data);
+                    
+                    if (isset($dayoffs['error']) && is_a($dayoffs['error'], 'Exception')) {                
+                        $resp = Resp::error(500, $dayoffs['error']->getCode(), '', $dayoffs['error']);
+                    } else {                
+                        $resp = Resp::make(201);
+                    }
+                } else {
+                    $resp = Resp::error(406, 2001);
                 }
             }
         } else {
-            return Resp::error(400, 1000); 
+            return Resp::error(400, 5000); 
         }
         
         return $resp;

@@ -360,8 +360,7 @@ class AppointmentRepository
                             ->where('calendar_id', $calendar_id)
                             ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                             ->where('appointment_start_time', '<=', $max_date_time)
-                            ->where('is_canceled', '<>', 1)                            
-                            ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
+                            ->where('is_canceled', '<>', 1)->orderBy('appointment_start_time', 'ASC')->get();
                     } else {                        
                         $appointment_date = new \DateTime($date);
                         $max_date_time = $appointment_date->format('Y-m-d');                        
@@ -370,8 +369,7 @@ class AppointmentRepository
                             ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                             ->where('calendar_id', $calendar_id)
                             ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))
-                            ->where('is_canceled', '<>', 1)                            
-                            ->where('is_reserved', 0)->get();
+                            ->where('is_canceled', '<>', 1)->get();
                     }
                     
                     $appointment_array = array();
@@ -721,7 +719,6 @@ class AppointmentRepository
             }
         } catch (QueryException $qe) {
             $res['error'] = $qe;
-            die($qe->getMessage()); 
         } catch (Exception $e) {
             $res['error'] = $e;
         }
@@ -761,11 +758,18 @@ class AppointmentRepository
                 $data['appointment_end_time'] = $end_date;
                 
                 $appointment = Appointment::where('id', $id)->update($data);
-                $mail = new MailService();
-                $resp_mail = $mail->setEmail($appkey, $domain, $id, 'modify');
+                $appo = Appointment::where('id', $id)->first();
+                
+                $resp_mail['error'] = false;
+                if (!$appo->is_reserved && $appo->confirmation_date) {
+                    $mail = new MailService();
+                    $resp_mail = $mail->setEmail($appkey, $domain, $id, 'modify');
+                }
                 
                 if ($resp_mail['error']) {
-                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                    Log::error('Message: ' . $resp_mail['errorMessage']);
+                    $res['error'] = null;
+                    //$res['error'] = new \Exception($resp_mail['errorMessage']);
                 } else {
                     $res['error'] = null;
                 }
@@ -789,10 +793,11 @@ class AppointmentRepository
      *      
      * @param string $appkey
      * @param string $domain
-     * @param int $id     
+     * @param int $id
+     * @param bool $cache
      * @return Collection
      */
-    public function listAppointmentById($appkey, $domain, $id)
+    public function listAppointmentById($appkey, $domain, $id, $cache = true)
     {
         $res = array();
         
@@ -800,7 +805,7 @@ class AppointmentRepository
             $ttl = (int)config('calendar.cache_ttl');
             $cache_id = sha1('cacheAppointmentListById_'.$id);
             $tag = sha1($appkey.'_'.$domain);
-            $res = Cache::tags($tag)->get($cache_id);
+            $res = $cache === true ? Cache::tags($tag)->get($cache_id) : null;
             
             if ($res === null) {                
                 if ((int)$id > 0) {                    
@@ -879,20 +884,27 @@ class AppointmentRepository
         try {
             
             if ((int)$id > 0) {
-                $data['confirmation_date'] = date('Y-m-d H:i:s');
-                $data['is_reserved'] = 0;
-                $appointment = Appointment::where('id', $id)->update($data);
-                $mail = new MailService();
-                $resp_mail = $mail->setEmail($appkey, $domain, $id, 'confirmation');
+                $appo = Appointment::where('id', $id)->first();
+                if (!$appo->is_canceled) {
+                    $data['confirmation_date'] = date('Y-m-d H:i:s');
+                    $data['is_reserved'] = 0;
+                    $appointment = Appointment::where('id', $id)->update($data);
+                    $mail = new MailService();
+                    $resp_mail = $mail->setEmail($appkey, $domain, $id, 'confirmation');
 
-                if ($resp_mail['error']) {
-                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                    if ($resp_mail['error']) {
+                        Log::error('Message: ' . $resp_mail['errorMessage']);
+                        $res['error'] = null;
+                        //$res['error'] = new \Exception($resp_mail['errorMessage']);
+                    } else {
+                        $res['error'] = null;
+                    }
+
+                    $tag = sha1($appkey.'_'.$domain);
+                    Cache::tags($tag)->flush();
                 } else {
-                    $res['error'] = null;
+                    $res['error'] = new \Exception('', 2071);
                 }
-                
-                $tag = sha1($appkey.'_'.$domain);
-                Cache::tags($tag)->flush();
             }
         } catch (QueryException $qe) {
             $res['error'] = $qe;
@@ -930,7 +942,9 @@ class AppointmentRepository
                 $resp_mail = $mail->setEmail($appkey, $domain, $id, 'cancel');
                 
                 if ($resp_mail['error']) {
-                    $res['error'] = new \Exception($resp_mail['errorMessage']);
+                    Log::error('Message: ' . $resp_mail['errorMessage']);
+                    $res['error'] = null;
+                    //$res['error'] = new \Exception($resp_mail['errorMessage']);
                 } else {
                     $res['error'] = null;
                 }               
@@ -1008,46 +1022,39 @@ class AppointmentRepository
     
     /**
      * Elimina citas cuya reserva haya pasado cierto tiempo
-     *
-     * @param string $appkey
-     * @param string $domain
+     *     
      * @return Collection
      */
-    public function deleteAppointmentsPendingToConfirm($appkey, $domain)
+    public function deleteAppointmentsPendingToConfirm()
     {
         $res = array();
         
         try {
+            $columns = array(
+                'appointments.id',
+                'reservation_date',
+                'time_confirm_appointment',
+                'appkey',
+                'domain'
+            );
+            $now = new \DateTime(date('Y-m-d H:i:s'));
+
+            $appointments = Appointment::select($columns)
+                    ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                    ->where('appointments.is_reserved', 1)
+                    ->where('appointments.is_canceled', 0)->get();
+
+            foreach ($appointments as $appointment) {
+                $time_to_confirm = (int)$appointment->time_confirm_appointment;                    
+                $reservation_date = new \DateTime($appointment->reservation_date);
+                $diff = $reservation_date->diff($now);
+                if ($diff->format('%R%i') >= $time_to_confirm) {
+                    $this->destroyAppointment($appointment->appkey, $appointment->domain, (int)$appointment->id);
+                }
+            }                
             
-            if (!empty($appkey) && !empty($domain)) {
-                $columns = array(
-                    'appointments.id',
-                    'reservation_date',
-                    'time_confirm_appointment'
-                );
-                $now = new \DateTime(date('Y-m-d H:i:s'));
-                
-                $appointments = Appointment::select($columns)
-                        ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
-                        ->where('appointments.is_reserved', 1)
-                        ->where('appointments.is_canceled', 0)
-                        ->where('calendars.appkey', $appkey)
-                        ->where('calendars.domain', $domain)->get();
-                
-                foreach ($appointments as $appointment) {                     
-                    $time_to_confirm = (int)$appointment->time_confirm_appointment;                    
-                    $reservation_date = new \DateTime($appointment->reservation_date);
-                    $diff = $reservation_date->diff($now);
-                    if ($diff->format('%R%h') >= $time_to_confirm) {
-                        $this->destroyAppointment($appkey, $domain, (int)$appointment->id);
-                    }
-                }                
-                
-                $res['error'] = null;
-                
-                $tag = sha1($appkey.'_'.$domain);
-                Cache::tags($tag)->flush();
-            }
+            Cache::flush();
+            $res['error'] = null;            
         } catch (QueryException $qe) {
                 $res['error'] = $qe;
         } catch (Exception $e) {
@@ -1137,6 +1144,7 @@ class AppointmentRepository
                 }
             }
         } else {
+            $val = false;
             $code = 1010;
         }
         
@@ -1230,10 +1238,9 @@ class AppointmentRepository
      * @param date $start_time
      * @return boolean
      */
-    public function isOverlappingAppointmentByUser($appkey, $domain, $applyer_id, $start_time)
+    public function isOverlappingAppointmentByUser($appkey, $domain, $calendar_id, $applyer_id, $start_time)
     {        
         $resp = true;
-        
         try {            
             $ttl = (int)config('calendar.cache_ttl');
             $cache_id = sha1('cacheisOverlappingAppointmentByUser_'.$appkey.'_'.$domain.'_'.$applyer_id.'_'.$start_time);
@@ -1245,6 +1252,7 @@ class AppointmentRepository
                     $start_time = new \DateTime($start_time);
                     $start_time = $start_time->format('Y-m-d H:i:s');
                     
+                    $calendar = Calendar::where('id', $calendar_id)->get();
                     $appointments = Appointment::join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->select('appointments.id')
                                 ->where('calendars.appkey', $appkey)
@@ -1252,8 +1260,12 @@ class AppointmentRepository
                                 ->where('appointments.applyer_id', $applyer_id)
                                 ->where('appointments.is_canceled', '<>', 1)
                                 ->where('appointments.appointment_start_time', $start_time)->get();
-                    
-                    $resp = $appointments->count() > 0 ? true : false;
+
+                    if ($appointments->count() < $calendar[0]->concurrency) {
+                        $resp = false;
+                    } else {
+                        $resp = true;
+                    }
                     Cache::tags([$tag])->put($cache_id, $resp, $ttl);                    
                 }
             }
