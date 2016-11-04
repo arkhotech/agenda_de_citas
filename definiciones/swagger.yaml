@@ -1526,6 +1526,9 @@ definitions:
         type: integer
         format: int32
         description: ID del calendario
+      cause:
+        type: string
+        description: Motivo por el cual se bloquea el horario
       range:
         type: array
         description: Array de rangos de fechas/horas a bloquear
