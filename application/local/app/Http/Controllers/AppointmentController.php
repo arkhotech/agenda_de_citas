@@ -35,6 +35,43 @@ class AppointmentController extends Controller
     }
     
     /**
+     * Controller que despliega una cita por ID
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function findById(Request $request, $id)
+    {
+        $resp = array();
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
+        
+        if (!empty($appkey) && !empty($domain)) {
+            if ((int)$id > 0) {
+                $appointments = $this->appointments->listAppointmentById($appkey, $domain, $id);
+
+                if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
+                    $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
+                } else {
+                    if (count($appointments['data']) > 0) {
+                        $appointment['appointments'] = $appointments['data'];
+                        $appointment['count'] = $appointments['count'];
+                        $resp = Resp::make(200, $appointment);
+                    } else {
+                        $resp = Resp::error(404, 2072);
+                    }
+                }
+            } else {
+                $resp = Resp::error(400, 1020, 'appointment_id debe ser mayor a cero');
+            }
+        } else {
+            $resp = Resp::error(400, 1000);
+        }
+        
+        return $resp;
+    }
+    
+    /**
      * Controller que despliega listado de citas por calendario
      *
      * @param  \Illuminate\Http\Request $request
@@ -275,7 +312,7 @@ class AppointmentController extends Controller
                 if (!$validate['is_ok']) {                    
                     return Resp::error(406, $validate['error_code']);
                 } else {
-                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['applyer_id'], $data['appointment_start_time']);
+                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['calendar_id'], $data['applyer_id'], $data['appointment_start_time']);
                     
                     if ($isOverlapping) {
                         return Resp::error(400, 1020, 'Ya tiene una cita reservada para este día');
@@ -469,27 +506,20 @@ class AppointmentController extends Controller
     }
     
     /**
-     * Elimina un registro de tipo dayoff
-     * 
-     * @param  \Illuminate\Http\Request $request
+     * Elimina todas las citas reservadas pendientes por confirmar
+     *      
      * @return \Illuminate\Http\Response
      */
-    public function destroyAppointmentsPendingToConfirm(Request $request)
-    {
-        $appkey = $request->header('appkey');
-        $domain = $request->header('domain');
+    public function destroyAppointmentsPendingToConfirm()
+    {        
         $resp = array();
         
-        if (!empty($appkey) && !empty($domain)) {            
-            $appointments = $this->appointments->deleteAppointmentsPendingToConfirm($appkey, $domain);
+        $appointments = $this->appointments->deleteAppointmentsPendingToConfirm();
 
-            if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {                
-                $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
-            } else {
-                $resp = Resp::make(200);
-            }
+        if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {                
+            $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
         } else {
-            return Resp::error(400, 1000);
+            $resp = Resp::make(200);
         }
         
         return $resp;

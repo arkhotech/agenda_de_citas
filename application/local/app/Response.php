@@ -216,6 +216,7 @@ class Response {
             1000 => 'Parámetros de header appkey y/o dominio no proporcionados',
             1020 => 'Faltan parámetros o petición mal formada',
             1030 => 'Appkey o dominio no existe',
+            5000 => 'Appkey no existe',
             
             //Calendar
             1010 => 'Calendario no encontrado',
@@ -228,6 +229,7 @@ class Response {
 			1080 => 'Hay citas disponibles en esta fecha',
             1090 => 'La fecha final debe ser mayor o igual a la fecha actual',
             2000 => 'La appkey no existe',
+            2001 => 'La fecha ya ha sido registrada',
             
             //Appointment
             2010 => 'La fecha de la cita debe ser mayor o igual a la fecha actual',
@@ -237,10 +239,13 @@ class Response {
             2050 => 'La fecha de la cita se está cruzando con otra',
             2060 => 'No puede cancelar la cita, tiempo de espera agotado',
             2070 => 'No hay citas',
+            2071 => 'No se puede confirmar la cita porque se encuentra cancelada',
+            2072 => 'Cita no encontrada',
             
             //BlockSchedule
             2080 => 'La fecha final debe ser mayor a la fecha de inicio',
             2090 => 'La fecha de inicio debe ser mayor o igual a la fecha actual',
+            2091 => 'El parámetro range no está bien definido, debe ser un array con elementos',
 
             //App
             4010 => 'No hay applicaciones',

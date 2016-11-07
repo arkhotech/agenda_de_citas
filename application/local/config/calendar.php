@@ -4,7 +4,7 @@ return array(
     'per_page' => 10,
     'cache_ttl' => 1,
     'time_max_schedule' => 24,
-    'month_max_appointments' => 2,
+    'month_max_appointments' => 3,
     'subject_confirmation_email' => 'Confirmación de cita',
     'subject_modify_email' => 'Cita modificada',
     'subject_cancel_email' => 'Cita cancelada',
