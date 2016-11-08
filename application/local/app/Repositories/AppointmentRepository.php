@@ -260,7 +260,7 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('owner_id', $id)
-                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')
                                 ->paginate($per_page);
@@ -271,7 +271,7 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('owner_id', $id)
-                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
 
