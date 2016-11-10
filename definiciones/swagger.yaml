@@ -66,6 +66,47 @@ paths:
           description: Error 500
           schema:
             "$ref": "#/definitions/ErrorResponse"
+  "/appointment/bulkConfirm":
+    post:
+      tags:
+      - Appointments
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: appkey
+        in: header
+        description: App key
+        required: true
+        type: string
+      - name: domain
+        in: header
+        description: Dominio de la aplicación
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          "$ref": "#/definitions/InputAppointmentBulkConfirm"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/SuccessResponse"
+        '400':
+          description: Error 400
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '406':
+          description: Error 406
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '500':
+          description: Error 500
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
   "/appointment/{appointment_id}":
     put:
       tags:
@@ -696,6 +737,8 @@ paths:
       - BlockSchedules
       consumes:
       - application/json
+      produces:
+      - application/json
       parameters:
       - name: appkey
         in: header
@@ -710,12 +753,22 @@ paths:
         type: string
       - in: body
         name: body
-        required: false
+        required: true
         schema:
           "$ref": "#/definitions/InputBlockScheduleBulk"
       responses:
-        '200':
-          description: Status 200
+        '201':
+          description: Success
+          schema:
+            "$ref": "#/definitions/SuccessResponse"
+        '400':
+          description: Error 400
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '500':
+          description: Error 500
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
   "/blockSchedules/{block_schedule_id}":
     delete:
       tags:
@@ -1446,6 +1499,17 @@ definitions:
         type: integer
         format: int32
         description: Si la cita fue atendida por el solicitante 1 o 0
+  InputAppointmentBulkConfirm:
+    type: object
+    required:
+    - ids
+    properties:
+      ids:
+        type: array
+        description: Array de IDs de citas
+        items:
+          type: integer
+          format: int32
   InputAppointmentCancel:
     type: object
     required:
