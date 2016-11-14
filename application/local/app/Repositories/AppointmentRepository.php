@@ -66,7 +66,7 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('appointments.calendar_id', $id)
-                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')
                                 ->paginate($per_page);
@@ -77,7 +77,7 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('appointments.calendar_id', $id)
-                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
                         
@@ -260,7 +260,7 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('owner_id', $id)
-                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')
                                 ->paginate($per_page);
@@ -271,7 +271,7 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('owner_id', $id)
-                                ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
+                                ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
 
@@ -931,6 +931,67 @@ class AppointmentRepository
         } catch (QueryException $qe) {
             $res['error'] = $qe;
         } catch (Exception $e) {
+            $res['error'] = $e;
+        }
+        
+        return $res;
+    }
+    
+    /**
+     * Confirma citas masivamente
+     *
+     * @param string $appkey
+     * @param string $domain 
+     * @param array $ids
+     * @return Collection
+     */
+    public function bulkConfirmAppointment($appkey, $domain, $ids)
+    {
+        $res = array();
+        
+        try {
+            DB::beginTransaction();
+            
+            foreach ($ids as $id) {
+                if ((int)$id > 0) {
+                    $appo = Appointment::where('id', $id)->first();
+                    if (!$appo->is_canceled) {
+                        $data['confirmation_date'] = date('Y-m-d H:i:s');
+                        $data['is_reserved'] = 0;
+                        $appointment = Appointment::where('id', $id)->update($data);                                                
+                    } else {
+                        $res['error'] = new \Exception('ID cita: ' . $id . ' Cita cancelada', 2071);
+                        break;
+                    }
+                } else {
+                    $res['error'] = new \Exception('ID cita: ' . $id . ' Cita no encontrada', 2072);
+                    break;
+                }
+            }
+            
+            if (!isset($res['error']) || $res['error'] === null) {
+                DB::commit();
+                
+                $tag = sha1($appkey.'_'.$domain);
+                Cache::tags($tag)->flush();
+            
+                // Se envian los correos electronicos
+                foreach ($ids as $id) {
+                    $mail = new MailService();
+                    $resp_mail = $mail->setEmail($appkey, $domain, $id, 'confirmation');
+
+                    if ($resp_mail['error']) {
+                        Log::error('Message: ' . $resp_mail['errorMessage'] . ' ID cita: ' . $id);
+                    }
+                }                
+            } else {
+                DB::rollBack();
+            }
+        } catch (QueryException $qe) {
+            DB::rollBack();
+            $res['error'] = $qe;
+        } catch (Exception $e) {
+            DB::rollBack();
             $res['error'] = $e;
         }
         

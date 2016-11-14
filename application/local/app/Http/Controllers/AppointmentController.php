@@ -442,6 +442,77 @@ class AppointmentController extends Controller
     }
     
     /**
+     * Confirma citas masivamente
+     *
+     * @param  \Illuminate\Http\Request $request     
+     * @return \Illuminate\Http\Response
+     */
+    public function bulkConfirm(Request $request)
+    {        
+        $resp = array();
+        $data = $request->json()->all();
+        $appkey = $request->header('appkey');
+        $domain = $request->header('domain');
+        $ids = $data['ids'];
+        $calendar_id = 0;
+        $appointment_start_time = '';
+        
+        if (!empty($appkey) && !empty($domain)) {
+        
+            $validator = Validator::make($data, [
+                'ids' => 'bail|required|array'
+            ]);
+
+            if ($validator->fails()) {                        
+                $messages = $validator->errors();
+                $message = '';            
+                foreach ($messages->all() as $key => $msg) {
+                    $message = $msg;
+                    break;
+                }
+
+                $resp = Resp::error(400, 1020, $message);
+            } else {
+            
+                foreach ($ids as $id) {
+                    // Se validan las citas                
+                    $appointment = $this->appointments->listAppointmentById($appkey, $domain, $id);
+                    if (isset($appointment['data']) && (int)$appointment['count'] > 0) {
+                        foreach ($appointment['data'] as $a) {            
+                            $calendar_id = (int)$a->calendar_id;
+                            $appointment_start_time = $a->appointment_start_time;
+                        }
+
+                        if ( $calendar_id > 0 && $appointment_start_time) {
+                            $validate = $this->appointments->isValidAppointment($appkey, $domain, $calendar_id, $appointment_start_time, $id);
+
+                            if (!$validate['is_ok']) {                    
+                                return Resp::error(406, $validate['error_code'], Resp::getCustomMessage($validate['error_code']) . ';' . $id);
+                            }
+                        }                    
+                    } else {            
+                        return Resp::error(404, 2070, Resp::getCustomMessage(2070) . ';' . $id);
+                    }
+                }
+
+                // Se confirman las citas
+                $appointment = $this->appointments->bulkConfirmAppointment($appkey, $domain, $ids);
+
+                if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                
+                    $resp = Resp::error(500, $appointment['error']->getCode(), '', $appointment['error']);
+                } else {                    
+                    $resp = Resp::make(200);
+                }
+            }            
+            
+        } else {
+            return Resp::error(400, 1000);
+        }
+        
+        return $resp;
+    }
+    
+    /**
      * Cancela una cita
      *
      * @param  \Illuminate\Http\Request $request
