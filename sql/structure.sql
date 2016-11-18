@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.24, for linux-glibc2.5 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.12, for osx10.11 (x86_64)
 --
--- Host: localhost    Database: calendar
+-- Host: dev2.arkho.tech    Database: calendars
 -- ------------------------------------------------------
--- Server version	5.6.31-0ubuntu0.14.04.2
+-- Server version	5.5.51
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,7 +29,8 @@ CREATE TABLE `appointments` (
   `applyer_email` varchar(80) NOT NULL,
   `calendar_id` int(11) NOT NULL,
   `subject` varchar(80) DEFAULT NULL,
-  `appoinment_time` datetime NOT NULL,
+  `appointment_start_time` datetime NOT NULL,
+  `appointment_end_time` datetime NOT NULL,
   `is_reserved` tinyint(4) DEFAULT NULL,
   `reservation_date` datetime NOT NULL,
   `confirmation_date` datetime DEFAULT NULL,
@@ -39,10 +40,11 @@ CREATE TABLE `appointments` (
   `cancelation_date` datetime DEFAULT NULL,
   `cancelation_cause` text,
   `applyer_attended` tinyint(4) DEFAULT NULL,
+  `metadata` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_appoinments_calendar_id` (`calendar_id`),
   CONSTRAINT `fk_appoinments_calendar_id` FOREIGN KEY (`calendar_id`) REFERENCES `calendars` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=367 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,6 +59,11 @@ CREATE TABLE `apps` (
   `domain` varchar(150) NOT NULL,
   `name` varchar(70) NOT NULL,
   `contact_email` varchar(80) NOT NULL,
+  `from_email` varchar(80) NOT NULL,
+  `from_name` varchar(80) NOT NULL,
+  `html_confirmation_email` text NOT NULL,
+  `html_modify_email` text NOT NULL,
+  `html_cancel_email` text NOT NULL,
   `status` tinyint(4) NOT NULL,
   PRIMARY KEY (`appkey`,`domain`),
   UNIQUE KEY `app_key_UNIQUE` (`appkey`,`domain`)
@@ -82,7 +89,7 @@ CREATE TABLE `block_schedules` (
   PRIMARY KEY (`id`),
   KEY `fk_block_schedules_calendar_id_idx` (`calendar_id`),
   CONSTRAINT `fk_block_schedules_calendar_id` FOREIGN KEY (`calendar_id`) REFERENCES `calendars` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=410 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,6 +104,7 @@ CREATE TABLE `calendars` (
   `name` varchar(80) NOT NULL,
   `owner_id` varchar(20) NOT NULL,
   `owner_name` varchar(150) NOT NULL,
+  `owner_email` varchar(100) DEFAULT NULL,
   `is_group` tinyint(4) DEFAULT NULL,
   `schedule` text NOT NULL,
   `time_attention` int(11) NOT NULL,
@@ -112,7 +120,7 @@ CREATE TABLE `calendars` (
   KEY `ix_calendars_owner_name` (`owner_name`),
   KEY `fk_calendars_app_key_idx` (`appkey`,`domain`),
   CONSTRAINT `fk_calendars_app_key_domain` FOREIGN KEY (`appkey`, `domain`) REFERENCES `apps` (`appkey`, `domain`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,12 +135,11 @@ CREATE TABLE `non_working_days` (
   `name` varchar(70) NOT NULL,
   `date_dayoff` date NOT NULL,
   `appkey` varchar(15) NOT NULL,
-  `domain` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_non_working_days_app_key` (`appkey`),
-  KEY `fk_non_working_days_app_key_idx` (`appkey`,`domain`),
-  CONSTRAINT `fk_non_working_days_app_key` FOREIGN KEY (`appkey`, `domain`) REFERENCES `apps` (`appkey`, `domain`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+  KEY `fk_non_working_days_app_key_idx` (`appkey`),
+  CONSTRAINT `fk_non_working_days_app_key` FOREIGN KEY (`appkey`) REFERENCES `apps` (`appkey`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -144,4 +151,4 @@ CREATE TABLE `non_working_days` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-23 14:25:55
+-- Dump completed on 2016-11-14 16:47:08
