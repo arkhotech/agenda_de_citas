@@ -87,7 +87,7 @@ paths:
         type: string
       - in: body
         name: body
-        required: true
+        required: false
         schema:
           "$ref": "#/definitions/InputAppointmentBulkConfirm"
       responses:
@@ -580,6 +580,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - name: appkey
+        in: query
+        description: Appkey
+        required: false
+        type: string
       - in: body
         name: body
         required: false
@@ -753,7 +758,7 @@ paths:
         type: string
       - in: body
         name: body
-        required: true
+        required: false
         schema:
           "$ref": "#/definitions/InputBlockScheduleBulk"
       responses:
@@ -1263,6 +1268,8 @@ definitions:
     - domain
     - from_email
     - from_name
+    - html_confirmation_email
+    - html_modify_email
     - name
     - status
     properties:
@@ -1281,6 +1288,17 @@ definitions:
       from_name:
         type: string
         description: Nombre
+      html_cancel_email:
+        type: string
+        description: Plantilla HTML para cancelación de citas codificada en base 64
+      html_confirmation_email:
+        type: string
+        description: Plantilla HTML para confirmación de citas codificada en base
+          64
+      html_modify_email:
+        type: string
+        description: Plantilla HTML para modificación de citas codificada en base
+          64
       name:
         type: string
         description: Nombre de la App
@@ -1693,23 +1711,33 @@ definitions:
     type: object
     required:
     - contact_email
-    - domain
     - from_email
     - from_name
+    - html_cancel_email
+    - html_confirmation_email
+    - html_modify_email
     - name
     properties:
       contact_email:
         type: string
         description: Email de contacto
-      domain:
-        type: string
-        description: Dominio de la App
       from_email:
         type: string
         description: Email de notificación
       from_name:
         type: string
         description: Nombre
+      html_cancel_email:
+        type: string
+        description: Plantilla HTML para cancelación de citas codificada en base 64
+      html_confirmation_email:
+        type: string
+        description: Plantilla HTML para confirmación de citas codificada en base
+          64
+      html_modify_email:
+        type: string
+        description: Plantilla HTML para modificación de citas codificada en base
+          64
       name:
         type: string
         description: Nombre de la App
@@ -1751,6 +1779,9 @@ definitions:
     - contact_email
     - from_email
     - from_name
+    - html_cancel_email
+    - html_confirmation_email
+    - html_modify_email
     - name
     properties:
       contact_email:
@@ -1762,6 +1793,17 @@ definitions:
       from_name:
         type: string
         description: Nombre
+      html_cancel_email:
+        type: string
+        description: Plantilla HTML para cancelación de citas codificada en base 64
+      html_confirmation_email:
+        type: string
+        description: Plantilla HTML para confirmación de citas codificada en base
+          64
+      html_modify_email:
+        type: string
+        description: Plantilla HTML para modificación de citas codificada en base
+          64
       name:
         type: string
         description: Nombre de la App
@@ -1770,7 +1812,7 @@ definitions:
     required:
     - response
     properties:
-      application:
+      apps:
         type: array
         description: Listado de aplicaciones
         items:

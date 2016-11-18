@@ -27,6 +27,9 @@ class App extends Model
         'contact_email',
         'from_email',
         'from_name',
+        'html_confirmation_email',
+        'html_modify_email',
+        'html_cancel_email',
         'status'
     );
 }

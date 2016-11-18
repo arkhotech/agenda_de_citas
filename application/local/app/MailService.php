@@ -53,20 +53,20 @@ class MailService {
                             
                             switch ($template_type) {
                                 case 'confirmation':
-                                    $html_applyer = $_app->html_confirmation_email;
-                                    $html_owner = $_app->html_confirmation_email;
+                                    $html_applyer = base64_decode($_app->html_confirmation_email);
+                                    $html_owner = $html_applyer;
                                     $subject = base64_encode(config('calendar.subject_confirmation_email'));
                                     $html_text = 'confirmación';
                                     break;
                                 case 'modify':
-                                    $html_applyer = $_app->html_modify_email;
-                                    $html_owner = $_app->html_modify_email;
+                                    $html_applyer = base64_decode($_app->html_modify_email);
+                                    $html_owner = $html_applyer;
                                     $subject = base64_encode(config('calendar.subject_modify_email'));
                                     $html_text = 'modificación';
                                     break;
                                 case 'cancel':
-                                    $html_applyer = $_app->html_cancel_email;
-                                    $html_owner = $_app->html_cancel_email;
+                                    $html_applyer = base64_decode($_app->html_cancel_email);
+                                    $html_owner = $html_applyer;
                                     $subject = base64_encode(config('calendar.subject_cancel_email'));
                                     $html_text = 'cancelación';
                                     break;

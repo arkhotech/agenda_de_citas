@@ -65,13 +65,15 @@ class AppController extends Controller
      * Crea un nuevo registro de tipo App
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  string $appkey
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $resp = array();
         $data = $request->json()->all();
-
+        $appkey = $request->input('appkey');
+        
         $validator = Validator::make($data, [
             'domain' => 'required|max:150',
             'name' => 'required|max:70',
@@ -93,7 +95,7 @@ class AppController extends Controller
 
             $resp = Resp::error(400, 1020, $message);
         } else {
-            $apps = $this->app->createApp($data);
+            $apps = $this->app->createApp($data, $appkey);
             
             if (isset($apps['error']) && is_a($apps['error'], 'Exception')) {                
                 $resp = Resp::error(500, $apps['error']->getCode(), '', $apps['error']);
@@ -120,33 +122,37 @@ class AppController extends Controller
         $domain = $request->header('domain');
         $data = $request->json()->all();
         
-        $validator = Validator::make($data, [
-            'name' => 'required|max:70',
-            'contact_email' => 'required|max:150',
-            'from_email' => 'required|max:80',
-            'from_name' => 'required|max:80',
-            'html_confirmation_email' => 'required',
-            'html_modify_email' => 'required',
-            'html_cancel_email' => 'required'
-        ]);
+        if (!empty($appkey) && !empty($domain)) {
+            $validator = Validator::make($data, [
+                'name' => 'required|max:70',
+                'contact_email' => 'required|max:150',
+                'from_email' => 'required|max:80',
+                'from_name' => 'required|max:80',
+                'html_confirmation_email' => 'required',
+                'html_modify_email' => 'required',
+                'html_cancel_email' => 'required'
+            ]);
 
-        if ($validator->fails()) {
-            $messages = $validator->errors();
-            $message = '';
-            foreach ($messages->all() as $msg) {
-                $message = $msg;
-                break;
-            }
+            if ($validator->fails()) {
+                $messages = $validator->errors();
+                $message = '';
+                foreach ($messages->all() as $msg) {
+                    $message = $msg;
+                    break;
+                }
 
-            $resp = Resp::error(400, 1020, $message);
-        } else {
-            $apps = $this->app->updateApp($data, $appkey, $domain);
-            
-            if (isset($apps['error']) && is_a($apps['error'], 'Exception')) {                
-                $resp = Resp::error(500, $apps['error']->getCode(), '', $apps['error']);
+                $resp = Resp::error(400, 1020, $message);
             } else {
-                $resp = Resp::make(200);
+                $apps = $this->app->updateApp($data, $appkey, $domain);
+
+                if (isset($apps['error']) && is_a($apps['error'], 'Exception')) {                
+                    $resp = Resp::error(500, $apps['error']->getCode(), '', $apps['error']);
+                } else {
+                    $resp = Resp::make(200);
+                }
             }
+        } else {
+            $resp = Resp::error(400, 1000);
         }
         
         return $resp;
