@@ -28,7 +28,7 @@ class AppRepository
         try {
 
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = 'cacheAppList';
+            $cache_id = 'cacheAppList_' . $appkey . '_' . $domain;
             $res = Cache::get($cache_id);
                     
             if ($res === null) {

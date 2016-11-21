@@ -520,7 +520,8 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function cancel(Request $request, $id)
-    {
+    {   
+        
         $resp = array();
         $data = $request->json()->all();
         $appkey = $request->header('appkey');
@@ -553,10 +554,10 @@ class AppointmentController extends Controller
                 }
                 
                 if ($appointment_start_time) {
-                    $now = new \DateTime(date('Y-m-d H:i:s'));
-                    $start_date = new \DateTime($appointment_start_time);
-                    $diff = $now->diff($start_date);
-                    if ($diff->format('%R%h') >= $time_to_cancel) {                            
+                    $now = strtotime(date('Y-m-d H:i:s'));
+                    $start_date = strtotime($appointment_start_time);
+                    $diff = ($start_date - $now)/60;
+                    if (floor($diff) >= floor($time_to_cancel*60)) {
                         $appointment = $this->appointments->cancelAppointment($appkey, $domain, $id, $data);
 
                         if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                
@@ -565,7 +566,7 @@ class AppointmentController extends Controller
                             $resp = Resp::make(200);
                         }
                     } else {
-                        $resp = Resp::error(406, 2060, 'Can not cancel appointment because time to cancel calendar must be greather or equal to '.$time_to_cancel.' hours');
+                        $resp = Resp::error(406, 2060, 'No se puede cancelar la cita porque expiró el tiempo máximo. '.$time_to_cancel.' horas de anticipación');
                     }
                 }
             }

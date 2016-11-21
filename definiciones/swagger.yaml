@@ -22,7 +22,7 @@ tags:
 schemes:
 - http
 paths:
-  "/appointment/assists/{appointment_id}":
+  "/appointments/assists/{appointment_id}":
     put:
       tags:
       - Appointments
@@ -60,95 +60,6 @@ paths:
             "$ref": "#/definitions/SuccessResponse"
         '400':
           description: Error 400
-          schema:
-            "$ref": "#/definitions/ErrorResponse"
-        '500':
-          description: Error 500
-          schema:
-            "$ref": "#/definitions/ErrorResponse"
-  "/appointment/bulkConfirm":
-    post:
-      tags:
-      - Appointments
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - name: appkey
-        in: header
-        description: App key
-        required: true
-        type: string
-      - name: domain
-        in: header
-        description: Dominio de la aplicación
-        required: true
-        type: string
-      - in: body
-        name: body
-        required: false
-        schema:
-          "$ref": "#/definitions/InputAppointmentBulkConfirm"
-      responses:
-        '200':
-          description: Success
-          schema:
-            "$ref": "#/definitions/SuccessResponse"
-        '400':
-          description: Error 400
-          schema:
-            "$ref": "#/definitions/ErrorResponse"
-        '406':
-          description: Error 406
-          schema:
-            "$ref": "#/definitions/ErrorResponse"
-        '500':
-          description: Error 500
-          schema:
-            "$ref": "#/definitions/ErrorResponse"
-  "/appointment/{appointment_id}":
-    put:
-      tags:
-      - Appointments
-      description: Actualiza una la información de una cita
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - name: appointment_id
-        in: path
-        description: ID de la cita a modificar
-        required: true
-        type: integer
-        format: int32
-      - name: appkey
-        in: header
-        description: App key
-        required: true
-        type: string
-      - name: domain
-        in: header
-        description: Dominio de la aplicación
-        required: true
-        type: string
-      - in: body
-        name: body
-        required: false
-        schema:
-          "$ref": "#/definitions/InputAppointmentReserve"
-      responses:
-        '200':
-          description: Success
-          schema:
-            "$ref": "#/definitions/SuccessResponse"
-        '400':
-          description: Error 400
-          schema:
-            "$ref": "#/definitions/ErrorResponse"
-        '406':
-          description: Error 406
           schema:
             "$ref": "#/definitions/ErrorResponse"
         '500':
@@ -241,6 +152,47 @@ paths:
             "$ref": "#/definitions/ErrorResponse"
         '404':
           description: Error 404
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '500':
+          description: Error 500
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+  "/appointments/bulkConfirm":
+    post:
+      tags:
+      - Appointments
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: appkey
+        in: header
+        description: App key
+        required: true
+        type: string
+      - name: domain
+        in: header
+        description: Dominio de la aplicación
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: false
+        schema:
+          "$ref": "#/definitions/InputAppointmentBulkConfirm"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/SuccessResponse"
+        '400':
+          description: Error 400
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '406':
+          description: Error 406
           schema:
             "$ref": "#/definitions/ErrorResponse"
         '500':
@@ -524,6 +476,54 @@ paths:
           description: Success
           schema:
             "$ref": "#/definitions/OutputCreateAppointment"
+        '400':
+          description: Error 400
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '406':
+          description: Error 406
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+        '500':
+          description: Error 500
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
+  "/appointments/{appointment_id}":
+    put:
+      tags:
+      - Appointments
+      description: Actualiza una la información de una cita
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: appointment_id
+        in: path
+        description: ID de la cita a modificar
+        required: true
+        type: integer
+        format: int32
+      - name: appkey
+        in: header
+        description: App key
+        required: true
+        type: string
+      - name: domain
+        in: header
+        description: Dominio de la aplicación
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: false
+        schema:
+          "$ref": "#/definitions/InputAppointmentReserve"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/SuccessResponse"
         '400':
           description: Error 400
           schema:
