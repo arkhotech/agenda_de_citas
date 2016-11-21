@@ -119,4 +119,6 @@ Una vez instalado el servicio de calendarios, par ainicializarlo se debe crear u
 automáticamente, estos se deben especificar como parametros de entrada al crear el registro. El HTML puede ser
 el que se estime conveniente y se deben proveer uno para cada acción en citas: confirmar, modificar y cancelar citas. 
 
+IMPORTANTE:  El formato de HTML debe ser en base 64. Para facilitar esta tarea puede usar el siguiente utilizatio online: https://www.base64encode.org/
+
 El archivo new_app_ejemplo.json se puede utilizar como dato para crear la primera aplicación. Esta viene con un template por defecto.
