@@ -232,12 +232,14 @@ class CalendarRepository
                         $cal_array[$i]['domain'] = $d->domain;
                         $i++;
                     }
-
+                    
                     $res['data'] = $cal_array;
                     $res['count'] = $calendars->count();
                     $res['error'] = null;                    
                     
                     Cache::tags([$tag])->put($cache_id, $res, $ttl);
+                } else {                    
+                    $res['error'] = new \Exception('', 1020);
                 }
             }
         } catch (QueryException $qe) {
@@ -282,12 +284,16 @@ class CalendarRepository
                         }
 
                         $calendars = Calendar::where('owner_id', $id)
+                            ->where('appkey', $appkey)
+                            ->where('domain', $domain)
                             ->where('status', 1)
                             ->orderBy('name', 'asc')
                             ->paginate($per_page);
                         $res['count'] = $calendars->total();
                     } else {
                         $calendars = Calendar::where('owner_id', $id)
+                            ->where('appkey', $appkey)
+                            ->where('domain', $domain)
                             ->where('status', 1)
                             ->orderBy('name', 'asc')
                             ->get();

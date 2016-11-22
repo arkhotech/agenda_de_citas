@@ -66,6 +66,8 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('appointments.calendar_id', $id)
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')
@@ -76,6 +78,8 @@ class AppointmentRepository
                     } else {
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where('appointments.calendar_id', $id)
                                 ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
@@ -162,6 +166,8 @@ class AppointmentRepository
 
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where('applyer_id', $id)
                                 ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
                                 ->where('is_canceled', '<>', 1)
@@ -174,6 +180,8 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('applyer_id', $id)
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
@@ -260,6 +268,8 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('owner_id', $id)
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')
@@ -271,6 +281,8 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('owner_id', $id)
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
@@ -360,6 +372,8 @@ class AppointmentRepository
                         $appointments = Appointment::select($columns)
                             ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                             ->where('calendar_id', $calendar_id)
+                            ->where('appkey', $appkey)
+                            ->where('domain', $domain)
                             ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                             ->where('appointment_start_time', '<=', $max_date_time)
                             ->where('is_canceled', '<>', 1)->orderBy('appointment_start_time', 'ASC')->get();
@@ -376,6 +390,8 @@ class AppointmentRepository
                             $appointments = Appointment::select($columns)
                                 ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->where('calendar_id', $calendar_id)
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where(DB::raw('YEAR(appointment_start_time)'), (int)$date_format[0])
                                 ->where(DB::raw('MONTH(appointment_start_time)'), (int)$date_format[1])
                                 ->where('is_canceled', '<>', 1)->get();
@@ -386,6 +402,8 @@ class AppointmentRepository
                             $appointments = Appointment::select($columns)
                                 ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->where('calendar_id', $calendar_id)
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))
                                 ->where('is_canceled', '<>', 1)->get();
                         }
@@ -524,12 +542,19 @@ class AppointmentRepository
         try {
             
             foreach ($calendar_array as $calendar) {
+                $calendar_id = isset($calendar['id']) ? $calendar['id'] : 0;
+                $cal_obj = new CalendarRepository();
+                $cal_info = $cal_obj->listCalendarById($appkey, $domain, $calendar_id);
+                        
+                if ($cal_info['error'] !== null || (isset($cal_info['count']) && (int)$cal_info['count'] == 0)) {
+                    $res['error'] = new \Exception('', 1030);
+                    return $res;
+                }
 
                 $res = array();
 
                 $ttl = (int)config('calendar.cache_ttl');
-                $month_max_availability = (int)config('calendar.month_max_appointments');
-                $calendar_id = isset($calendar['id']) ? $calendar['id'] : '';
+                $month_max_availability = (int)config('calendar.month_max_appointments');                
                 $calendar_name = isset($calendar['name']) ? $calendar['name'] : '';
                 $owner_name = isset($calendar['owner_name']) ? $calendar['owner_name'] : '';
                 $schedule = isset($calendar['schedule']) ? $calendar['schedule'] : array();
@@ -558,21 +583,25 @@ class AppointmentRepository
                             $months = new \DateTime(date('Y-m-d H:i:s'));
                             $interval = new \DateInterval('P'.$month_max_availability.'M');
                             $max_date_time = $months->add($interval)->format('Y-m-d H:i:s');
-                        
+                            
                             $appointments = Appointment::select($columns)
                                 ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
                                 ->where('owner_id', $owner_id)
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where('calendar_id', $calendar_id)
                                 ->where(DB::raw('DATE(appointment_start_time)'), '>=', date('Y-m-d'))
                                 ->where('appointment_start_time', '<=', $max_date_time)
                                 ->where('is_canceled', '<>', 1)                            
-                                ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();
+                                ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')->get();                            
                         } else {
                             $appointment_date = new \DateTime($date);
                             $max_date_time = $appointment_date->format('Y-m-d');                        
                             
                             $appointments = Appointment::select($columns)
                                 ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
+                                ->where('appkey', $appkey)
+                                ->where('domain', $domain)
                                 ->where('owner_id', $owner_id)
                                 ->where('calendar_id', $calendar_id)
                                 ->where(DB::raw('DATE(appointment_start_time)'), $appointment_date->format('Y-m-d'))

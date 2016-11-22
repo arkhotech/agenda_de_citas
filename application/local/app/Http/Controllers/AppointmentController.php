@@ -247,12 +247,7 @@ class AppointmentController extends Controller
                 if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                     $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
                 } else {
-                    if (count($appointments) > 0) {
-                        //$allAppointments['calendar_id'] = $appointments['calendar_id'];
-                        //$allAppointments['owner_name'] = $appointments['owner_name'];
-                        //$allAppointments['concurrency'] = $appointments['concurrency'];
-                        //$allAppointments['appointmentsavailable'] = $appointments['appointmentsavailable'];
-                        
+                    if (count($appointments) > 0) {                        
                         $resp = Resp::make(200, $appointments);
                     } else {
                         $resp = Resp::error(404, 2070);
