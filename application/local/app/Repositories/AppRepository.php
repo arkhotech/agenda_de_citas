@@ -28,7 +28,7 @@ class AppRepository
         try {
 
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = 'cacheAppList';
+            $cache_id = 'cacheAppList_' . $appkey . '_' . $domain;
             $res = Cache::get($cache_id);
                     
             if ($res === null) {
@@ -59,16 +59,21 @@ class AppRepository
      * Crea un nuevo registro de tipo App
      * 
      * @param array $data
+     * @param string $appkey
      * @return Collection
      */
-    public function createApp($data)
+    public function createApp($data, $appkey)
     {
         $res = array();
         
         try {
-            $data['appkey'] = uniqid(App::count());
+            if ($appkey) {
+                $data['appkey'] = $appkey;
+            } else {
+                $data['appkey'] = uniqid(App::count());
+            }            
             $data['status'] = 1;
-
+            
             $app = App::create($data);
             $res['data'] = $app;
             $res['error'] = null;
@@ -76,7 +81,7 @@ class AppRepository
             Cache::forget('cacheAppList');
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 1040);
+                $res['error'] = new \Exception('', 4040);
             } else {
                 $res['error'] = $qe;
             }
@@ -116,7 +121,7 @@ class AppRepository
             Cache::forget('cacheAppList');
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 1040);
+                $res['error'] = new \Exception('', 4040);
             } else {
                 $res['error'] = $qe;
             }

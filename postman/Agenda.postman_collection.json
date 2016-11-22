@@ -1,0 +1,1100 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Agenda",
+		"_postman_id": "7f9f5681-6e2d-c4fb-d1ed-7009bda35fc3",
+		"description": "Esquema en el que estarán construidos los servicios para la aplicación de agendador de citas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "appointments",
+			"description": "Folder for appointments",
+			"item": [
+				{
+					"name": "/appointments/:appointment_id",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/:appointment_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								":appointment_id"
+							],
+							"variable": [
+								{
+									"value": "{{appointment_id}}",
+									"id": "appointment_id"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Actualiza una la información de una cita"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/assists/:appointment_id",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/assists/:appointment_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"assists",
+								":appointment_id"
+							],
+							"variable": [
+								{
+									"value": "{{appointment_id}}",
+									"id": "appointment_id"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Actualiza una cita a asistió o no asistió"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/bulkConfirm",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/bulkConfirm",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/availability/listByOwner/:owner_id?date={{date}}",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/availability/listByOwner/:owner_id?date={{date}}",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"availability",
+								"listByOwner",
+								":owner_id"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "{{date}}"
+								}
+							],
+							"variable": [
+								{
+									"value": "{{owner_id}}",
+									"id": "owner_id"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista la disponiblidad de citas por owner en una fecha dada"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/availability/:calendar_id?date={{date}}",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/availability/:calendar_id?date={{date}}",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"availability",
+								":calendar_id"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "{{date}}"
+								}
+							],
+							"variable": [
+								{
+									"value": "{{calendar_id}}",
+									"id": "calendar_id"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista la disponiblidad de citas por calendario en una fecha dada"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/cancel/:appointment_id",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/cancel/:appointment_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"cancel",
+								":appointment_id"
+							],
+							"variable": [
+								{
+									"value": "{{appointment_id}}",
+									"id": "appointment_id"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Cancela una cita"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/confirm/:appointment_id",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/confirm/:appointment_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"confirm",
+								":appointment_id"
+							],
+							"variable": [
+								{
+									"value": "{{appointment_id}}",
+									"id": "appointment_id"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/listByApplyer/:applyer_id?page={{page}}&records={{records}}",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByApplyer/:applyer_id?page={{page}}&records={{records}}",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"listByApplyer",
+								":applyer_id"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{page}}"
+								},
+								{
+									"key": "records",
+									"value": "{{records}}"
+								}
+							],
+							"variable": [
+								{
+									"value": "{{applyer_id}}",
+									"id": "applyer_id"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista todas las citas futuras solicitadas de un solicitante"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/listByCalendar/:calendar_id?page={{page}}&records={{records}}",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByCalendar/:calendar_id?page={{page}}&records={{records}}",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"listByCalendar",
+								":calendar_id"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{page}}"
+								},
+								{
+									"key": "records",
+									"value": "{{records}}"
+								}
+							],
+							"variable": [
+								{
+									"value": "{{calendar_id}}",
+									"id": "calendar_id"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista todas las citas futuras de un usuario por agenda"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/listByOwner/:owner_id?page={{page}}&records={{records}}",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByOwner/:owner_id?page={{page}}&records={{records}}",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"appointments",
+								"listByOwner",
+								":owner_id"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{page}}"
+								},
+								{
+									"key": "records",
+									"value": "{{records}}"
+								}
+							],
+							"variable": [
+								{
+									"value": "{{owner_id}}",
+									"id": "owner_id"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista todas las citas futuras solicitadas de un propietario"
+					},
+					"response": []
+				},
+				{
+					"name": "/appointments/reserve",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/reserve",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Reserva una cita"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "apps",
+			"description": "Folder for apps",
+			"item": [
+				{
+					"name": "/apps (List Application)",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps",
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Lista aplicaciones"
+					},
+					"response": []
+				},
+				{
+					"name": "/apps (Create Application)",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Crea aplicaciones"
+					},
+					"response": []
+				},
+				{
+					"name": "/apps (UpdateApplication)",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"domain\": \"Santiago\",\n    \"name\": \"Prueba2\",\n    \"contact_email\": \"msilva@arkhotech.com\",\n    \"from_email\": \"dyt-notificaciones@minsegpres.gob.cl\",\n    \"from_name\" : \"Administrador Dev3\",\n    \"html_confirmation_email\": \"\",\n\t\"html_modify_email\": \"\",\n\t\"html_cancel_email\": \"\"\n}\n"
+						},
+						"description": "Actualiza una App"
+					},
+					"response": []
+				},
+				{
+					"name": "/apps/changeStatus",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps/changeStatus",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Cambia el estado una App"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "blockSchedules",
+			"description": "Folder for blockSchedules",
+			"item": [
+				{
+					"name": "/blockSchedules",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules",
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista todos los días no laborables del año actual"
+					},
+					"response": []
+				},
+				{
+					"name": "/blockSchedules",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Crea Bloqueo de días sobre una agenda"
+					},
+					"response": []
+				},
+				{
+					"name": "/blockSchedules/bulkCreate",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules/bulkCreate",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/blockSchedules/:block_schedule_id",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules/:block_schedule_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"blockSchedules",
+								":block_schedule_id"
+							],
+							"variable": [
+								{
+									"value": "{{block_schedule_id}}",
+									"id": "block_schedule_id"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Elimina el bloqueo de un horario"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "calendars",
+			"description": "Folder for calendars",
+			"item": [
+				{
+					"name": "/calendars?page={{page}}&records={{records}}",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars?page={{page}}&records={{records}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista todas las instancias de agenda"
+					},
+					"response": []
+				},
+				{
+					"name": "/calendars (Data)",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Crea instancias de agenda para un usuario o grupo"
+					},
+					"response": []
+				},
+				{
+					"name": "/calendars/disable/:calendar_id",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/disable/:calendar_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"calendars",
+								"disable",
+								":calendar_id"
+							],
+							"variable": [
+								{
+									"value": "{{calendar_id}}",
+									"id": "calendar_id"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Deshabilita una agenda"
+					},
+					"response": []
+				},
+				{
+					"name": "/calendars/listByOwner/:owner_id?page={{page}}&records={{records}}",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/listByOwner/:owner_id?page={{page}}&records={{records}}",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"calendars",
+								"listByOwner",
+								":owner_id"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{page}}"
+								},
+								{
+									"key": "records",
+									"value": "{{records}}"
+								}
+							],
+							"variable": [
+								{
+									"value": "{{owner_id}}",
+									"id": "owner_id"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista todas las instancias de agenda que pertenecen a un usuario"
+					},
+					"response": []
+				},
+				{
+					"name": "/calendars/searchByName?text={{text}}&page={{page}}&records={{records}}",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/searchByName?text={{text}}&page={{page}}&records={{records}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Filtra por nombre de la agenda o propietario de la agenda"
+					},
+					"response": []
+				},
+				{
+					"name": "/calendars/:calendar_id (List)",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/:calendar_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"calendars",
+								":calendar_id"
+							],
+							"variable": [
+								{
+									"value": "{{calendar_id}}",
+									"id": "calendar_id"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista un calendario por su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "/calendars/:calendar_id (Update)",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/:calendar_id",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"calendars",
+								":calendar_id"
+							],
+							"variable": [
+								{
+									"value": "{{calendar_id}}",
+									"id": "calendar_id"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Actualiza una instancia de agenda"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "daysOff",
+			"description": "Folder for daysOff",
+			"item": [
+				{
+					"name": "/daysOff?year={{year}}",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff?year={{year}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Lista todos los días no laborables futuros"
+					},
+					"response": []
+				},
+				{
+					"name": "/daysOff",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Crea días no laborables"
+					},
+					"response": []
+				},
+				{
+					"name": "/daysOff/bulkLoad",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff/bulkLoad",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Crea días no laborables basado en un array"
+					},
+					"response": []
+				},
+				{
+					"name": "/daysOff/:day_off_id/",
+					"request": {
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff/:day_off_id/",
+							"protocol": "{{protocol}}",
+							"auth": {},
+							"host": [
+								"{{server}}"
+							],
+							"port": "{{port}}/{{context}}",
+							"path": [
+								"daysOff",
+								":day_off_id",
+								""
+							],
+							"variable": [
+								{
+									"value": "{{day_off_id}}",
+									"id": "day_off_id"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": "Elimina un día no laboral"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

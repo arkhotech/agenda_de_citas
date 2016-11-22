@@ -250,7 +250,8 @@ class Response {
             //App
             4010 => 'No hay applicaciones',
             4020 => 'Aplicación no editada, campos similares',
-            4030 => 'Estado de aplicación no cambió, mismo estado'
+            4030 => 'Estado de aplicación no cambió, mismo estado',
+            4040 => 'La appkey y el dominio debe ser único'
         );
         
 		$result = (isset($codes[$code])) ? $codes[$code] : 'Código de estado desconocido';

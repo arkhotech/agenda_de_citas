@@ -1109,7 +1109,7 @@ class AppointmentRepository
      * @return Collection
      */
     public function deleteAppointmentsPendingToConfirm()
-    {
+    {        
         $res = array();
         
         try {
@@ -1120,7 +1120,7 @@ class AppointmentRepository
                 'appkey',
                 'domain'
             );
-            $now = new \DateTime(date('Y-m-d H:i:s'));
+            $now = strtotime(date('Y-m-d H:i:s'));
 
             $appointments = Appointment::select($columns)
                     ->join('calendars', 'appointments.calendar_id', '=', 'calendars.id')
@@ -1128,10 +1128,10 @@ class AppointmentRepository
                     ->where('appointments.is_canceled', 0)->get();
 
             foreach ($appointments as $appointment) {
-                $time_to_confirm = (int)$appointment->time_confirm_appointment;                    
-                $reservation_date = new \DateTime($appointment->reservation_date);
-                $diff = $reservation_date->diff($now);
-                if ($diff->format('%R%i') >= $time_to_confirm) {
+                $time_to_confirm = (int)$appointment->time_confirm_appointment;                
+                $reservation_date = strtotime($appointment->reservation_date);                
+                $diff = ($now - $reservation_date)/60;
+                if (floor($diff) > floor(($time_to_confirm))) {
                     $this->destroyAppointment($appointment->appkey, $appointment->domain, (int)$appointment->id);
                 }
             }                
