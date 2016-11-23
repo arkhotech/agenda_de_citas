@@ -143,12 +143,17 @@ class AppController extends Controller
 
                 $resp = Resp::error(400, 1020, $message);
             } else {
-                $apps = $this->app->updateApp($data, $appkey, $domain);
-
-                if (isset($apps['error']) && is_a($apps['error'], 'Exception')) {                
-                    $resp = Resp::error(500, $apps['error']->getCode(), '', $apps['error']);
+                $info_app = $this->app->listApp($appkey, $domain); 
+                if ($info_app['count'] > 0) {
+                    $apps = $this->app->updateApp($data, $appkey, $domain);
+                    
+                    if (isset($apps['error']) && is_a($apps['error'], 'Exception')) {                
+                        $resp = Resp::error(500, $apps['error']->getCode(), '', $apps['error']);
+                    } else {
+                        $resp = Resp::make(200);
+                    }
                 } else {
-                    $resp = Resp::make(200);
+                    $resp = Resp::error(404, 4010);
                 }
             }
         } else {
