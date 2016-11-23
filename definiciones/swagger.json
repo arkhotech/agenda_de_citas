@@ -6,7 +6,7 @@
         "title": "Agenda",
         "contact": {}
     },
-    "host": "localhost",
+    "host": "dev2.arkho.tech",
     "basePath": "/v1",
     "tags": [
         {
@@ -34,7 +34,7 @@
         "http"
     ],
     "paths": {
-        "/appointment/assists/{appointment_id}": {
+        "/appointments/assists/{appointment_id}": {
             "put": {
                 "tags": [
                     "Appointments"
@@ -87,141 +87,6 @@
                     },
                     "400": {
                         "description": "Error 400",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Error 500",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/appointment/bulkConfirm": {
-            "post": {
-                "tags": [
-                    "Appointments"
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "appkey",
-                        "in": "header",
-                        "description": "App key",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "domain",
-                        "in": "header",
-                        "description": "Dominio de la aplicación",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/InputAppointmentBulkConfirm"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Error 400",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
-                        }
-                    },
-                    "406": {
-                        "description": "Error 406",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Error 500",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/appointment/{appointment_id}": {
-            "put": {
-                "tags": [
-                    "Appointments"
-                ],
-                "description": "Actualiza una la información de una cita",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "appointment_id",
-                        "in": "path",
-                        "description": "ID de la cita a modificar",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "name": "appkey",
-                        "in": "header",
-                        "description": "App key",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "domain",
-                        "in": "header",
-                        "description": "Dominio de la aplicación",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/InputAppointmentReserve"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Error 400",
-                        "schema": {
-                            "$ref": "#/definitions/ErrorResponse"
-                        }
-                    },
-                    "406": {
-                        "description": "Error 406",
                         "schema": {
                             "$ref": "#/definitions/ErrorResponse"
                         }
@@ -358,6 +223,69 @@
                     },
                     "404": {
                         "description": "Error 404",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error 500",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/appointments/bulkConfirm": {
+            "post": {
+                "tags": [
+                    "Appointments"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "appkey",
+                        "in": "header",
+                        "description": "App key",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "domain",
+                        "in": "header",
+                        "description": "Dominio de la aplicación",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/InputAppointmentBulkConfirm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error 400",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "406": {
+                        "description": "Error 406",
                         "schema": {
                             "$ref": "#/definitions/ErrorResponse"
                         }
@@ -798,12 +726,84 @@
                 }
             }
         },
+        "/appointments/{appointment_id}": {
+            "put": {
+                "tags": [
+                    "Appointments"
+                ],
+                "description": "Actualiza una la información de una cita",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "appointment_id",
+                        "in": "path",
+                        "description": "ID de la cita a modificar",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "appkey",
+                        "in": "header",
+                        "description": "App key",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "domain",
+                        "in": "header",
+                        "description": "Dominio de la aplicación",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/InputAppointmentReserve"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error 400",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "406": {
+                        "description": "Error 406",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error 500",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/apps": {
             "get": {
                 "tags": [
                     "Application"
                 ],
-                "description": "Lista las aplicaciones",
+                "description": "Lista las aplicaciones existentes en el servidor. Si se especifica los parametros appkey o domain, se filtran por ese valor.",
                 "produces": [
                     "application/json"
                 ],
@@ -811,7 +811,7 @@
                     {
                         "name": "appkey",
                         "in": "query",
-                        "description": "App key",
+                        "description": "Appkey de la valor",
                         "required": false,
                         "type": "string"
                     },
@@ -854,7 +854,7 @@
                 "tags": [
                     "Application"
                 ],
-                "description": "Crea aplicaciones",
+                "description": "Crea aplicaciones o dominios dentro de una aplicacion si se especifica. Si se especifíìica el parametro appkey con un valor ya existente, entonces se crea un nuevo dominio para la aplicacion.",
                 "consumes": [
                     "application/json"
                 ],
@@ -862,6 +862,13 @@
                     "application/json"
                 ],
                 "parameters": [
+                    {
+                        "name": "appkey",
+                        "in": "query",
+                        "description": "Identificador de aplicacion. Si se especifica este parametro, entonces se creara un nuevo dominio.",
+                        "required": false,
+                        "type": "string"
+                    },
                     {
                         "in": "body",
                         "name": "body",
@@ -1014,7 +1021,7 @@
                 "tags": [
                     "BlockSchedules"
                 ],
-                "description": "Lista todos los días no laborables del año actual",
+                "description": "Lista todos los días bloquedos del año actual",
                 "parameters": [
                     {
                         "name": "appkey",
@@ -1099,6 +1106,7 @@
                 "tags": [
                     "BlockSchedules"
                 ],
+                "description": "Crea bloqueos para un rango de fechas en una agenda",
                 "consumes": [
                     "application/json"
                 ],
@@ -1124,7 +1132,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "$ref": "#/definitions/InputBlockScheduleBulk"
                         }
@@ -1212,7 +1220,7 @@
                 "tags": [
                     "Calendars"
                 ],
-                "description": "Lista todas las instancias de agenda",
+                "description": "Lista todas las instancias de agenda filtradas y paginadas seg´nun los parametros enviados en el query string, appkey y domain.",
                 "produces": [
                     "application/json"
                 ],
@@ -1279,7 +1287,7 @@
                 "tags": [
                     "Calendars"
                 ],
-                "summary": "data",
+                "summary": "Crea calendarios",
                 "description": "Crea instancias de agenda para un usuario o grupo",
                 "consumes": [
                     "application/json"
@@ -1338,7 +1346,7 @@
                 "tags": [
                     "Calendars"
                 ],
-                "description": "Deshabilita una agenda",
+                "description": "Deshabilita una agenda. Esta agenda no es eliminada fisicamente.",
                 "produces": [
                     "application/json"
                 ],
@@ -1780,7 +1788,7 @@
                 "tags": [
                     "DaysOff"
                 ],
-                "description": "Crea días no laborables basado en un array",
+                "description": "Crea días no laborables de una vez basado en un array. Esto servicio esta orientado a la carga automatica desde otros sistemas en la que de una vez se cargue el año completo.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1884,6 +1892,8 @@
                 "domain",
                 "from_email",
                 "from_name",
+                "html_confirmation_email",
+                "html_modify_email",
                 "name",
                 "status"
             ],
@@ -1907,6 +1917,18 @@
                 "from_name": {
                     "type": "string",
                     "description": "Nombre"
+                },
+                "html_cancel_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para cancelación de citas codificada en base 64"
+                },
+                "html_confirmation_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para confirmación de citas codificada en base 64"
+                },
+                "html_modify_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para modificación de citas codificada en base 64"
                 },
                 "name": {
                     "type": "string",
@@ -2422,19 +2444,21 @@
             "type": "object",
             "required": [
                 "contact_email",
-                "domain",
                 "from_email",
                 "from_name",
+                "html_cancel_email",
+                "html_confirmation_email",
+                "html_modify_email",
                 "name"
             ],
             "properties": {
+                "domain": {
+                    "type": "string",
+                    "description": "valor del dominio con el que se agruparan las agendas"
+                },
                 "contact_email": {
                     "type": "string",
                     "description": "Email de contacto"
-                },
-                "domain": {
-                    "type": "string",
-                    "description": "Dominio de la App"
                 },
                 "from_email": {
                     "type": "string",
@@ -2443,6 +2467,18 @@
                 "from_name": {
                     "type": "string",
                     "description": "Nombre"
+                },
+                "html_cancel_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para cancelación de citas codificada en base 64"
+                },
+                "html_confirmation_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para confirmación de citas codificada en base 64"
+                },
+                "html_modify_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para modificación de citas codificada en base 64"
                 },
                 "name": {
                     "type": "string",
@@ -2502,6 +2538,9 @@
                 "contact_email",
                 "from_email",
                 "from_name",
+                "html_cancel_email",
+                "html_confirmation_email",
+                "html_modify_email",
                 "name"
             ],
             "properties": {
@@ -2517,6 +2556,18 @@
                     "type": "string",
                     "description": "Nombre"
                 },
+                "html_cancel_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para cancelación de citas codificada en base 64"
+                },
+                "html_confirmation_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para confirmación de citas codificada en base 64"
+                },
+                "html_modify_email": {
+                    "type": "string",
+                    "description": "Plantilla HTML para modificación de citas codificada en base 64"
+                },
                 "name": {
                     "type": "string",
                     "description": "Nombre de la App"
@@ -2529,7 +2580,7 @@
                 "response"
             ],
             "properties": {
-                "application": {
+                "apps": {
                     "type": "array",
                     "description": "Listado de aplicaciones",
                     "items": {
