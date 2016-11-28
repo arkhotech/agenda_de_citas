@@ -1259,6 +1259,22 @@ paths:
           description: Error 500
           schema:
             "$ref": "#/definitions/ErrorResponse"
+  "/deleteAppointmentsPendingToConfirm":
+    delete:
+      tags:
+      - Appointments
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Status 200
+          schema:
+            "$ref": "#/definitions/SuccessResponse"
+        '500':
+          description: Status 500
+          schema:
+            "$ref": "#/definitions/ErrorResponse"
 definitions:
   Application:
     type: object
