@@ -114,7 +114,7 @@ class AppointmentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function listByApplyer(Request $request, $id)
+    public function listByApplier(Request $request, $id)
     {
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
@@ -123,7 +123,7 @@ class AppointmentController extends Controller
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
-            $appointments = $this->appointments->listAppointmentsByApplyerId($appkey, $domain, $id, $page, $records);
+            $appointments = $this->appointments->listAppointmentsByApplierId($appkey, $domain, $id, $page, $records);
             
             if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                 $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
@@ -278,9 +278,9 @@ class AppointmentController extends Controller
         
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
-                'applyer_email' => 'bail|required|email|max:80',
-                'applyer_id' => 'bail|required|max:20',
-                'applyer_name' => 'bail|required|max:150',
+                'applier_email' => 'bail|required|email|max:80',
+                'applier_id' => 'bail|required|max:20',
+                'applier_name' => 'bail|required|max:150',
                 'appointment_start_time' => 'bail|required|isodate',
                 'calendar_id' => 'bail|required|integer',
                 'subject' => 'max:80',
@@ -307,7 +307,7 @@ class AppointmentController extends Controller
                 if (!$validate['is_ok']) {                    
                     return Resp::error(406, $validate['error_code']);
                 } else {
-                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['calendar_id'], $data['applyer_id'], $data['appointment_start_time']);
+                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['calendar_id'], $data['applier_id'], $data['appointment_start_time']);
                     
                     if ($isOverlapping) {
                         return Resp::error(400, 1020, 'Ya tiene una cita reservada para este día');
@@ -347,9 +347,9 @@ class AppointmentController extends Controller
         if (!empty($appkey) && !empty($domain)) {
             if ((int)$id > 0) {
                 $validator = Validator::make($data, [
-                    'applyer_email' => 'bail|required|email|max:80',
-                    'applyer_id' => 'max:20',
-                    'applyer_name' => 'max:150',
+                    'applier_email' => 'bail|required|email|max:80',
+                    'applier_id' => 'max:20',
+                    'applier_name' => 'max:150',
                     'appointment_start_time' => 'bail|required|isodate',
                     'calendar_id' => 'bail|required|integer',
                     'subject' => 'max:80'
@@ -608,7 +608,7 @@ class AppointmentController extends Controller
         
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
-                'applyer_attended' => 'bail|required|boolean'
+                'applier_attended' => 'bail|required|boolean'
             ]);
 
             if ($validator->fails()) {

@@ -313,10 +313,10 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/listByApplyer/:applyer_id?page={{page}}&records={{records}}",
+					"name": "/appointments/listByApplier/:applier_id?page={{page}}&records={{records}}",
 					"request": {
 						"url": {
-							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByApplyer/:applyer_id?page={{page}}&records={{records}}",
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByApplier/:applier_id?page={{page}}&records={{records}}",
 							"protocol": "{{protocol}}",
 							"auth": {},
 							"host": [
@@ -325,8 +325,8 @@
 							"port": "{{port}}/{{context}}",
 							"path": [
 								"appointments",
-								"listByApplyer",
-								":applyer_id"
+								"listByApplier",
+								":applier_id"
 							],
 							"query": [
 								{
@@ -340,8 +340,8 @@
 							],
 							"variable": [
 								{
-									"value": "{{applyer_id}}",
-									"id": "applyer_id"
+									"value": "{{applier_id}}",
+									"id": "applier_id"
 								}
 							]
 						},

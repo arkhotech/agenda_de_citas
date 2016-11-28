@@ -431,7 +431,7 @@
                 }
             }
         },
-        "/appointments/listByApplyer/{applyer_id}": {
+        "/appointments/listByApplier/{applier_id}": {
             "get": {
                 "tags": [
                     "Appointments"
@@ -442,7 +442,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "applyer_id",
+                        "name": "applier_id",
                         "in": "path",
                         "description": "ID del solicitante de la cita",
                         "required": true,
@@ -1943,8 +1943,8 @@
         "Appointment": {
             "type": "object",
             "required": [
-                "applyer_attended",
-                "applyer_name",
+                "applier_attended",
+                "applier_name",
                 "appoinment_time",
                 "appointment_id",
                 "calendar_id",
@@ -1952,12 +1952,12 @@
                 "subject"
             ],
             "properties": {
-                "applyer_attended": {
+                "applier_attended": {
                     "type": "integer",
                     "format": "int32",
                     "description": "Si la cita fue atendida o no 1 o 0"
                 },
-                "applyer_name": {
+                "applier_name": {
                     "type": "string",
                     "description": "Nombre del solicitante"
                 },
@@ -1987,8 +1987,8 @@
         "AppointmentAvailable": {
             "type": "object",
             "required": [
-                "applyer_email",
-                "applyer_name",
+                "applier_email",
+                "applier_name",
                 "appoinment_start_time",
                 "appointment_end_time",
                 "appointment_id",
@@ -1998,11 +1998,11 @@
                 "time"
             ],
             "properties": {
-                "applyer_email": {
+                "applier_email": {
                     "type": "string",
                     "description": "E-mail del solicitante"
                 },
-                "applyer_name": {
+                "applier_name": {
                     "type": "string",
                     "description": "Nombre del solicitante"
                 },
@@ -2206,10 +2206,10 @@
         "InputAppointmentAttended": {
             "type": "object",
             "required": [
-                "applyer_attended"
+                "applier_attended"
             ],
             "properties": {
-                "applyer_attended": {
+                "applier_attended": {
                     "type": "integer",
                     "format": "int32",
                     "description": "Si la cita fue atendida por el solicitante 1 o 0"
@@ -2256,20 +2256,20 @@
         "InputAppointmentReserve": {
             "type": "object",
             "required": [
-                "applyer_email",
+                "applier_email",
                 "appointment_start_time",
                 "calendar_id"
             ],
             "properties": {
-                "applyer_email": {
+                "applier_email": {
                     "type": "string",
                     "description": "Email del solicitante de la cita"
                 },
-                "applyer_id": {
+                "applier_id": {
                     "type": "string",
                     "description": "ID del solicitante de la cita"
                 },
-                "applyer_name": {
+                "applier_name": {
                     "type": "string",
                     "description": "Nombre del solicitante de la cita"
                 },

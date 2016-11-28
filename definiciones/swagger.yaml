@@ -287,7 +287,7 @@ paths:
           description: Error 500
           schema:
             "$ref": "#/definitions/ErrorResponse"
-  "/appointments/listByApplyer/{applyer_id}":
+  "/appointments/listByApplier/{applier_id}":
     get:
       tags:
       - Appointments
@@ -295,7 +295,7 @@ paths:
       produces:
       - application/json
       parameters:
-      - name: applyer_id
+      - name: applier_id
         in: path
         description: ID del solicitante de la cita
         required: true
@@ -1311,19 +1311,19 @@ definitions:
   Appointment:
     type: object
     required:
-    - applyer_attended
-    - applyer_name
+    - applier_attended
+    - applier_name
     - appoinment_time
     - appointment_id
     - calendar_id
     - owner_name
     - subject
     properties:
-      applyer_attended:
+      applier_attended:
         type: integer
         format: int32
         description: Si la cita fue atendida o no 1 o 0
-      applyer_name:
+      applier_name:
         type: string
         description: Nombre del solicitante
       appoinment_time:
@@ -1345,8 +1345,8 @@ definitions:
   AppointmentAvailable:
     type: object
     required:
-    - applyer_email
-    - applyer_name
+    - applier_email
+    - applier_name
     - appoinment_start_time
     - appointment_end_time
     - appointment_id
@@ -1355,10 +1355,10 @@ definitions:
     - subject
     - time
     properties:
-      applyer_email:
+      applier_email:
         type: string
         description: E-mail del solicitante
-      applyer_name:
+      applier_name:
         type: string
         description: Nombre del solicitante
       appoinment_start_time:
@@ -1514,9 +1514,9 @@ definitions:
   InputAppointmentAttended:
     type: object
     required:
-    - applyer_attended
+    - applier_attended
     properties:
-      applyer_attended:
+      applier_attended:
         type: integer
         format: int32
         description: Si la cita fue atendida por el solicitante 1 o 0
@@ -1549,17 +1549,17 @@ definitions:
   InputAppointmentReserve:
     type: object
     required:
-    - applyer_email
+    - applier_email
     - appointment_start_time
     - calendar_id
     properties:
-      applyer_email:
+      applier_email:
         type: string
         description: Email del solicitante de la cita
-      applyer_id:
+      applier_id:
         type: string
         description: ID del solicitante de la cita
-      applyer_name:
+      applier_name:
         type: string
         description: Nombre del solicitante de la cita
       appointment_start_time:

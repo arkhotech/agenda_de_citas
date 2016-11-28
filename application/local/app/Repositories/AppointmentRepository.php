@@ -47,11 +47,11 @@ class AppointmentRepository
                     $columns = array(
                         DB::raw('appointments.id AS appointment_id'),
                         'subject',
-                        'applyer_name',
-                        'applyer_email',
+                        'applier_name',
+                        'applier_email',
                         'owner_name',
                         'appointment_start_time',
-                        'applyer_attended',
+                        'applier_attended',
                         'calendar_id',
                         'metadata'
                     );
@@ -97,11 +97,11 @@ class AppointmentRepository
                         $appointment_time = $date->format('Y-m-d\TH:i:sO');
                         $appointments_array[$i]['appointment_id'] = $a->appointment_id;
                         $appointments_array[$i]['subject'] = $a->subject;
-                        $appointments_array[$i]['applyer_name'] = $a->applyer_name;
-                        $appointments_array[$i]['applyer_email'] = $a->applyer_email;
+                        $appointments_array[$i]['applier_name'] = $a->applier_name;
+                        $appointments_array[$i]['applier_email'] = $a->applier_email;
                         $appointments_array[$i]['owner_name'] = $a->owner_name;
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
-                        $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
+                        $appointments_array[$i]['applier_attended'] = $a->applier_attended;
                         $appointments_array[$i]['calendar_id'] = $a->calendar_id;
                         $appointments_array[$i]['metadata'] = $a->metadata;
                         $i++;
@@ -131,7 +131,7 @@ class AppointmentRepository
      * @param mixed $records int/null
      * @return Collection
      */
-    public function listAppointmentsByApplyerId($appkey, $domain, $id, $page, $records)
+    public function listAppointmentsByApplierId($appkey, $domain, $id, $page, $records)
     {
         $res = array();
         $page = (int)$page;
@@ -139,7 +139,7 @@ class AppointmentRepository
         
         try {            
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheAppointmentListByApplyer_'.$appkey.'_'.$domain.'_'.$id.'_'.$page.'_'.$records);
+            $cache_id = sha1('cacheAppointmentListByApplier_'.$appkey.'_'.$domain.'_'.$id.'_'.$page.'_'.$records);
             $tag = sha1($appkey.'_'.$domain);
             $res = Cache::tags($tag)->get($cache_id);
             
@@ -148,11 +148,11 @@ class AppointmentRepository
                     $columns = array(
                         DB::raw('appointments.id AS appointment_id'),
                         'subject',
-                        'applyer_name',
-                        'applyer_email',
+                        'applier_name',
+                        'applier_email',
                         'owner_name',
                         'appointment_start_time',
-                        'applyer_attended',
+                        'applier_attended',
                         'calendar_id',
                         'metadata'
                     );
@@ -168,7 +168,7 @@ class AppointmentRepository
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
                                 ->where('appkey', $appkey)
                                 ->where('domain', $domain)
-                                ->where('applyer_id', $id)
+                                ->where('applier_id', $id)
                                 ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
                                 ->where('is_canceled', '<>', 1)
                                 ->where('is_reserved', 0)->orderBy('appointment_start_time', 'ASC')
@@ -179,7 +179,7 @@ class AppointmentRepository
                     } else {
                         $appointments = Appointment::select($columns)
                                 ->join('calendars', 'calendars.id', '=', 'appointments.calendar_id')
-                                ->where('applyer_id', $id)
+                                ->where('applier_id', $id)
                                 ->where('appkey', $appkey)
                                 ->where('domain', $domain)
                                 ->where('appointment_start_time', '>=', date('Y-m-d H:i:s'))
@@ -198,11 +198,11 @@ class AppointmentRepository
                         $appointment_time = $date->format('Y-m-d\TH:i:sO');
                         $appointments_array[$i]['appointment_id'] = $a->appointment_id;
                         $appointments_array[$i]['subject'] = $a->subject;
-                        $appointments_array[$i]['applyer_name'] = $a->applyer_name;
-                        $appointments_array[$i]['applyer_email'] = $a->applyer_email;
+                        $appointments_array[$i]['applier_name'] = $a->applier_name;
+                        $appointments_array[$i]['applier_email'] = $a->applier_email;
                         $appointments_array[$i]['owner_name'] = $a->owner_name;
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
-                        $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
+                        $appointments_array[$i]['applier_attended'] = $a->applier_attended;
                         $appointments_array[$i]['calendar_id'] = $a->calendar_id;
                         $appointments_array[$i]['metadata'] = $a->metadata;
                         $i++;
@@ -249,11 +249,11 @@ class AppointmentRepository
                     $columns = array(
                         DB::raw('appointments.id AS appointment_id'),
                         'subject',
-                        'applyer_name',
-                        'applyer_email',
+                        'applier_name',
+                        'applier_email',
                         'owner_name',
                         'appointment_start_time',
-                        'applyer_attended',
+                        'applier_attended',
                         'calendar_id',
                         'metadata'
                     );
@@ -299,11 +299,11 @@ class AppointmentRepository
                         $appointment_time = $date->format('Y-m-d\TH:i:sO');
                         $appointments_array[$i]['appointment_id'] = $a->appointment_id;
                         $appointments_array[$i]['subject'] = $a->subject;
-                        $appointments_array[$i]['applyer_name'] = $a->applyer_name;
-                        $appointments_array[$i]['applyer_email'] = $a->applyer_email;
+                        $appointments_array[$i]['applier_name'] = $a->applier_name;
+                        $appointments_array[$i]['applier_email'] = $a->applier_email;
                         $appointments_array[$i]['owner_name'] = $a->owner_name;
                         $appointments_array[$i]['appointment_time'] = $appointment_time;
-                        $appointments_array[$i]['applyer_attended'] = $a->applyer_attended;
+                        $appointments_array[$i]['applier_attended'] = $a->applier_attended;
                         $appointments_array[$i]['calendar_id'] = $a->calendar_id;
                         $appointments_array[$i]['metadata'] = $a->metadata;
                         $i++;
@@ -354,8 +354,8 @@ class AppointmentRepository
                     $columns = array(
                         DB::raw('appointments.id AS appointment_id'),
                         'subject',
-                        'applyer_name',
-                        'applyer_email',
+                        'applier_name',
+                        'applier_email',
                         'appointment_start_time',
                         'appointment_end_time',
                         'metadata',
@@ -416,8 +416,8 @@ class AppointmentRepository
                         $date2 = new \DateTime($appointment->appointment_end_time);
                         $appointment_array[$i]['appointment_id'] = $appointment->appointment_id;
                         $appointment_array[$i]['subject'] = $appointment->subject;
-                        $appointment_array[$i]['applyer_name'] = $appointment->applyer_name;
-                        $appointment_array[$i]['applyer_email'] = $appointment->applyer_email;
+                        $appointment_array[$i]['applier_name'] = $appointment->applier_name;
+                        $appointment_array[$i]['applier_email'] = $appointment->applier_email;
                         $appointment_array[$i]['appointment_start_time'] = $date1->format('Y-m-d\TH:i:sO');
                         $appointment_array[$i]['appointment_end_time'] = $date2->format('Y-m-d\TH:i:sO');
                         $appointment_array[$i]['metadata'] = $appointment->metadata;
@@ -472,8 +472,8 @@ class AppointmentRepository
                                         if ($ind > -1) {
                                             $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
                                             $time_range[$k]['subject'] = $appointment_array[$ind]['subject'] != null ? $appointment_array[$ind]['subject'] : '';
-                                            $time_range[$k]['applyer_name'] = $appointment_array[$ind]['applyer_name'] != null ? $appointment_array[$ind]['applyer_name'] : '';
-                                            $time_range[$k]['applyer_email'] = $appointment_array[$ind]['applyer_email'];
+                                            $time_range[$k]['applier_name'] = $appointment_array[$ind]['applier_name'] != null ? $appointment_array[$ind]['applier_name'] : '';
+                                            $time_range[$k]['applier_email'] = $appointment_array[$ind]['applier_email'];
                                             $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
                                             $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
                                             $time_range[$k]['metadata'] = $appointment_array[$ind]['metadata'];
@@ -483,8 +483,8 @@ class AppointmentRepository
                                         } else {
                                             $time_range[$k]['appointment_id'] = '';
                                             $time_range[$k]['subject'] = '';
-                                            $time_range[$k]['applyer_name'] = '';
-                                            $time_range[$k]['applyer_email'] = '';
+                                            $time_range[$k]['applier_name'] = '';
+                                            $time_range[$k]['applier_email'] = '';
                                             $time_range[$k]['appointment_start_time'] = '';
                                             $time_range[$k]['appointment_end_time'] = '';
                                             $time_range[$k]['metadata'] = '';
@@ -569,8 +569,8 @@ class AppointmentRepository
                         $columns = array(
                             DB::raw('appointments.id AS appointment_id'),
                             'subject',
-                            'applyer_name',
-                            'applyer_email',
+                            'applier_name',
+                            'applier_email',
                             'appointment_start_time',
                             'appointment_end_time',
                             'metadata',
@@ -616,8 +616,8 @@ class AppointmentRepository
                             $date2 = new \DateTime($appointment->appointment_end_time);
                             $appointment_array[$i]['appointment_id'] = $appointment->appointment_id;
                             $appointment_array[$i]['subject'] = $appointment->subject;
-                            $appointment_array[$i]['applyer_name'] = $appointment->applyer_name;
-                            $appointment_array[$i]['applyer_email'] = $appointment->applyer_email;
+                            $appointment_array[$i]['applier_name'] = $appointment->applier_name;
+                            $appointment_array[$i]['applier_email'] = $appointment->applier_email;
                             $appointment_array[$i]['appointment_start_time'] = $date1->format('Y-m-d\TH:i:sO');
                             $appointment_array[$i]['appointment_end_time'] = $date2->format('Y-m-d\TH:i:sO');
                             $appointment_array[$i]['metadata'] = $appointment->metadata;
@@ -668,8 +668,8 @@ class AppointmentRepository
                                             if ($ind > -1) {
                                                 $time_range[$k]['appointment_id'] = $appointment_array[$ind]['appointment_id'];
                                                 $time_range[$k]['subject'] = $appointment_array[$ind]['subject'] != null ? $appointment_array[$ind]['subject'] : '';
-                                                $time_range[$k]['applyer_name'] = $appointment_array[$ind]['applyer_name'] != null ? $appointment_array[$ind]['applyer_name'] : '';
-                                                $time_range[$k]['applyer_email'] = $appointment_array[$ind]['applyer_email'];
+                                                $time_range[$k]['applier_name'] = $appointment_array[$ind]['applier_name'] != null ? $appointment_array[$ind]['applier_name'] : '';
+                                                $time_range[$k]['applier_email'] = $appointment_array[$ind]['applier_email'];
                                                 $time_range[$k]['appointment_start_time'] = $appointment_array[$ind]['appointment_start_time'];
                                                 $time_range[$k]['appointment_end_time'] = $appointment_array[$ind]['appointment_end_time'];
                                                 $time_range[$k]['metadata'] = $appointment_array[$ind]['metadata'];
@@ -679,8 +679,8 @@ class AppointmentRepository
                                             } else {
                                                 $time_range[$k]['appointment_id'] = '';
                                                 $time_range[$k]['subject'] = '';
-                                                $time_range[$k]['applyer_name'] = '';
-                                                $time_range[$k]['applyer_email'] = '';
+                                                $time_range[$k]['applier_name'] = '';
+                                                $time_range[$k]['applier_email'] = '';
                                                 $time_range[$k]['appointment_start_time'] = '';
                                                 $time_range[$k]['appointment_end_time'] = '';
                                                 $time_range[$k]['metadata'] = '';
@@ -757,7 +757,7 @@ class AppointmentRepository
                 $data['is_reserved'] = 1;
                 $data['reservation_date'] = date('Y-m-d H:i:s');
                 $data['is_canceled'] = 0;
-                $data['applyer_attended'] = -1;
+                $data['applier_attended'] = -1;
                 
                 $appointment = Appointment::create($data);
                 $res['id'] = $appointment->id;
@@ -1089,7 +1089,7 @@ class AppointmentRepository
         try {
             
             if ((int)$id > 0) {
-                $columns['applyer_attended'] = $data['applyer_attended'];
+                $columns['applier_attended'] = $data['applier_attended'];
                 Appointment::where('id', $id)->update($columns);
                 $res['error'] = null;
                 
@@ -1346,21 +1346,21 @@ class AppointmentRepository
      * 
      * @param string $appkey
      * @param string $domain
-     * @param string $applyer_id
+     * @param string $applier_id
      * @param date $start_time
      * @return boolean
      */
-    public function isOverlappingAppointmentByUser($appkey, $domain, $calendar_id, $applyer_id, $start_time)
+    public function isOverlappingAppointmentByUser($appkey, $domain, $calendar_id, $applier_id, $start_time)
     {        
         $resp = true;
         try {            
             $ttl = (int)config('calendar.cache_ttl');
-            $cache_id = sha1('cacheisOverlappingAppointmentByUser_'.$appkey.'_'.$domain.'_'.$applyer_id.'_'.$start_time);
+            $cache_id = sha1('cacheisOverlappingAppointmentByUser_'.$appkey.'_'.$domain.'_'.$applier_id.'_'.$start_time);
             $tag = sha1($appkey.'_'.$domain);
             $resp = Cache::tags($tag)->get($cache_id);
             
             if ($resp === null) {
-                if (!empty($appkey) && !empty($domain) && !empty($applyer_id) && !empty($start_time)) {
+                if (!empty($appkey) && !empty($domain) && !empty($applier_id) && !empty($start_time)) {
                     $start_time = new \DateTime($start_time);
                     $start_time = $start_time->format('Y-m-d H:i:s');
                     
@@ -1369,7 +1369,7 @@ class AppointmentRepository
                                 ->select('appointments.id')
                                 ->where('calendars.appkey', $appkey)
                                 ->where('calendars.domain', $domain)
-                                ->where('appointments.applyer_id', $applyer_id)
+                                ->where('appointments.applier_id', $applier_id)
                                 ->where('appointments.is_canceled', '<>', 1)
                                 ->where('appointments.appointment_start_time', $start_time)->get();
 

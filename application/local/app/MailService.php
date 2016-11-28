@@ -53,20 +53,20 @@ class MailService {
                             
                             switch ($template_type) {
                                 case 'confirmation':
-                                    $html_applyer = base64_decode($_app->html_confirmation_email);
-                                    $html_owner = $html_applyer;
+                                    $html_applier = base64_decode($_app->html_confirmation_email);
+                                    $html_owner = $html_applier;
                                     $subject = base64_encode(config('calendar.subject_confirmation_email'));
                                     $html_text = 'confirmación';
                                     break;
                                 case 'modify':
-                                    $html_applyer = base64_decode($_app->html_modify_email);
-                                    $html_owner = $html_applyer;
+                                    $html_applier = base64_decode($_app->html_modify_email);
+                                    $html_owner = $html_applier;
                                     $subject = base64_encode(config('calendar.subject_modify_email'));
                                     $html_text = 'modificación';
                                     break;
                                 case 'cancel':
-                                    $html_applyer = base64_decode($_app->html_cancel_email);
-                                    $html_owner = $html_applyer;
+                                    $html_applier = base64_decode($_app->html_cancel_email);
+                                    $html_owner = $html_applier;
                                     $subject = base64_encode(config('calendar.subject_cancel_email'));
                                     $html_text = 'cancelación';
                                     break;
@@ -74,7 +74,7 @@ class MailService {
                             }
                         } 
                         
-                        if (empty($html_applyer)) {
+                        if (empty($html_applier)) {
                             $res['error'] = true;
                             $res['errorMessage'] = 'Debe configurar la plantilla de correo electrónico de ' . $html_text . ' Cuenta: ' .$nombre_app;
                         } else {    
@@ -93,12 +93,12 @@ class MailService {
                                         $ano = $date->format('Y');
                                         $hora = $date->format('H:i');
                                         $fecha_cita = $dia . ' de ' . $mes . ' de ' . $ano . ' a las ' . $hora;
-                                        $nombre_ciudadano = trim($a->applyer_name);
+                                        $nombre_ciudadano = trim($a->applier_name);
                                         $nombre_funcionario = trim($a->owner_name);
                                         $nombre_tramite = 'TRÁMITE';
                                         $nombre_agenda = trim($a->name);
                                         $motivo_cancelacion = !empty($a->cancelation_cause) ? trim($a->cancelation_cause) : 'No indicado';
-                                        $applyer_email = trim($a->applyer_email);
+                                        $applier_email = trim($a->applier_email);
                                         $owner_email =  trim($a->owner_email);
                                         
                                         if (!empty($a->metadata)) {
@@ -138,7 +138,7 @@ class MailService {
                                             $send_mail_owner = $this->sendMail($from_email, $subject, $body, array($owner_email));
 
                                             if (!$send_mail_owner['error']) {
-                                                $applyer_replace = array(
+                                                $applier_replace = array(
                                                     $nombre_app,
                                                     $nombre_ciudadano,
                                                     $dia,
@@ -150,13 +150,13 @@ class MailService {
                                                     $nombre_agenda,
                                                     $motivo_cancelacion,
                                                 );
-                                                $body = base64_encode(str_replace($search, $applyer_replace, $html_applyer));
+                                                $body = base64_encode(str_replace($search, $applier_replace, $html_applier));
                                                 
-                                                if (!empty($from_email) && !empty($applyer_email)) {
-                                                    $send_mail_applyer = $this->sendMail($from_email, $subject, $body, array($applyer_email));
-                                                    if ($send_mail_applyer['error']) {
+                                                if (!empty($from_email) && !empty($applier_email)) {
+                                                    $send_mail_applier = $this->sendMail($from_email, $subject, $body, array($applier_email));
+                                                    if ($send_mail_applier['error']) {
                                                         $res['error'] = true;
-                                                        $res['errorMessage'] = $send_mail_applyer['errorMessage'] . ' Cuenta: ' . $nombre_app . ' ID cita: ' . $appointment_id;
+                                                        $res['errorMessage'] = $send_mail_applier['errorMessage'] . ' Cuenta: ' . $nombre_app . ' ID cita: ' . $appointment_id;
                                                     }
                                                 } else {
                                                     $res['error'] = true;
