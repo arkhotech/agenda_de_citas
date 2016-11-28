@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.12, for osx10.11 (x86_64)
 --
--- Host: dev2.arkho.tech    Database: calendars
+-- Host: localhost    Database: calendars
 -- ------------------------------------------------------
 -- Server version	5.5.51
 

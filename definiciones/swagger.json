@@ -6,7 +6,7 @@
     "title": "Agenda",
     "contact": {}
   },
-  "host": "dev2.arkho.tech",
+  "host": "localhost",
   "basePath": "/v1",
   "tags": [
     {
