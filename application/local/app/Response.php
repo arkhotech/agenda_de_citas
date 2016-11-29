@@ -215,7 +215,7 @@ class Response {
             //Generic
             1000 => 'Parámetros de header appkey y/o dominio no proporcionados',
             1020 => 'Faltan parámetros o petición mal formada',
-            1030 => 'Appkey o dominio no existe',
+            1030 => 'Appkey y/o dominio no existe',
             5000 => 'Appkey no existe',
             
             //Calendar

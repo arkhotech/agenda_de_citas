@@ -37,7 +37,7 @@ Route::group(array('prefix' => 'v1'), function() {
     Route::put('appointments/cancel/{id}', 'AppointmentController@cancel');
     Route::put('appointments/assists/{id}', 'AppointmentController@assists');
     Route::get('appointments/listByCalendar/{id}', 'AppointmentController@listByCalendar');
-    Route::get('appointments/listByApplyer/{id}', 'AppointmentController@listByApplyer');
+    Route::get('appointments/listByApplier/{id}', 'AppointmentController@listByApplier');
     Route::get('appointments/listByOwner/{id}', 'AppointmentController@listByOwner');
     Route::get('appointments/availability/{id}', 'AppointmentController@listAvailability');
     Route::get('appointments/availability/listByOwner/{id}', 'AppointmentController@listAvailabilityByOwner');
@@ -61,5 +61,5 @@ Route::group(array('prefix' => 'v1'), function() {
 });
 
 Route::any('{all}', function(){
-    return 'API Agenda de Citas - ArkhoTech';
+    return 'API Agenda de Citas';
 })->where('all', '.*');

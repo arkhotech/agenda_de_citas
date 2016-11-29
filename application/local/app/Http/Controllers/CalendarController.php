@@ -96,7 +96,7 @@ class CalendarController extends Controller
                     }
                 }
             } else {
-                $resp = Resp::error(400, 1020, 'calendar_id param must be greater than zero');
+                $resp = Resp::error(400, 1020, 'Parámetro calendar_id debe ser mayor a cero');
             }
         } else {
             $resp = Resp::error(400, 1000);
