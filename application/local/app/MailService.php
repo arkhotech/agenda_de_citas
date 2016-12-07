@@ -14,6 +14,8 @@ use App\Repositories\AppointmentRepository;
 use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+
 use \Httpful\Request;
 
 class MailService { 
@@ -182,10 +184,19 @@ class MailService {
                         $res['errorMessage'] = 'La appkey y/o domain no se encontraron en la base de datos. Appkey: ' . $appkey . ' Domain: ' . $domain;
                     }
                 }
-            } catch (Exception $ex) {
+            } catch (ConnectException $ex) {
+                Log::debug('ConnectException');
                 $res['error'] = true;
                 $res['errorMessage'] = 'code: ' .  $ex->getCode() . ' Message: ' . $ex->getMessage();
-            }            
+            } catch (ClientException $ex) {
+                Log::debug('ConnectException');
+                $res['error'] = true;
+                $res['errorMessage'] = 'code: ' .  $ex->getCode() . ' Message: ' . $ex->getMessage();
+            } catch (Exception $e) {
+                Log::debug('Exception');
+                $res['error'] = true;
+                $res['errorMessage'] = 'code: ' .  $e->getCode() . ' Message: ' . $e->getMessage();
+            }
         } else {
             $res['error'] = true;
             $res['errorMessage'] = 'Faltan parámetros o tipo de dato incorrecto';
@@ -227,8 +238,8 @@ class MailService {
             $resp = array();
             $access_token = '';
             
-            if ($response_token === null) {                
-                
+            if ($response_token === null) {
+
                 // Obtiene el access token
                 $response_token = $client->request('POST', $urlAccessToken, [
                     'form_params' => [
@@ -238,14 +249,14 @@ class MailService {
                         'grant_type' => 'client_credentials'
                     ]
                 ]);
-                
-                $resp = json_decode($response_token->getBody(), true);
-                if ($response_token->getStatusCode() == 200) {                    
+
+                if ($response_token->getStatusCode() == 200) {
+                    $resp = json_decode($response_token->getBody(), true);
                     $ttl = (int)$resp['expires_in']/60;
                     Cache::put($cache_id, $resp, $ttl);
                     $access_token = $resp['access_token'];
                 }
-            } else {                
+            } else {
                 $access_token = $response_token['access_token'];                
             }            
             
@@ -268,7 +279,7 @@ class MailService {
                     ->send();
                 
                 if ($response->code == 401 && isset($response->body->error) &&
-                        $response->body->error == 'invalid_token') {                    
+                        $response->body->error == 'invalid_token') {
                     Cache::forget($cache_id);
                     $this->sendMail($from, $subject, $body, $to);
                 } else if ($response->code != 200) {
