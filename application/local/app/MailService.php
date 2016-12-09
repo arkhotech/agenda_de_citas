@@ -13,9 +13,7 @@ use App\Repositories\AppRepository;
 use App\Repositories\AppointmentRepository;
 use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ConnectException;
-
+use Exception;
 use \Httpful\Request;
 
 class MailService { 
@@ -184,14 +182,6 @@ class MailService {
                         $res['errorMessage'] = 'La appkey y/o domain no se encontraron en la base de datos. Appkey: ' . $appkey . ' Domain: ' . $domain;
                     }
                 }
-            } catch (ConnectException $ex) {
-                Log::debug('ConnectException');
-                $res['error'] = true;
-                $res['errorMessage'] = 'code: ' .  $ex->getCode() . ' Message: ' . $ex->getMessage();
-            } catch (ClientException $ex) {
-                Log::debug('ConnectException');
-                $res['error'] = true;
-                $res['errorMessage'] = 'code: ' .  $ex->getCode() . ' Message: ' . $ex->getMessage();
             } catch (Exception $e) {
                 Log::debug('Exception');
                 $res['error'] = true;
@@ -292,15 +282,10 @@ class MailService {
                 $res['error'] = true;
                 $res['errorMessage'] = $resp['error_description'];
             }
-        } catch (ClientException $ce) {
-            $res['error'] = true;
-            $res['errorMessage'] = $ce->getMessage();
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             $res['error'] = true;
             $res['errorMessage'] = $ex->getMessage();
         }
-            
         return $res;
     }
     
