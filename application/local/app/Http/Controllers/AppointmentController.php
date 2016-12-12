@@ -494,8 +494,7 @@ class AppointmentController extends Controller
                 // Se confirman las citas
                 $appointment = $this->appointments->bulkConfirmAppointment($appkey, $domain, $ids);
 
-                if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {
-                    die('dasd');
+                if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                    
                     $resp = Resp::error(500, $appointment['error']->getCode(), '', $appointment['error']);
                 } else {                    
                     $resp = Resp::make(200);
