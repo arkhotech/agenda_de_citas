@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use Exception;
 use DB;
 use Log;
 use App\Calendar;
@@ -547,7 +548,7 @@ class AppointmentRepository
                 $cal_info = $cal_obj->listCalendarById($appkey, $domain, $calendar_id);
                         
                 if ($cal_info['error'] !== null || (isset($cal_info['count']) && (int)$cal_info['count'] == 0)) {
-                    $res['error'] = new \Exception('', 1030);
+                    $res['error'] = new Exception('', 1030);
                     return $res;
                 }
 
@@ -766,7 +767,7 @@ class AppointmentRepository
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
             } else {
-                $res['error'] = new \Exception('', 1010);
+                $res['error'] = new Exception('', 1010);
             }
         } catch (QueryException $qe) {
             $res['error'] = $qe;
@@ -820,7 +821,7 @@ class AppointmentRepository
                 if ($resp_mail['error']) {
                     Log::error('Message: ' . $resp_mail['errorMessage']);
                     $res['error'] = null;
-                    //$res['error'] = new \Exception($resp_mail['errorMessage']);
+                    //$res['error'] = new Exception($resp_mail['errorMessage']);
                 } else {
                     $res['error'] = null;
                 }
@@ -828,7 +829,7 @@ class AppointmentRepository
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
             } else {
-                $res['error'] = new \Exception('', 1010);
+                $res['error'] = new Exception('', 1010);
             }
         } catch (QueryException $qe) {
                 $res['error'] = $qe;
@@ -946,7 +947,7 @@ class AppointmentRepository
                     if ($resp_mail['error']) {
                         Log::error('Message: ' . $resp_mail['errorMessage']);
                         $res['error'] = null;
-                        //$res['error'] = new \Exception($resp_mail['errorMessage']);
+                        //$res['error'] = new Exception($resp_mail['errorMessage']);
                     } else {
                         $res['error'] = null;
                     }
@@ -954,7 +955,7 @@ class AppointmentRepository
                     $tag = sha1($appkey.'_'.$domain);
                     Cache::tags($tag)->flush();
                 } else {
-                    $res['error'] = new \Exception('', 2071);
+                    $res['error'] = new Exception('', 2071);
                 }
             }
         } catch (QueryException $qe) {
@@ -989,11 +990,11 @@ class AppointmentRepository
                         $data['is_reserved'] = 0;
                         $appointment = Appointment::where('id', $id)->update($data);                                                
                     } else {
-                        $res['error'] = new \Exception('ID cita: ' . $id . ' Cita cancelada', 2071);
+                        $res['error'] = new Exception('ID cita: ' . $id . ' Cita cancelada', 2071);
                         break;
                     }
                 } else {
-                    $res['error'] = new \Exception('ID cita: ' . $id . ' Cita no encontrada', 2072);
+                    $res['error'] = new Exception('ID cita: ' . $id . ' Cita no encontrada', 2072);
                     break;
                 }
             }
@@ -1056,7 +1057,7 @@ class AppointmentRepository
                 if ($resp_mail['error']) {
                     Log::error('Message: ' . $resp_mail['errorMessage']);
                     $res['error'] = null;
-                    //$res['error'] = new \Exception($resp_mail['errorMessage']);
+                    //$res['error'] = new Exception($resp_mail['errorMessage']);
                 } else {
                     $res['error'] = null;
                 }               
@@ -1119,7 +1120,7 @@ class AppointmentRepository
         
         try {
             $appointment = Appointment::destroy($id);
-            $res['error'] = $appointment === false ? new \Exception('', 500) : null;
+            $res['error'] = $appointment === false ? new Exception('', 500) : null;
             
             $tag = sha1($appkey.'_'.$domain);
             Cache::tags($tag)->flush();

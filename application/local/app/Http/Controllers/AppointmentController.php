@@ -446,9 +446,10 @@ class AppointmentController extends Controller
     {        
         $resp = array();
         $data = $request->json()->all();
+        
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
-        $ids = $data['ids'];
+        $ids = isset($data['ids']) ? $data['ids'] : false;
         $calendar_id = 0;
         $appointment_start_time = '';
         
@@ -493,7 +494,8 @@ class AppointmentController extends Controller
                 // Se confirman las citas
                 $appointment = $this->appointments->bulkConfirmAppointment($appkey, $domain, $ids);
 
-                if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                
+                if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {
+                    die('dasd');
                     $resp = Resp::error(500, $appointment['error']->getCode(), '', $appointment['error']);
                 } else {                    
                     $resp = Resp::make(200);

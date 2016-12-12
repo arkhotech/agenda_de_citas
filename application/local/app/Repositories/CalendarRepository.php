@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use Exception;
 use Log;
 use App\Calendar;
 use App\App;
@@ -239,7 +240,7 @@ class CalendarRepository
                     
                     Cache::tags([$tag])->put($cache_id, $res, $ttl);
                 } else {                    
-                    $res['error'] = new \Exception('', 1020);
+                    $res['error'] = new Exception('', 1020);
                 }
             }
         } catch (QueryException $qe) {
@@ -361,11 +362,11 @@ class CalendarRepository
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
             } else {
-                $res['error'] = new \Exception('', 1030);
+                $res['error'] = new Exception('', 1030);
             }
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 1040);
+                $res['error'] = new Exception('', 1040);
             } else {
                 $res['error'] = $qe;
             }
@@ -394,7 +395,7 @@ class CalendarRepository
                 unset($data['status']);
 
                 $calendar = Calendar::where('id', $id)->update($data);
-                $res['error'] = $calendar === false ? new \Exception('', 500) : null;
+                $res['error'] = $calendar === false ? new Exception('', 500) : null;
                 
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
@@ -405,15 +406,15 @@ class CalendarRepository
                 $up['time_confirm_appointment'] = $data['time_confirm_appointment'];
 
                 $calendar = Calendar::where('id', $id)->update($up);
-                $res['error'] = $calendar === false ? new \Exception('', 500) : null;
+                $res['error'] = $calendar === false ? new Exception('', 500) : null;
                 
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
-                $res['error'] = new \Exception('', 1050);
+                $res['error'] = new Exception('', 1050);
             }*/
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 1040);
+                $res['error'] = new Exception('', 1040);
             } else {
                 $res['error'] = $qe;
             }
@@ -441,12 +442,12 @@ class CalendarRepository
             if (!$this->hasAvailableAppointments($appkey, $domain, $id)) {
 
                 $calendar = Calendar::where('id', $id)->update(array('status' => 0));
-                $res['error'] = $calendar === false ? new \Exception('', 500) : null;
+                $res['error'] = $calendar === false ? new Exception('', 500) : null;
                 
                 $tag = sha1($appkey.'_'.$domain);
                 Cache::tags($tag)->flush();
             } else {
-                $res['error'] = new \Exception('', 1060);
+                $res['error'] = new Exception('', 1060);
             }
         } catch (QueryException $qe) {            
                 $res['error'] = $qe;
