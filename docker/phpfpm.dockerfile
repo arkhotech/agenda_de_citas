@@ -18,3 +18,5 @@ RUN mv /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.bak
 COPY assets/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 COPY assets/docker.conf /usr/local/etc/php-fpm.d/docker.conf
+
+COPY appplecation/local /var/www/html
