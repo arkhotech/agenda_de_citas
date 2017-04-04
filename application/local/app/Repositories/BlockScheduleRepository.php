@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use Exception;
 use DB;
 use Log;
 use App\BlockSchedule;
@@ -163,13 +164,13 @@ class BlockScheduleRepository
                         $tag = sha1($appkey.'_'.$domain);
                         Cache::tags($tag)->flush();
                     } else {
-                        $res['error'] = new \Exception('', 2080);
+                        $res['error'] = new Exception('', 2080);
                     }
                 } else {
-                    $res['error'] = new \Exception('', 2090);
+                    $res['error'] = new Exception('', 2090);
                 }
             } else {
-                $res['error'] = new \Exception('', 1010);
+                $res['error'] = new Exception('', 1010);
             }
         } catch (QueryException $qe) {
             $res['error'] = $qe;
@@ -221,13 +222,13 @@ class BlockScheduleRepository
                                     $res['error'] = null;
 
                                 } else {
-                                    $res['error'] = new \Exception('', 2080);
+                                    $res['error'] = new Exception('', 2080);
                                 }
                             } else {
-                                $res['error'] = new \Exception('', 2090);
+                                $res['error'] = new Exception('', 2090);
                             }
                         } else {
-                            $res['error'] = new \Exception('', 2091);
+                            $res['error'] = new Exception('', 2091);
                         }
                         
                         if (isset($res['error']) && $res['error'] !== null) {
@@ -241,11 +242,11 @@ class BlockScheduleRepository
                     $tag = sha1($appkey.'_'.$domain);
                     Cache::tags($tag)->flush();
                 } else {
-                    $res['error'] = new \Exception('', 2091);
+                    $res['error'] = new Exception('', 2091);
                 }
             } else {
                 DB::rollBack();
-                $res['error'] = new \Exception('', 1010);
+                $res['error'] = new Exception('', 1010);
             }
         } catch (QueryException $qe) {
             DB::rollBack();
@@ -274,7 +275,7 @@ class BlockScheduleRepository
         
         try {
             $blockSchedule = BlockSchedule::destroy($id);
-            $res['error'] = $blockSchedule === false ? new \Exception('', 500) : null;
+            $res['error'] = $blockSchedule === false ? new Exception('', 500) : null;
             
             $tag = sha1($appkey.'_'.$domain);
             Cache::tags($tag)->flush();

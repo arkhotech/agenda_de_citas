@@ -215,7 +215,7 @@ class Response {
             //Generic
             1000 => 'Parámetros de header appkey y/o dominio no proporcionados',
             1020 => 'Faltan parámetros o petición mal formada',
-            1030 => 'Appkey o dominio no existe',
+            1030 => 'Appkey y/o dominio no existe',
             5000 => 'Appkey no existe',
             
             //Calendar
@@ -250,7 +250,8 @@ class Response {
             //App
             4010 => 'No hay applicaciones',
             4020 => 'Aplicación no editada, campos similares',
-            4030 => 'Estado de aplicación no cambió, mismo estado'
+            4030 => 'Estado de aplicación no cambió, mismo estado',
+            4040 => 'La appkey y el dominio debe ser único'
         );
         
 		$result = (isset($codes[$code])) ? $codes[$code] : 'Código de estado desconocido';

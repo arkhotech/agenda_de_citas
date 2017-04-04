@@ -114,7 +114,7 @@ class AppointmentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function listByApplyer(Request $request, $id)
+    public function listByApplier(Request $request, $id)
     {
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
@@ -123,7 +123,7 @@ class AppointmentController extends Controller
         $resp = array();
         
         if (!empty($appkey) && !empty($domain)) {
-            $appointments = $this->appointments->listAppointmentsByApplyerId($appkey, $domain, $id, $page, $records);
+            $appointments = $this->appointments->listAppointmentsByApplierId($appkey, $domain, $id, $page, $records);
             
             if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                 $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
@@ -247,12 +247,7 @@ class AppointmentController extends Controller
                 if (isset($appointments['error']) && is_a($appointments['error'], 'Exception')) {
                     $resp = Resp::error(500, $appointments['error']->getCode(), '', $appointments['error']);
                 } else {
-                    if (count($appointments) > 0) {
-                        //$allAppointments['calendar_id'] = $appointments['calendar_id'];
-                        //$allAppointments['owner_name'] = $appointments['owner_name'];
-                        //$allAppointments['concurrency'] = $appointments['concurrency'];
-                        //$allAppointments['appointmentsavailable'] = $appointments['appointmentsavailable'];
-                        
+                    if (count($appointments) > 0) {                        
                         $resp = Resp::make(200, $appointments);
                     } else {
                         $resp = Resp::error(404, 2070);
@@ -283,9 +278,9 @@ class AppointmentController extends Controller
         
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
-                'applyer_email' => 'bail|required|email|max:80',
-                'applyer_id' => 'bail|required|max:20',
-                'applyer_name' => 'bail|required|max:150',
+                'applier_email' => 'bail|required|email|max:80',
+                'applier_id' => 'bail|required|max:20',
+                'applier_name' => 'bail|required|max:150',
                 'appointment_start_time' => 'bail|required|isodate',
                 'calendar_id' => 'bail|required|integer',
                 'subject' => 'max:80',
@@ -312,7 +307,7 @@ class AppointmentController extends Controller
                 if (!$validate['is_ok']) {                    
                     return Resp::error(406, $validate['error_code']);
                 } else {
-                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['calendar_id'], $data['applyer_id'], $data['appointment_start_time']);
+                    $isOverlapping = $this->appointments->isOverlappingAppointmentByUser($appkey, $domain, $data['calendar_id'], $data['applier_id'], $data['appointment_start_time']);
                     
                     if ($isOverlapping) {
                         return Resp::error(400, 1020, 'Ya tiene una cita reservada para este día');
@@ -352,9 +347,9 @@ class AppointmentController extends Controller
         if (!empty($appkey) && !empty($domain)) {
             if ((int)$id > 0) {
                 $validator = Validator::make($data, [
-                    'applyer_email' => 'bail|required|email|max:80',
-                    'applyer_id' => 'max:20',
-                    'applyer_name' => 'max:150',
+                    'applier_email' => 'bail|required|email|max:80',
+                    'applier_id' => 'max:20',
+                    'applier_name' => 'max:150',
                     'appointment_start_time' => 'bail|required|isodate',
                     'calendar_id' => 'bail|required|integer',
                     'subject' => 'max:80'
@@ -451,9 +446,10 @@ class AppointmentController extends Controller
     {        
         $resp = array();
         $data = $request->json()->all();
+        
         $appkey = $request->header('appkey');
         $domain = $request->header('domain');
-        $ids = $data['ids'];
+        $ids = isset($data['ids']) ? $data['ids'] : false;
         $calendar_id = 0;
         $appointment_start_time = '';
         
@@ -498,7 +494,7 @@ class AppointmentController extends Controller
                 // Se confirman las citas
                 $appointment = $this->appointments->bulkConfirmAppointment($appkey, $domain, $ids);
 
-                if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                
+                if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                    
                     $resp = Resp::error(500, $appointment['error']->getCode(), '', $appointment['error']);
                 } else {                    
                     $resp = Resp::make(200);
@@ -520,7 +516,8 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function cancel(Request $request, $id)
-    {
+    {   
+        
         $resp = array();
         $data = $request->json()->all();
         $appkey = $request->header('appkey');
@@ -553,10 +550,10 @@ class AppointmentController extends Controller
                 }
                 
                 if ($appointment_start_time) {
-                    $now = new \DateTime(date('Y-m-d H:i:s'));
-                    $start_date = new \DateTime($appointment_start_time);
-                    $diff = $now->diff($start_date);
-                    if ($diff->format('%R%h') >= $time_to_cancel) {                            
+                    $now = strtotime(date('Y-m-d H:i:s'));
+                    $start_date = strtotime($appointment_start_time);
+                    $diff = ($start_date - $now)/60;
+                    if (floor($diff) >= floor($time_to_cancel*60)) {
                         $appointment = $this->appointments->cancelAppointment($appkey, $domain, $id, $data);
 
                         if (isset($appointment['error']) && is_a($appointment['error'], 'Exception')) {                
@@ -565,7 +562,7 @@ class AppointmentController extends Controller
                             $resp = Resp::make(200);
                         }
                     } else {
-                        $resp = Resp::error(406, 2060, 'Can not cancel appointment because time to cancel calendar must be greather or equal to '.$time_to_cancel.' hours');
+                        $resp = Resp::error(406, 2060, 'No se puede cancelar la cita porque expiró el tiempo máximo. '.$time_to_cancel.' horas de anticipación');
                     }
                 }
             }
@@ -612,7 +609,7 @@ class AppointmentController extends Controller
         
         if (!empty($appkey) && !empty($domain)) {
             $validator = Validator::make($data, [
-                'applyer_attended' => 'bail|required|boolean'
+                'applier_attended' => 'bail|required|boolean'
             ]);
 
             if ($validator->fails()) {

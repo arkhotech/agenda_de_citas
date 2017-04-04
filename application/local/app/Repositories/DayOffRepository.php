@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use Exception;
 use App\DayOff;
 use App\Repositories\CalendarRepository;
 use App\App;
@@ -190,17 +191,17 @@ class DayOffRepository
                         $tag = sha1($appkey);
                         Cache::tags($tag)->flush();
                     /*} else {
-                        $res['error'] = new \Exception('', 1080);
+                        $res['error'] = new Exception('', 1080);
                     }*/
                 } else {
-                    $res['error'] = new \Exception('', 1090);
+                    $res['error'] = new Exception('', 1090);
                 }
             } else {
-                $res['error'] = new \Exception('', 1030);
+                $res['error'] = new Exception('', 1030);
             }
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 2000);
+                $res['error'] = new Exception('', 2000);
             } else {
                 $res['error'] = $qe;
             }
@@ -244,18 +245,18 @@ class DayOffRepository
                             $tag = sha1($appkey);
                             Cache::tags($tag)->flush();
                         /*} else {
-                            $res['error'] = new \Exception('', 1080);
+                            $res['error'] = new Exception('', 1080);
                         }*/
                     } else {
-                        $res['error'] = new \Exception('', 1090);
+                        $res['error'] = new Exception('', 1090);
                     }
                 }
             } else {
-                $res['error'] = new \Exception('', 1030);
+                $res['error'] = new Exception('', 1030);
             }
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 1040);
+                $res['error'] = new Exception('', 1040);
             } else {
                 $res['error'] = $qe;
             }
@@ -279,7 +280,7 @@ class DayOffRepository
         
         try {
             $dayoff = DayOff::destroy($id);
-            $res['error'] = $dayoff === false ? new \Exception('', 500) : null;
+            $res['error'] = $dayoff === false ? new Exception('', 500) : null;
             
             $tag = sha1($appkey);
             Cache::tags($tag)->flush();
