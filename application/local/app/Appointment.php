@@ -17,9 +17,9 @@ class Appointment extends Model
     public $timestamps = false;
     
 	protected $fillable = array(
-        'applyer_id',
-        'applyer_name',
-        'applyer_email',
+        'applier_id',
+        'applier_name',
+        'applier_email',
         'calendar_id',
         'subject',
         'appointment_start_time',
@@ -33,7 +33,7 @@ class Appointment extends Model
         'is_canceled',
         'cancelation_date',
         'cancelation_cause',
-        'applyer_attended'
+        'applier_attended'
     );
     
     /**

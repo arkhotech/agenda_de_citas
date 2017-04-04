@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use Exception;
 use App\App;
 use Illuminate\Support\Facades\Cache;
 use \Illuminate\Database\QueryException;
@@ -81,7 +82,7 @@ class AppRepository
             Cache::forget('cacheAppList');
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 4040);
+                $res['error'] = new Exception('', 4040);
             } else {
                 $res['error'] = $qe;
             }
@@ -111,9 +112,9 @@ class AppRepository
                         ->update($data);
 
             if ($app === false) {
-                $res['error'] = new \Exception('', 500);
+                $res['error'] = new Exception('', 500);
             } elseif ($app == 0) {
-                $res['error'] = new \Exception('', 4020);
+                $res['error'] = new Exception('', 4020);
             } else {
                 $res['error'] = null;
             }
@@ -121,7 +122,7 @@ class AppRepository
             Cache::forget('cacheAppList');
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 4040);
+                $res['error'] = new Exception('', 4040);
             } else {
                 $res['error'] = $qe;
             }
@@ -149,9 +150,9 @@ class AppRepository
                         ->update($data);
 
             if ($app === false) {
-                $res['error'] = new \Exception('', 500);
+                $res['error'] = new Exception('', 500);
             } elseif ($app == 0) {
-                $res['error'] = new \Exception('', 4030);
+                $res['error'] = new Exception('', 4030);
             } else {
                 $res['error'] = null;
             }
@@ -159,7 +160,7 @@ class AppRepository
             Cache::forget('cacheAppList');
         } catch (QueryException $qe) {
             if ($qe->getCode() == 23000) {
-                $res['error'] = new \Exception('', 1040);
+                $res['error'] = new Exception('', 1040);
             } else {
                 $res['error'] = $qe;
             }

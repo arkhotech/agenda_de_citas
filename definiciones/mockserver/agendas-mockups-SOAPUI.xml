@@ -3,11 +3,11 @@
 </con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>appointment_id</con:name><con:style>TEMPLATE</con:style><con:description>ID de la cita</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>400</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:request name="Request 1" id="31674f0b-7f4a-4b93-8752-3958a133871f" mediaType="application/json"><con:settings/><con:endpoint>http://localhost:80</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:resource name="/appointments/available/{calendar_id}" path="/appointments/available/{calendar_id}" id="7ceb1dba-870a-4c6c-adf8-2b85c33cfc8a"><con:settings/><con:parameters/><con:method name="getAppointmentsAvailableCalendar_id" id="25faaa36-561c-4b03-a130-42360dd82ae4" method="GET"><con:description>Lista la disponiblidad de citas en una fecha dada
 </con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>calendar_id</con:name><con:style>TEMPLATE</con:style><con:description>ID del calendario</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>400</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>404</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/></con:representation><con:request name="Request 1" id="249218e3-9b53-4aa9-b402-e111b67805f1" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8089</con:endpoint><con:request/><con:originalUri>http://localhost/v1/appointments/available/1</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="calendar_id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters><con:parameterOrder><con:entry>calendar_id</con:entry></con:parameterOrder></con:request></con:method></con:resource><con:resource name="/appointments/cancel/{appointment_id}" path="/appointments/cancel/{appointment_id}" id="bff20024-a5e5-4871-8378-02d958d44652"><con:settings/><con:parameters/><con:method name="putAppointmentsCancelAppointment_id" id="4df6a20d-425a-48e9-8409-548ae7b5c107" method="PUT"><con:description>Cancela una cita
 </con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>appointment_id</con:name><con:style>TEMPLATE</con:style><con:description>ID de la cita</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>400</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:request name="Request 1" id="43a946ac-ec73-4768-aa59-6cd2c8436795" mediaType="application/json"><con:settings/><con:endpoint>http://localhost:80</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:resource name="/appointments/confirm/{appointment_id}" path="/appointments/confirm/{appointment_id}" id="d9f6beaf-b317-4aa2-ba3e-cec42b86610f"><con:settings/><con:parameters/><con:method name="putAppointmentsConfirmAppointment_id" id="e653dd76-3de3-463e-b94b-d6a02af71870" method="PUT"><con:description>
-</con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>appointment_id</con:name><con:style>TEMPLATE</con:style><con:description>ID de la cita</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>400</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/></con:representation><con:request name="Request 1" id="afc89e91-74b5-4e2c-8fcc-9a3f0b05778f" mediaType="application/json"><con:settings/><con:endpoint>http://localhost:80</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:resource name="/appointments/listByApplyer/{applyer_id}" path="/appointments/listByApplyer/{applyer_id}" id="080efb5f-c27a-40bc-aba9-0b5e5b5d22dd"><con:settings/><con:parameters/><con:method name="getAppointmentsListByApplyerApplyer_id" id="62833791-fac6-4bf8-9407-4ac24c594600" method="GET"><con:description>Lista todas las citas futuras solicitadas de un solicitante
-</con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>applyer_id</con:name><con:style>TEMPLATE</con:style><con:description>ID del solicitante de la cita</con:description></con:parameter><con:parameter required="true"><con:name>page</con:name><con:style>QUERY</con:style><con:description>Parámetros de paginación</con:description></con:parameter><con:parameter required="true"><con:name>app_key</con:name><con:style>HEADER</con:style><con:description>App key</con:description></con:parameter><con:parameter required="true"><con:name>domain</con:name><con:style>HEADER</con:style><con:description>Dominios de una App</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>400</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>404</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>404</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="Request 1" id="fead0778-fd0b-4777-8973-b7e4dfc4c644" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8089</con:endpoint><con:request/><con:originalUri>http://localhost/v1/appointments/listByApplyer/</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+</con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>appointment_id</con:name><con:style>TEMPLATE</con:style><con:description>ID de la cita</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>400</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/></con:representation><con:request name="Request 1" id="afc89e91-74b5-4e2c-8fcc-9a3f0b05778f" mediaType="application/json"><con:settings/><con:endpoint>http://localhost:80</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:resource name="/appointments/listByApplier/{applier_id}" path="/appointments/listByApplier/{applier_id}" id="080efb5f-c27a-40bc-aba9-0b5e5b5d22dd"><con:settings/><con:parameters/><con:method name="getAppointmentsListByApplierApplier_id" id="62833791-fac6-4bf8-9407-4ac24c594600" method="GET"><con:description>Lista todas las citas futuras solicitadas de un solicitante
+</con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>applier_id</con:name><con:style>TEMPLATE</con:style><con:description>ID del solicitante de la cita</con:description></con:parameter><con:parameter required="true"><con:name>page</con:name><con:style>QUERY</con:style><con:description>Parámetros de paginación</con:description></con:parameter><con:parameter required="true"><con:name>app_key</con:name><con:style>HEADER</con:style><con:description>App key</con:description></con:parameter><con:parameter required="true"><con:name>domain</con:name><con:style>HEADER</con:style><con:description>Dominios de una App</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>400</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>404</con:status><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>404</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="Request 1" id="fead0778-fd0b-4777-8973-b7e4dfc4c644" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8089</con:endpoint><con:request/><con:originalUri>http://localhost/v1/appointments/listByApplier/</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
   <con:entry key="page" value="1"/>
   <con:entry key="domain" value="prueba"/>
-  <con:entry key="applyer_id" value="312"/>
+  <con:entry key="applier_id" value="312"/>
   <con:entry key="app_key" value="simple"/>
 </con:parameters></con:request></con:method></con:resource><con:resource name="/appointments/listByCalendar/{calendar_id}" path="/appointments/listByCalendar/{calendar_id}" id="3b7b534f-3821-496c-bfec-2b9ed932542a"><con:settings/><con:parameters/><con:method name="getAppointmentsListByCalendarCalendar_id" id="9ab24e42-fea8-4093-866f-b046da86006d" method="GET"><con:description>Lista todas las citas futuras de un usuario por agenda
 </con:description><con:settings/><con:parameters><con:parameter required="true"><con:name>calendar_id</con:name><con:style>TEMPLATE</con:style><con:description>ID de la agenda</con:description></con:parameter><con:parameter required="true"><con:name>page</con:name><con:style>QUERY</con:style><con:description>Parámetros de paginación</con:description></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/></con:representation><con:request name="Request 1" id="e6fe7784-d231-4bbc-8d5d-bada8895e766" mediaType="application/json"><con:settings/><con:endpoint>http://localhost:80</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:resource name="/appointments/listByOwner/{owner_id}" path="/appointments/listByOwner/{owner_id}" id="dcd200b5-106e-49b6-b395-d025da0bc0af"><con:settings/><con:parameters/><con:method name="getAppointmentsListByOwnerOwner_id" id="f486839a-4016-4840-8deb-6d1684fe51d1" method="GET"><con:description>Lista todas las citas futuras solicitadas de un propietario
@@ -154,40 +154,40 @@ if( requestBody.contains("some data") )
     {
       "2016-08-26":[
         {
-          "applyer_email":"prueba@prueba.com",
-          "applyer_name":"ciudadano",
+          "applier_email":"prueba@prueba.com",
+          "applier_name":"ciudadano",
           "appoinment_time":"15:00",
           "available":"B",
           "owner_name":"Propietario de la agenda",
           "subject":"asunto",
           "time":"15:00"
         },{
-          "applyer_email":"prueba@prueba.com",
-          "applyer_name":"ciudadano2",
+          "applier_email":"prueba@prueba.com",
+          "applier_name":"ciudadano2",
           "appoinment_time":"15:30",
           "available":"R",
           "owner_name":"Propietario de la agenda",
           "subject":"asunto",
           "time":"15:00"
         },{
-          "applyer_email":"",
-          "applyer_name":"",
+          "applier_email":"",
+          "applier_name":"",
           "appoinment_time":"16:00",
           "available":"D",
           "owner_name":"Propietario de la agenda",
           "subject":"",
           "time":"15:00"
         },{
-          "applyer_email":"",
-          "applyer_name":"",
+          "applier_email":"",
+          "applier_name":"",
           "appoinment_time":"16:30",
           "available":"D",
           "owner_name":"Propietario de la agenda",
           "subject":"",
           "time":"15:00"
         },{
-          "applyer_email":"",
-          "applyer_name":"",
+          "applier_email":"",
+          "applier_name":"",
           "appoinment_time":"15:00",
           "available":"D",
           "owner_name":"Propietario de la agenda",
@@ -199,24 +199,24 @@ if( requestBody.contains("some data") )
     {
       "2016-08-27":[
         {
-          "applyer_email":"",
-          "applyer_name":"",
+          "applier_email":"",
+          "applier_name":"",
           "appoinment_time":"16:00",
           "available":"D",
           "owner_name":"Propietario de la agenda",
           "subject":"",
           "time":"15:00"
         },{
-          "applyer_email":"",
-          "applyer_name":"",
+          "applier_email":"",
+          "applier_name":"",
           "appoinment_time":"16:30",
           "available":"D",
           "owner_name":"Propietario de la agenda",
           "subject":"",
           "time":"15:00"
         },{
-          "applyer_email":"",
-          "applyer_name":"",
+          "applier_email":"",
+          "applier_name":"",
           "appoinment_time":"15:00",
           "available":"D",
           "owner_name":"Propietario de la agenda",
@@ -330,7 +330,7 @@ if( requestBody.contains("some data") )
     return "Response N"
 }
 */
-</con:dispatchPath><con:response name="Response 1" id="a583bee2-94ee-40d7-99e1-48a27f03c7a2" httpResponseStatus="200"><con:settings/></con:response></con:restMockAction><con:restMockAction name="/v1/appointments/listByApplyer/" method="GET" resourcePath="/v1/appointments/listByApplyer/" id="9a89cb7b-73b5-41e1-9208-ff30c64d0c69"><con:settings/><con:defaultResponse>Response 1</con:defaultResponse><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:dispatchPath>log.info "hit"
+</con:dispatchPath><con:response name="Response 1" id="a583bee2-94ee-40d7-99e1-48a27f03c7a2" httpResponseStatus="200"><con:settings/></con:response></con:restMockAction><con:restMockAction name="/v1/appointments/listByApplier/" method="GET" resourcePath="/v1/appointments/listByApplier/" id="9a89cb7b-73b5-41e1-9208-ff30c64d0c69"><con:settings/><con:defaultResponse>Response 1</con:defaultResponse><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:dispatchPath>log.info "hit"
 
 /*
 // Script dispatcher is used to select a response based on the incoming request.

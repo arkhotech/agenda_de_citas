@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.12, for osx10.11 (x86_64)
 --
--- Host: dev2.arkho.tech    Database: calendars
+-- Host: localhost    Database: calendars
 -- ------------------------------------------------------
 -- Server version	5.5.51
 
@@ -24,9 +24,9 @@ DROP TABLE IF EXISTS `appointments`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `appointments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `applyer_id` varchar(20) NOT NULL,
-  `applyer_name` varchar(150) NOT NULL,
-  `applyer_email` varchar(80) NOT NULL,
+  `applier_id` varchar(20) NOT NULL,
+  `applier_name` varchar(150) NOT NULL,
+  `applier_email` varchar(80) NOT NULL,
   `calendar_id` int(11) NOT NULL,
   `subject` varchar(80) DEFAULT NULL,
   `appointment_start_time` datetime NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `appointments` (
   `is_canceled` tinyint(4) DEFAULT NULL,
   `cancelation_date` datetime DEFAULT NULL,
   `cancelation_cause` text,
-  `applyer_attended` tinyint(4) DEFAULT NULL,
+  `applier_attended` tinyint(4) DEFAULT NULL,
   `metadata` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_appoinments_calendar_id` (`calendar_id`),

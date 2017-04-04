@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Agenda",
-		"_postman_id": "7f9f5681-6e2d-c4fb-d1ed-7009bda35fc3",
+		"_postman_id": "823008bd-021a-3a81-cbf0-f404d2c20cc1",
 		"description": "Esquema en el que estarán construidos los servicios para la aplicación de agendador de citas",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -12,60 +12,17 @@
 			"description": "Folder for appointments",
 			"item": [
 				{
-					"name": "/appointments/:appointment_id",
-					"request": {
-						"url": {
-							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/:appointment_id",
-							"protocol": "{{protocol}}",
-							"auth": {},
-							"host": [
-								"{{server}}"
-							],
-							"port": "{{port}}/{{context}}",
-							"path": [
-								"appointments",
-								":appointment_id"
-							],
-							"variable": [
-								{
-									"value": "{{appointment_id}}",
-									"id": "appointment_id"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "appkey",
-								"value": "{{appkey}}",
-								"description": ""
-							},
-							{
-								"key": "domain",
-								"value": "{{domain}}",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"description": "Actualiza una la información de una cita"
-					},
-					"response": []
-				},
-				{
-					"name": "/appointments/assists/:appointment_id",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/assists/:appointment_id",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/assists/:appointment_id",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
 								"assists",
 								":appointment_id"
@@ -99,42 +56,17 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/bulkConfirm",
-					"request": {
-						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/bulkConfirm",
-						"method": "POST",
-						"header": [
-							{
-								"key": "appkey",
-								"value": "{{appkey}}",
-								"description": ""
-							},
-							{
-								"key": "domain",
-								"value": "{{domain}}",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "/appointments/availability/listByOwner/:owner_id?date={{date}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/availability/listByOwner/:owner_id?date={{date}}",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/availability/listByOwner/:owner_id?date={{date}}",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
 								"availability",
 								"listByOwner",
@@ -175,17 +107,17 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/availability/:calendar_id?date={{date}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/availability/:calendar_id?date={{date}}",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/availability/:calendar_id?date={{date}}",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
 								"availability",
 								":calendar_id"
@@ -225,17 +157,42 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/cancel/:appointment_id",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/bulkConfirm",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/bulkConfirm",
+						"method": "POST",
+						"header": [
+							{
+								"key": "appkey",
+								"value": "{{appkey}}",
+								"description": ""
+							},
+							{
+								"key": "domain",
+								"value": "{{domain}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/cancel/:appointment_id",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/cancel/:appointment_id",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
 								"cancel",
 								":appointment_id"
@@ -269,17 +226,17 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/confirm/:appointment_id",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/confirm/:appointment_id",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/confirm/:appointment_id",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
 								"confirm",
 								":appointment_id"
@@ -313,20 +270,20 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/listByApplyer/:applyer_id?page={{page}}&records={{records}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByApplier/:applier_id?page={{page}}&records={{records}}",
 					"request": {
 						"url": {
-							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByApplyer/:applyer_id?page={{page}}&records={{records}}",
-							"protocol": "{{protocol}}",
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByApplier/:applier_id?page={{page}}&records={{records}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
-								"listByApplyer",
-								":applyer_id"
+								"listByApplier",
+								":applier_id"
 							],
 							"query": [
 								{
@@ -340,8 +297,8 @@
 							],
 							"variable": [
 								{
-									"value": "{{applyer_id}}",
-									"id": "applyer_id"
+									"value": "{{applier_id}}",
+									"id": "applier_id"
 								}
 							]
 						},
@@ -367,17 +324,17 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/listByCalendar/:calendar_id?page={{page}}&records={{records}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByCalendar/:calendar_id?page={{page}}&records={{records}}",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByCalendar/:calendar_id?page={{page}}&records={{records}}",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
 								"listByCalendar",
 								":calendar_id"
@@ -421,17 +378,17 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/listByOwner/:owner_id?page={{page}}&records={{records}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByOwner/:owner_id?page={{page}}&records={{records}}",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/listByOwner/:owner_id?page={{page}}&records={{records}}",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"appointments",
 								"listByOwner",
 								":owner_id"
@@ -475,7 +432,7 @@
 					"response": []
 				},
 				{
-					"name": "/appointments/reserve",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/reserve",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/reserve",
 						"method": "POST",
@@ -498,18 +455,30 @@
 						"description": "Reserva una cita"
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "apps",
-			"description": "Folder for apps",
-			"item": [
+				},
 				{
-					"name": "/apps (List Application)",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/:appointment_id",
 					"request": {
-						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps",
-						"method": "GET",
+						"url": {
+							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/appointments/:appointment_id",
+							"protocol": "http",
+							"auth": {},
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"v1",
+								"appointments",
+								":appointment_id"
+							],
+							"variable": [
+								{
+									"value": "{{appointment_id}}",
+									"id": "appointment_id"
+								}
+							]
+						},
+						"method": "PUT",
 						"header": [
 							{
 								"key": "appkey",
@@ -526,32 +495,32 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"description": "Lista aplicaciones"
+						"description": "Actualiza una la información de una cita"
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "apps",
+			"description": "Folder for apps",
+			"item": [
 				{
-					"name": "/apps (Create Application)",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps?appkey={{appkey}}&domain={{domain}}",
 					"request": {
-						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps",
-						"method": "POST",
-						"header": [
-							{
-								"key": "appkey",
-								"value": "{{appkey}}",
-								"description": ""
-							}
-						],
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps?appkey={{appkey}}&domain={{domain}}",
+						"method": "GET",
+						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": ""
+							"mode": "formdata",
+							"formdata": []
 						},
-						"description": "Crea aplicaciones"
+						"description": "Lista las aplicaciones existentes en el servidor. Si se especifica los parametros appkey o domain, se filtran por ese valor."
 					},
 					"response": []
 				},
 				{
-					"name": "/apps (UpdateApplication)",
+					"name": "UpdateApplication",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps",
 						"method": "PUT",
@@ -569,14 +538,28 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"domain\": \"Santiago\",\n    \"name\": \"Prueba2\",\n    \"contact_email\": \"msilva@arkhotech.com\",\n    \"from_email\": \"dyt-notificaciones@minsegpres.gob.cl\",\n    \"from_name\" : \"Administrador Dev3\",\n    \"html_confirmation_email\": \"\",\n\t\"html_modify_email\": \"\",\n\t\"html_cancel_email\": \"\"\n}\n"
+							"raw": ""
 						},
 						"description": "Actualiza una App"
 					},
 					"response": []
 				},
 				{
-					"name": "/apps/changeStatus",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps?appkey={{appkey}}",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps?appkey={{appkey}}",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": "Crea aplicaciones o dominios dentro de una aplicacion si se especifica. Si se especifíìica el parametro appkey con un valor ya existente, entonces se crea un nuevo dominio para la aplicacion."
+					},
+					"response": []
+				},
+				{
+					"name": "ChangeStatusApplication",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/apps/changeStatus",
 						"method": "PUT",
@@ -607,7 +590,7 @@
 			"description": "Folder for blockSchedules",
 			"item": [
 				{
-					"name": "/blockSchedules",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules",
 						"method": "GET",
@@ -627,12 +610,12 @@
 							"mode": "formdata",
 							"formdata": []
 						},
-						"description": "Lista todos los días no laborables del año actual"
+						"description": "Lista todos los días bloquedos del año actual"
 					},
 					"response": []
 				},
 				{
-					"name": "/blockSchedules",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules",
 						"method": "POST",
@@ -657,7 +640,7 @@
 					"response": []
 				},
 				{
-					"name": "/blockSchedules/bulkCreate",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules/bulkCreate",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules/bulkCreate",
 						"method": "POST",
@@ -677,22 +660,22 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"description": ""
+						"description": "Crea bloqueos para un rango de fechas en una agenda"
 					},
 					"response": []
 				},
 				{
-					"name": "/blockSchedules/:block_schedule_id",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules/:block_schedule_id",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/blockSchedules/:block_schedule_id",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"blockSchedules",
 								":block_schedule_id"
 							],
@@ -731,7 +714,7 @@
 			"description": "Folder for calendars",
 			"item": [
 				{
-					"name": "/calendars?page={{page}}&records={{records}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars?page={{page}}&records={{records}}",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars?page={{page}}&records={{records}}",
 						"method": "GET",
@@ -751,12 +734,12 @@
 							"mode": "formdata",
 							"formdata": []
 						},
-						"description": "Lista todas las instancias de agenda"
+						"description": "Lista todas las instancias de agenda filtradas y paginadas seg´nun los parametros enviados en el query string, appkey y domain."
 					},
 					"response": []
 				},
 				{
-					"name": "/calendars (Data)",
+					"name": "Crea calendarios",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars",
 						"method": "POST",
@@ -781,17 +764,17 @@
 					"response": []
 				},
 				{
-					"name": "/calendars/disable/:calendar_id",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/disable/:calendar_id",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/disable/:calendar_id",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"calendars",
 								"disable",
 								":calendar_id"
@@ -820,22 +803,22 @@
 							"mode": "formdata",
 							"formdata": []
 						},
-						"description": "Deshabilita una agenda"
+						"description": "Deshabilita una agenda. Esta agenda no es eliminada fisicamente."
 					},
 					"response": []
 				},
 				{
-					"name": "/calendars/listByOwner/:owner_id?page={{page}}&records={{records}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/listByOwner/:owner_id?page={{page}}&records={{records}}",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/listByOwner/:owner_id?page={{page}}&records={{records}}",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"calendars",
 								"listByOwner",
 								":owner_id"
@@ -879,7 +862,7 @@
 					"response": []
 				},
 				{
-					"name": "/calendars/searchByName?text={{text}}&page={{page}}&records={{records}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/searchByName?text={{text}}&page={{page}}&records={{records}}",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/searchByName?text={{text}}&page={{page}}&records={{records}}",
 						"method": "GET",
@@ -904,17 +887,17 @@
 					"response": []
 				},
 				{
-					"name": "/calendars/:calendar_id (List)",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/:calendar_id",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/:calendar_id",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"calendars",
 								":calendar_id"
 							],
@@ -947,17 +930,17 @@
 					"response": []
 				},
 				{
-					"name": "/calendars/:calendar_id (Update)",
+					"name": "UpdateCalendar",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/calendars/:calendar_id",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"calendars",
 								":calendar_id"
 							],
@@ -996,7 +979,7 @@
 			"description": "Folder for daysOff",
 			"item": [
 				{
-					"name": "/daysOff?year={{year}}",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff?year={{year}}",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff?year={{year}}",
 						"method": "GET",
@@ -1016,7 +999,7 @@
 					"response": []
 				},
 				{
-					"name": "/daysOff",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff",
 						"method": "POST",
@@ -1036,7 +1019,7 @@
 					"response": []
 				},
 				{
-					"name": "/daysOff/bulkLoad",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff/bulkLoad",
 					"request": {
 						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff/bulkLoad",
 						"method": "POST",
@@ -1051,22 +1034,22 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"description": "Crea días no laborables basado en un array"
+						"description": "Crea días no laborables de una vez basado en un array. Esto servicio esta orientado a la carga automatica desde otros sistemas en la que de una vez se cargue el año completo."
 					},
 					"response": []
 				},
 				{
-					"name": "/daysOff/:day_off_id/",
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff/:day_off_id/",
 					"request": {
 						"url": {
 							"raw": "{{protocol}}://{{server}}:{{port}}/{{context}}/daysOff/:day_off_id/",
-							"protocol": "{{protocol}}",
+							"protocol": "http",
 							"auth": {},
 							"host": [
-								"{{server}}"
+								"localhost"
 							],
-							"port": "{{port}}/{{context}}",
 							"path": [
+								"v1",
 								"daysOff",
 								":day_off_id",
 								""
@@ -1091,6 +1074,26 @@
 							"formdata": []
 						},
 						"description": "Elimina un día no laboral"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "deleteAppointmentsPendingToConfirm",
+			"description": "Folder for deleteAppointmentsPendingToConfirm",
+			"item": [
+				{
+					"name": "{{protocol}}://{{server}}:{{port}}/{{context}}/deleteAppointmentsPendingToConfirm",
+					"request": {
+						"url": "{{protocol}}://{{server}}:{{port}}/{{context}}/deleteAppointmentsPendingToConfirm",
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
 					},
 					"response": []
 				}
