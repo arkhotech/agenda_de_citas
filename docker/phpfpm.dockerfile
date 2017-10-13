@@ -19,4 +19,4 @@ COPY assets/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 COPY assets/docker.conf /usr/local/etc/php-fpm.d/docker.conf
 
-COPY appplecation/local /var/www/html
+#COPY appplication/local /var/www/html
