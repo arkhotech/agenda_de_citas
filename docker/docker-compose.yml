@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  calendar: 
+    image: "registry.arkhotech.space:calendars"
+    networks:
+      - backend  
+    build:
+      context: .
+      dockerfile: "phpfpm.dockerfile"
+    
+networks:
+  backend:
+     driver: overlay
+
