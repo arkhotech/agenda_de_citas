@@ -7,7 +7,12 @@ fi
 
 if [ $DOCKER_MODE == "SWARM" ]; then
    echo "Modo Swarm"
+   for nodo in $( docker node ls -q )
+   do
+      echo "Check instancias en nodo: ${nodo}"
+      docker node ps
 
+   done
 else
    echo "Docker en modo normal"
    

@@ -2,7 +2,7 @@ version: "3"
 
 services:
    calendars:
-     image: "registry.arkhotech.space/calendars:1"
+     image: "registry.arkhotech.space/calendars:1.2"
      networks:
        - backend
      build:
@@ -22,7 +22,7 @@ services:
        - backend
 
    caldatabase:
-       image: "registry.arkhotech.space/cal-database:1"
+       image: "mysql:5.5"
        volumes:
          -  database:/var/lib/mysql
        ports:
@@ -39,7 +39,7 @@ services:
          context: .
          dockerfile: mysql.dockerfile
    calnginx:
-       image: "registry.arkhotech.space/calnginx:2"
+       image: "registry.arkhotech.space/calnginx:2.3"
        ports:
          - "8088:80"
        depends_on:
@@ -56,6 +56,6 @@ volumes:
 
 networks:
   backend:
-    driver: bridge
+    driver: overlay 
   frontend:
-    driver: bridge 
+    driver: overlay 

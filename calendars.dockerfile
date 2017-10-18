@@ -19,6 +19,8 @@ COPY assets/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 COPY assets/docker.conf /usr/local/etc/php-fpm.d/docker.conf
 
+ENV DB_HOST=caldatabase
+
 COPY application /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
@@ -37,6 +39,16 @@ USER root
 
 RUN apt-get install -y mysql-client
 
-COPY .env /var/www/html/.env
+COPY environment /var/www/html/local/.env
 
 COPY sql /sql
+
+ENV  APP_ROOT=/var/www/html
+
+RUN mkdir -p $APP_ROOT/local/storage/framework/cache; \
+    mkdir -p $APP_ROOT/local/storage/framework/sessions ;\
+    mkdir -p $APP_ROOT/local/storage/framework/views ; \
+    mkdir -p $APP_ROOT/local/storage/app ; \
+    mkdir -p $APP_ROOT/local/storage/logs ;\
+    chown -R www-data:www-data $APP_ROOT/local/storage ; \
+    chmod 765 -R $APP_ROOT/local/storage/framework
