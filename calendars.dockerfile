@@ -23,15 +23,20 @@ COPY application /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
 
+WORKDIR /var/www/html/local
 
 RUN apt-get install curl php5.6-cli git ; \
     curl -sS https://getcomposer.org/installer |  php -- --install-dir=/usr/local/bin --filename=composer 
 
 USER www-data
 
-WORKDIR /var/www/html/local
-
 RUN composer install
+
+USER root
+
+
+RUN apt-get install -y mysql-client
 
 COPY .env /var/www/html/.env
 
+COPY sql /sql

@@ -14,12 +14,14 @@ services:
      build:
        context: .
        dockerfile: calendars.dockerfile
+     env_file:
+       - calendar.env
    calredis:
      image: redis
      networks:
        - backend
 
-   cal_database:
+   caldatabase:
        image: "registry.arkhotech.space/cal-database:1"
        volumes:
          -  database:/var/lib/mysql
@@ -54,6 +56,6 @@ volumes:
 
 networks:
   backend:
-    driver: overlay 
+    driver: bridge
   frontend:
-    driver: overlay 
+    driver: bridge 
